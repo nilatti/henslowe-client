@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render correctly 1`] = `
+<div>
+  <div
+    className="container-fluid"
+  >
+    <div
+      className="App"
+    >
+      <header>
+        <nav>
+          <ul>
+            <li>
+              <a
+                href={undefined}
+                onClick={[Function]}
+              >
+                Dashboard
+              </a>
+            </li>
+            <li>
+              <a
+                href={undefined}
+                onClick={[Function]}
+              >
+                Authors
+              </a>
+            </li>
+            <li>
+              <a
+                href={undefined}
+                onClick={[Function]}
+              >
+                Plays
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <main />
+    </div>
+  </div>
+</div>
+`;
