@@ -9,4 +9,4 @@ AGENT_INSTALL_DIR="/var/lib/go-agent/pipelines"
 WORKSPACE="$AGENT_INSTALL_DIR/$GO_PIPELINE_NAME"
 source ~/.nvm/nvm.sh;
 npm install;
-npm start;
+npm run build;
