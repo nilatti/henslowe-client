@@ -2,7 +2,7 @@ import API from './api'
 import axios from 'axios';
 
 let base_api = axios.create({
-  baseURL: 'http://localhost:3001/'
+  baseURL: 'https://henslowescloud.com:3001/'
 })
 
 async function createUser(user) {
