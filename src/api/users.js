@@ -1,12 +1,12 @@
 import API from './api'
 import axios from 'axios';
 
-let base_api = axios.create({
-  baseURL: 'https://henslowescloud.com:3001/'
-})
+// let API = axios.create({
+//   baseURL: 'https://henslowescloud.com:3001/'
+// })
 
 async function createUser(user) {
-  return (base_api.post(
+  return (API.post(
     'users', {
       user
     }
@@ -18,7 +18,7 @@ async function deleteUser(userId) {
 }
 
 async function loginUser(user) {
-  return (base_api.post(
+  return (API.post(
     'sign_in', {
       user: user
     }
