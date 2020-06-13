@@ -33,6 +33,7 @@ import {ProductionAuthContext} from '../Contexts'
 export default function ProductionShow (props) {
     let { url } = useRouteMatch();
     let linesTotal = props.production.play.new_line_count || props.production.play.old_line_count || ""
+    let runTime;
     if (linesTotal > 0) {
       runTime = linesTotal/this.props.production.lines_per_minute
     }
