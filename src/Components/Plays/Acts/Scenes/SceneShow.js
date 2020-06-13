@@ -42,25 +42,26 @@ class SceneShow extends Component {
     let frenchSceneTabs
     if (scene.french_scenes[0] ) {
       frenchSceneTabs = scene.french_scenes.map((frenchScene) =>
-          <Tab eventKey={`french_scene-${frenchScene.id}`} title={`${frenchScene.number}`} key={`french_scene-${frenchScene.id}`}>
-            <FrenchSceneInfoTab
-              actId={act.id}
-              actNumber={act.number}
-              frenchScene={frenchScene}
-              handleEditSubmit={this.props.handleFrenchSceneEditFormSubmit}
-              handleEntranceExitCreateFormSubmit={this.props.handleEntranceExitCreateFormSubmit}
-              handleEntranceExitDeleteClick={this.props.handleEntranceExitDeleteClick}
-              handleEntranceExitEditFormSubmit={this.props.handleEntranceExitEditFormSubmit}
-              handleOnStageCreateFormSubmit={this.props.handleOnStageCreateFormSubmit}
-              handleOnStageDeleteClick={this.props.handleOnStageDeleteClick}
-              handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
-              onDeleteClick={this.props.handleFrenchSceneDeleteClick}
-              play={this.props.play}
-              production={this.props.production}
-              sceneId={scene.id}
-              sceneNumber={scene.number}
-            />
-          </Tab>
+            <Tab eventKey={`french_scene-${frenchScene.id}`} title={`${frenchScene.number}`} key={`french_scene-${frenchScene.id}`}>
+              <FrenchSceneInfoTab
+                actId={act.id}
+                actNumber={act.number}
+                frenchScene={frenchScene}
+                handleEditSubmit={this.props.handleFrenchSceneEditFormSubmit}
+                handleEntranceExitCreateFormSubmit={this.props.handleEntranceExitCreateFormSubmit}
+                handleEntranceExitDeleteClick={this.props.handleEntranceExitDeleteClick}
+                handleEntranceExitEditFormSubmit={this.props.handleEntranceExitEditFormSubmit}
+                handleOnStageCreateFormSubmit={this.props.handleOnStageCreateFormSubmit}
+                handleOnStageDeleteClick={this.props.handleOnStageDeleteClick}
+                handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
+                onDeleteClick={this.props.handleFrenchSceneDeleteClick}
+                play={this.props.play}
+                production={this.props.production}
+                sceneId={scene.id}
+                sceneNumber={scene.number}
+              />
+            </Tab>
+
         )
       } else {
         frenchSceneTabs = <div>Nothing to show here</div>

@@ -21,7 +21,6 @@ import {
 import {
   calculateLineCount,
   calculateRunTime,
-  getLinesFromCharacters
 } from '../../utils/playScriptUtils'
 
 import ActorsList from './Actors/ActorsList'
@@ -33,8 +32,10 @@ import {ProductionAuthContext} from '../Contexts'
 
 export default function ProductionShow (props) {
     let { url } = useRouteMatch();
-    let linesTotal = calculateLineCount(getLinesFromCharacters(props.production.play.characters))
-    let runTime = parseFloat(linesTotal / props.production.lines_per_minute).toFixed(2)
+    let linesTotal = props.production.play.new_line_count || props.production.play.old_line_count || ""
+    if (linesTotal > 0) {
+      runTime = linesTotal/this.props.production.lines_per_minute
+    }
     return (
       <Col md={12}>
       <Row>
@@ -97,7 +98,7 @@ export default function ProductionShow (props) {
             <span></span>
           }
           {
-            props.production.lines_per_minute && linesTotal > 0 ?
+            runTime ?
             <p>Run time: {runTime} minutes</p>
             :
             <span></span>

@@ -21,6 +21,10 @@ async function getProduction(productionId) {
   return API.request(`productions/${productionId}`)
 }
 
+async function getProductionWithPlayText(productionId) {
+  return API.request(`productions/play_text/${productionId}`)
+}
+
 async function getProductionNames() {
   return API.request(`productions/production_names`)
 }

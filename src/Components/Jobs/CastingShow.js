@@ -88,7 +88,7 @@ class CastingShow extends Component {
   }
 
   render() {
-    let lineCount = calculateLineCount(this.props.casting.character.lines)
+    let lineCount = this.props.casting.character.new_line_count || this.props.casting.character.original_line_count || ""
     return (
       <div>
       {
