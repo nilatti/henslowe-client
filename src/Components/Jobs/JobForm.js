@@ -318,7 +318,7 @@ class JobForm extends Component {
       label: this.buildUserName(user)
     }))
 
-    console.log({users, theaters, productions, specializaitions})
+    console.log({users, theaters, productions, specializations})
     return (
 
       <Col md = {{span: 8, offset: 2}}>
