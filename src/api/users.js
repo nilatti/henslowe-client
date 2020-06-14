@@ -3,7 +3,7 @@ import axios from 'axios';
 
 async function createUser(user) {
   return (API.post(
-    'sign_up', {
+    'user_registration', {
       user
     }
   ))
