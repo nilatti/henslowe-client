@@ -81,6 +81,8 @@ class JobForm extends Component {
       specializationSet = true
     }
 
+    console.log('props', this.props)
+
     this.state = {
       end_date: end_date || '',
       productions: [],
@@ -99,6 +101,7 @@ class JobForm extends Component {
       userSet: false,
       validated: false,
     }
+    console.log('state', this.state)
   }
 
   buildUserName = (user) => {
@@ -108,6 +111,7 @@ class JobForm extends Component {
   }
 
   componentDidMount = () => {
+    console.log('mounted')
     if (this.props.theater) {
       this.loadProductionsForTheaterFromServer(this.props.theater.id)
     } else {
@@ -313,6 +317,8 @@ class JobForm extends Component {
       id: user.id,
       label: this.buildUserName(user)
     }))
+
+    console.log({users, theaters, productions, specializaitions})
     return (
 
       <Col md = {{span: 8, offset: 2}}>
