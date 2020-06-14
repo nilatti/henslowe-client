@@ -63,7 +63,7 @@ class TheaterForm extends Component {
   processSubmit = () => {
     this.props.onFormSubmit({
       city: this.state.city,
-      id: this.props.theater.id,
+      id: this.props.theater ? this.props.theater.id : '',
       mission_statement: this.state.mission_statement,
       name: this.state.name,
       phone_number: this.state.phone_number,
