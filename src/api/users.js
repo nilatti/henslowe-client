@@ -2,8 +2,8 @@ import API from './api'
 import axios from 'axios';
 
 async function createUser(user) {
-  return (API.get(
-    'registration', {
+  return (API.post(
+    'users', {
       user
     }
   ))
