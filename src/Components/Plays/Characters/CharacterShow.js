@@ -48,6 +48,7 @@ class CharacterShow extends Component {
     lines = lines.map((line) =>
       <CharacterLine
         character={this.props.character}
+        key={line.id}
         line={line}
         showCut={this.state.showCut}
       />

@@ -27,6 +27,37 @@ function calculateChange(a, b){
   return a/b
 }
 
+function filterEmptyActs (play) {
+  return _.filter(play.acts, function(act) {
+    if (act.original_line_count > 0 && act.new_line_count > 0) {
+      return act
+    } else if (!act.original_line_count) {
+      return act
+    }
+  })
+}
+
+function filterEmptyFrenchScenes (scene) {
+  return _.filter(scene.french_scenes, function(frenchScene) {
+    if (frenchScene.original_line_count > 0 && frenchScene.new_line_count > 0) {
+      return frenchScene
+    } else if (!frenchScene.original_line_count) {
+      return frenchScene
+    }
+  })
+}
+
+function filterEmptyScenes (act) {
+  return _.filter(act.scenes, function(scene) {
+    if (scene.original_line_count > 0 && scene.new_line_count > 0) {
+      return scene
+    } else if (!scene.original_line_count) {
+      return scene
+    }
+  })
+}
+
+
 function getFrenchScenesFromAct(act) {
   let frenchScenes = []
   act.scenes.map((scene) => {
@@ -159,6 +190,9 @@ export {
   calculateChange,
   calculateLineCount,
   calculateRunTime,
+  filterEmptyActs,
+  filterEmptyFrenchScenes,
+  filterEmptyScenes,
   getFrenchScenesFromAct,
   getFrenchScenesFromPlay,
   getLinesFromCharacters,

@@ -11,6 +11,7 @@ import {
 
 import SceneFormToggle from './Scenes/SceneFormToggle'
 import SceneInfoTab from './Scenes/SceneInfoTab'
+import {filterEmptyScenes} from '../../../utils/playScriptUtils'
 
 class ActShow extends Component {
   constructor(props, context) {
@@ -34,7 +35,7 @@ class ActShow extends Component {
   render() {
     let sceneTabs
     if (this.props.act.scenes[0]) {
-      sceneTabs = this.props.act.scenes.map((scene) =>
+      sceneTabs = filterEmptyScenes(this.props.act).map((scene) =>
         <Tab eventKey={`scene-${scene.id}`} title={`Scene ${scene.number}`} key={`scene-${scene.id}`}>
           <SceneInfoTab
             actId={this.props.act.id}

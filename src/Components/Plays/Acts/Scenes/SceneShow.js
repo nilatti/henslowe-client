@@ -13,6 +13,8 @@ import {
 import FrenchSceneFormToggle from './FrenchScenes/FrenchSceneFormToggle'
 import FrenchSceneInfoTab from './FrenchScenes/FrenchSceneInfoTab'
 
+import {filterEmptyFrenchScenes} from '../../../../utils/playScriptUtils'
+
 class SceneShow extends Component {
   constructor(props, context) {
     super(props, context);
@@ -20,16 +22,6 @@ class SceneShow extends Component {
     this.state = {
       key: ''
     };
-  }
-
-  filterEmptyFrenchScenes (scene) {
-    scene.french_scenes.filter(frenchScene => {
-      if (frenchScene.original_line_count > 0 && frenchScene.new_line_count > 0) {
-        return frenchScene
-      } else if (frenchScene.original_line_count == 0) {
-        return frenchScene
-      }
-    })
   }
 
   handleDeleteClick = () => {
@@ -51,7 +43,7 @@ class SceneShow extends Component {
     let scene = _.find(act.scenes, {'id': this.props.sceneId})
     let frenchSceneTabs
     if (scene.french_scenes[0] ) {
-      frenchSceneTabs = scene.french_scenes.map((frenchScene) =>
+      frenchSceneTabs = filterEmptyFrenchScenes(scene).map((frenchScene) =>
             <Tab eventKey={`french_scene-${frenchScene.id}`} title={`${frenchScene.number}`} key={`french_scene-${frenchScene.id}`}>
               <FrenchSceneInfoTab
                 actId={act.id}
