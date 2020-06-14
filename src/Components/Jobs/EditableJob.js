@@ -63,7 +63,6 @@ class EditableJob extends Component {
   }
 
   async updateJobOnServer(job) {
-    console.log('update called', job)
     const response = await updateServerJob(job)
     if (response.status >= 400) {
       this.setState({

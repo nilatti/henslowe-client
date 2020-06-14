@@ -79,7 +79,6 @@ class CastList extends Component {
 async loadActorsAndAuditionersFromServer(){
     const response = await getActorsAndAuditionersForProduction(this.props.production.id)
     if (response.status >= 400) {
-      console.log('Error fetching actors and auditioners')
       this.setState({
         errorStatus: 'Error fetching actors and auditioners'
       })
@@ -96,7 +95,6 @@ async loadActorsAndAuditionersFromServer(){
    const response = await getJobs(
      {
        production_id: this.props.production.id,
-       specialization_id: 2,  //I don't like the id that goes with the actor job being hardcoded here, but I'm not sure how to do it otherwise.
      })
 
     if (response.status >= 400) {
@@ -104,7 +102,8 @@ async loadActorsAndAuditionersFromServer(){
         errorStatus: 'Error fetching castings',
       })
     } else {
-      let legalCastings = response.data.filter(obj => obj.character !== undefined)
+      let actingJobs = response.data.filter(obj => obj.specialization.title == 'Actor')
+      let legalCastings = actingJobs.filter(obj => obj.character !== undefined)
       let sortedLegalCastings = _.orderBy(legalCastings.map(obj=> ({ ...obj, editOpen: false })), 'character.name')
       this.setState({
         castings: sortedLegalCastings,

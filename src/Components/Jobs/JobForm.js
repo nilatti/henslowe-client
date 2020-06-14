@@ -40,27 +40,22 @@ class JobForm extends Component {
     let end_date
     let production
     let productionSet = false
-    let specializationId
-    let specializationName
+    let specialization
     let specializationSet = false
     let start_date
     let theater
     let user
     let userName
-
     if (this.props.job) {
       end_date = this.props.job.end_date
       production = this.props.job.production
-      specializationId = this.props.job.specialization ? this.props.job.specialization.id : this.props.specializationId
-      specializationName = this.props.job.specialization ? this.props.job.specialization.name : this.props.specializationName
       start_date = this.props.job.start_date
       theater = this.props.job.theater
       user = this.props.job.user
     }
 
-    if (this.props.specializationId) {
-      specializationId = this.props.specializationId
-      specializationName = this.props.specializationName
+    if (this.props.specialization || this.props.job.specialization) {
+      specialization = this.props.job.specialization || this.props.specialization
     }
 
     if (this.props.production) {
@@ -79,31 +74,24 @@ class JobForm extends Component {
       user = this.props.user
       userName = this.buildUserName(user)
     }
-    if (specializationId) {
+    if (specialization) {
       specializationSet = true
     }
 
-    console.log('props', this.props)
-
     this.state = {
       end_date: end_date || '',
-      // productions: [],
       productionSet: productionSet,
       selectedProduction: production ? [{id: production.id, label: `${production.play.title} at ${theater.name}` }] : [],
-      selectedSpecialization: specializationId ? [{id: specializationId, label: specializationName }] : [],
+      selectedSpecialization: specialization ? [{id: specialization.id, label: `${specialization.title}` }] : [],
       selectedTheater: theater ? [{id: theater.id, label: theater.name }] : [],
       selectedUser: user ? [{id: user.id, label: userName}] : [],
       showNewUserModal: false,
-      // specializations: [],
       specializationSet: specializationSet,
       start_date: start_date || '',
-      // theaters: [],
       theaterSet: false,
-      // users: [],
       userSet: false,
       validated: false,
     }
-    console.log('state', this.state)
   }
 
   buildUserName = (user) => {
@@ -113,7 +101,6 @@ class JobForm extends Component {
   }
 
   componentDidMount = () => {
-    console.log('mounted')
     if (this.props.theater) {
       this.loadProductionsForTheaterFromServer(this.props.theater.id)
     } else {
@@ -320,7 +307,6 @@ class JobForm extends Component {
       label: this.buildUserName(user)
     }))
 
-    console.log({users, theaters, productions, specializations})
     return (
 
       <Col md = {{span: 8, offset: 2}}>
@@ -383,6 +369,7 @@ class JobForm extends Component {
             The dates will also update but can be edited to match the duration of the actual job.
         </Form.Text>
         <Typeahead
+          disabled={this.state.productionSet === true ? true : false}
           id="production"
           options={productions}
           onChange={(selected) => {
@@ -412,6 +399,7 @@ class JobForm extends Component {
           Start Date
         </Form.Label>
         <Form.Control
+            disabled={this.state.productionSet === true ? true : false}
             name="start_date"
             onChange={this.handleChange}
             placeholder=""
@@ -424,7 +412,8 @@ class JobForm extends Component {
           End Date
         </Form.Label>
         <Form.Control
-          min={this.state.start_date}
+            disabled={this.state.productionSet === true ? true : false}
+            min={this.state.start_date}
             name="end_date"
             onChange={this.handleChange}
             placeholder=""

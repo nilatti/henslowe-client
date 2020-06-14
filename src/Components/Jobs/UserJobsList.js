@@ -90,7 +90,6 @@ class UserJobsList extends Component {
 
   render() {
     let test = this.groupByTheater(this.state.jobs)
-    console.log(test)
     let jobs = this.state.jobs.map(job =>
       <li key={job.id}>
           {job.specialization.title} at {job.theater.name} <em>{job.production ? job.production.play.title : <></>}</em>

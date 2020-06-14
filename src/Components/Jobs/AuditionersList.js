@@ -11,10 +11,35 @@ import {
   buildUserName
 } from '../../utils/actorUtils'
 
+import {
+  getSpecializations
+} from '../../api/specializations'
+
 class AuditionersList extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
+  componentDidMount = () => {
+    this.loadSpecializationsFromServer()
+  }
   getAuditioners() {
     let auditioners = this.props.production.jobs.filter(job => job.specialization.title === 'Auditioner')
     return _.sortBy(auditioners, [function(o) { return o.user.first_name; }])
+  }
+
+  async loadSpecializationsFromServer() {
+    const response = await getSpecializations()
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: 'Error fetching specializations'
+      })
+    } else {
+      this.setState({
+        auditionerSpecialization: response.data.filter(specialization => specialization.title == 'Auditioner')[0]
+      })
+    }
   }
   render() {
     let productionSet = this.props.production !== undefined ? true : false
@@ -23,6 +48,7 @@ class AuditionersList extends Component {
         {job.user ? buildUserName(job.user) : ''}
       </li>
     )
+
     return (
       <div>
         <ul>
@@ -33,10 +59,8 @@ class AuditionersList extends Component {
             pathname: '/jobs/new',
             state: {
               production: this.props.production,
-              productionSet: productionSet,
               theater: this.props.theater,
-              specializationId: 4,
-              specializationName: 'Auditioner', //tk get rid of this hard coding, it is ugly
+              specialization: this.state.auditionerSpecialization,
             }
           }}
         >
