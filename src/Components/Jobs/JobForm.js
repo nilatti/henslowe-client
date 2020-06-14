@@ -39,6 +39,7 @@ class JobForm extends Component {
     super(props)
     let end_date
     let production
+    let productionSet = false
     let specializationId
     let specializationName
     let specializationSet = false
@@ -67,6 +68,7 @@ class JobForm extends Component {
       production = this.props.production
       start_date = this.props.production.start_date
       theater = this.props.production.theater
+      productionSet = true
     }
 
     if (this.props.theater) {
@@ -86,7 +88,7 @@ class JobForm extends Component {
     this.state = {
       end_date: end_date || '',
       productions: [],
-      productionSet: this.props.productionSet,
+      productionSet: productionSet,
       selectedProduction: production ? [{id: production.id, label: `${production.play.title} at ${theater.name}` }] : [],
       selectedSpecialization: specializationId ? [{id: specializationId, label: specializationName }] : [],
       selectedTheater: theater ? [{id: theater.id, label: theater.name }] : [],
