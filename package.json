@@ -2,6 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://henslowescloud.com/",
   "dependencies": {
     "@attently/riek": "^2.0.1",
     "@testing-library/jest-dom": "^5.5.0",
