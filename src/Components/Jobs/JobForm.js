@@ -87,19 +87,19 @@ class JobForm extends Component {
 
     this.state = {
       end_date: end_date || '',
-      productions: [],
+      // productions: [],
       productionSet: productionSet,
       selectedProduction: production ? [{id: production.id, label: `${production.play.title} at ${theater.name}` }] : [],
       selectedSpecialization: specializationId ? [{id: specializationId, label: specializationName }] : [],
       selectedTheater: theater ? [{id: theater.id, label: theater.name }] : [],
       selectedUser: user ? [{id: user.id, label: userName}] : [],
       showNewUserModal: false,
-      specializations: [],
+      // specializations: [],
       specializationSet: specializationSet,
       start_date: start_date || '',
-      theaters: [],
+      // theaters: [],
       theaterSet: false,
-      users: [],
+      // users: [],
       userSet: false,
       validated: false,
     }
