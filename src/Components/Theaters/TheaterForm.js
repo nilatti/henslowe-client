@@ -14,16 +14,30 @@ import {TheaterAuthContext} from '../Contexts'
 class TheaterForm extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      city: this.props.theater.city || '',
-      mission_statement: this.props.theater.mission_statement || '',
-      name: this.props.theater.name || '',
-      phone_number: this.props.theater.phone_number || '',
-      state: this.props.theater.state || '',
-      street_address: this.props.theater.street_address || '',
-      validated: false,
-      website: this.props.theater.website || '',
-      zip: this.props.theater.zip || '',
+    if (this.props.theater) {
+      this.state = {
+        city: this.props.theater.city || '',
+        mission_statement: this.props.theater.mission_statement || '',
+        name: this.props.theater.name || '',
+        phone_number: this.props.theater.phone_number || '',
+        state: this.props.theater.state || '',
+        street_address: this.props.theater.street_address || '',
+        validated: false,
+        website: this.props.theater.website || '',
+        zip: this.props.theater.zip || '',
+      }
+    } else {
+        this.state = {
+          city: '',
+        mission_statement: '',
+        name: '',
+        phone_number: '',
+        state: '',
+        street_address: '',
+        validated: false,
+        website: '',
+        zip: '',
+      }
     }
   }
 
