@@ -1,13 +1,9 @@
 import API from './api'
 import axios from 'axios';
 
-// let API = axios.create({
-//   baseURL: 'https://henslowescloud.com:3001/'
-// })
-
 async function createUser(user) {
   return (API.post(
-    'users', {
+    'sign_up', {
       user
     }
   ))
