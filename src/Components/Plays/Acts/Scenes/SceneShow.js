@@ -22,6 +22,16 @@ class SceneShow extends Component {
     };
   }
 
+  filterEmptyFrenchScenes (scene) {
+    scene.french_scenes.filter(frenchScene => {
+      if (frenchScene.original_line_count > 0 && frenchScene.new_line_count > 0) {
+        return frenchScene
+      } else if (frenchScene.original_line_count == 0) {
+        return frenchScene
+      }
+    })
+  }
+
   handleDeleteClick = () => {
     this.props.onDeleteClick(this.props.actId, this.props.scene.id)
   }
