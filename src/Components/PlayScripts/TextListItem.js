@@ -63,7 +63,10 @@ class TextListItem extends Component {
       let lines = this.orderText()
 
       let lineItems = lines.map((line) =>
-        <LineShow key={line.order_number} line={line} />
+        <LineShow
+          key={line.order_number}
+          line={line}
+        />
       )
       return(
         <div>

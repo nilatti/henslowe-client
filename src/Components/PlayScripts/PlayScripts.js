@@ -34,7 +34,7 @@ class PlayScripts extends Component {
   state={
     activeItem: {},
     play: [],
-    showCut: false,
+    showCut: true,
     text: {},
   }
 

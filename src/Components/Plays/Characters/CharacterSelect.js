@@ -15,13 +15,14 @@ import {
 class CharacterSelect extends Component {
 
   render() {
+    console.log('props', this.props)
     return(
       <Form.Group>
         <Form.Label>
           Character
         </Form.Label>
         <Typeahead
-          labelKey="label"
+          labelKey="name"
           id="character"
           required
           options={this.props.characters}

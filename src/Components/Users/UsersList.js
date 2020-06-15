@@ -9,6 +9,8 @@ import {
   getUsers
 } from '../../api/users'
 
+import {buildUserName} from '../../utils/actorUtils'
+
 class UsersList extends Component {
   state = {
     users: [],
@@ -33,7 +35,7 @@ class UsersList extends Component {
 
   render() {
     let users = this.state.users.map(user =>
-      <li key={user.id}> <Link to={`/users/${user.id}`}>{user.preferred_name || user.first_name || user.email} {user.last_name}</Link></li>
+      <li key={user.id}> <Link to={`/users/${user.id}`}>{buildUserName(user)}</Link></li>
     )
     return (
       <div>

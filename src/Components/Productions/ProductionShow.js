@@ -132,6 +132,7 @@ export default function ProductionShow (props) {
             <>
             <Row>
               <h2>Auditioners</h2>
+              <div><b>You have to add auditioners before you can cast the show</b></div>
               <AuditionersList production={props.production} />
             </Row>
             <hr/>
