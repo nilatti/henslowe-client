@@ -7,10 +7,8 @@ function calculateLineCount(lines) { //array of lines
     let syllablesPerLine
     let defaultSyllables = 10
     let count = 0
-    if (line.new_content && line.new_content.match(/[a-zA-Z]+/)) {
+    if (line.new_content && line.new_content.length > 0) {
       syllablesPerLine = Syllable(line.new_content)
-    } else if (line.new_content && line.new_content.match(/^\s$/)) {
-      syllablesPerLine = 0
     } else {
       syllablesPerLine = Syllable(line.original_content)
     }
