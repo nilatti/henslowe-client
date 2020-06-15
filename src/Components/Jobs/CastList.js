@@ -178,7 +178,7 @@ async loadActorsAndAuditionersFromServer(){
       </li>
     )
     return (
-      <div>
+      <Col>
         <h2>Casting</h2>
         <ProductionAuthContext.Consumer>
           {(value) => {
@@ -222,7 +222,7 @@ async loadActorsAndAuditionersFromServer(){
         </ul>
         </Col>
         </Row>
-      </div>
+      </Col>
     )
   }
 }

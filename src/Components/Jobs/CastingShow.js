@@ -89,6 +89,7 @@ class CastingShow extends Component {
 
   render() {
     let lineCount = this.props.casting.character.new_line_count || this.props.casting.character.original_line_count || ""
+    let selectedUser = this.state.selectedUser
     return (
       <div>
       {
@@ -116,22 +117,10 @@ class CastingShow extends Component {
         </Form>
         :
         <div>
-        <ProductionAuthContext.Consumer>
-          {value => {if (value==='admin') {
-            return(<span
-              onClick={() => this.handleEditClick()}
-            >
-              {this.props.casting.character.name}
-            </span>)
-          } else {
-            return (
-              <span>
-                {this.props.casting.character.name}
-              </span>
-            )
-          }
-        }}
-        </ ProductionAuthContext.Consumer>
+
+        <span>
+          {this.props.casting.character.name}
+        </span>
 
         {lineCount > 0
           ?
@@ -139,18 +128,49 @@ class CastingShow extends Component {
           :
           <span></span>
         }
-        : {this.state.selectedUser.length > 0 ? this.state.selectedUser[0].label : <strong>Needs to be cast</strong>}
         <ProductionAuthContext.Consumer>
           {value => { if (value === 'admin') {
             return (
+              <span>
+              {
+                selectedUser.length > 0
+                ?
+                <span onClick={() => this.handleEditClick()}>
+                  {selectedUser[0].label}
+                </span>
+                :
+                <span onClick={() => this.handleEditClick()}>
+                <strong>Needs to be cast</strong>
+              </span>
+            }
 
             <span className='right floated trash icon'
             onClick={() => this.props.onDeleteClick(this.props.casting.id)}
             >
             <i className="fas fa-trash-alt"></i>
             </span>
+          </span>
           )
-          }}}
+        } else {
+          return (
+            <span>
+            {
+              selectedUser.length > 0
+              ?
+              <span>{selectedUser[0].name}</span>
+              :
+              <strong>Needs to be cast</strong>
+          }
+
+          <span className='right floated trash icon'
+          onClick={() => this.props.onDeleteClick(this.props.casting.id)}
+          >
+          <i className="fas fa-trash-alt"></i>
+          </span>
+        </span>
+          )
+        }
+        }}
         </ProductionAuthContext.Consumer>
 
         </div>

@@ -35,7 +35,7 @@ export default function ProductionShow (props) {
     let linesTotal = props.production.play.new_line_count || props.production.play.old_line_count || ""
     let runTime = 0;
     if (linesTotal > 0 && props.production.lines_per_minute) {
-      runTime = linesTotal/ props.production.lines_per_minute
+      runTime = (linesTotal/ props.production.lines_per_minute).toFixed(2)
     }
     return (
       <Col md={12}>
