@@ -46,7 +46,7 @@ class PlayShow extends Component {
     let actTabs
     let characterTabs
     if (this.props.play.acts) {
-      actTabs = (this.props.play).map((act) =>
+      actTabs = (this.props.play.acts).map((act) =>
         <Tab
           eventKey={`act-${act.id}`}
           key={`act-${act.id}`}
