@@ -19,7 +19,7 @@ import ActInfoTab from './Acts/ActInfoTab'
 import CharacterFormToggle from './Characters/CharacterFormToggle'
 import CharacterInfoTab from './Characters/CharacterInfoTab'
 
-import {filterEmptyActs} from '../../utils/playScriptUtils'
+import {filterEmptyContent} from '../../utils/playScriptUtils'
 
 class PlayShow extends Component {
 
@@ -46,7 +46,7 @@ class PlayShow extends Component {
     let actTabs
     let characterTabs
     if (this.props.play.acts) {
-      actTabs = filterEmptyActs(this.props.play).map((act) =>
+      actTabs = (this.props.play).map((act) =>
         <Tab
           eventKey={`act-${act.id}`}
           key={`act-${act.id}`}

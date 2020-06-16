@@ -13,7 +13,7 @@ import {
 import FrenchSceneFormToggle from './FrenchScenes/FrenchSceneFormToggle'
 import FrenchSceneInfoTab from './FrenchScenes/FrenchSceneInfoTab'
 
-import {filterEmptyFrenchScenes} from '../../../../utils/playScriptUtils'
+import {filterEmptyContent} from '../../../../utils/playScriptUtils'
 
 class SceneShow extends Component {
   constructor(props, context) {
@@ -43,7 +43,7 @@ class SceneShow extends Component {
     let scene = _.find(act.scenes, {'id': this.props.sceneId})
     let frenchSceneTabs
     if (scene.french_scenes[0] ) {
-      frenchSceneTabs = filterEmptyFrenchScenes(scene).map((frenchScene) =>
+      frenchSceneTabs = filterEmptyContent(scene.french_scenes).map((frenchScene) =>
             <Tab eventKey={`french_scene-${frenchScene.id}`} title={`${frenchScene.number}`} key={`french_scene-${frenchScene.id}`}>
               <FrenchSceneInfoTab
                 actId={act.id}

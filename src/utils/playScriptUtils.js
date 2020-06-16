@@ -25,28 +25,30 @@ function calculateChange(a, b){
   return a/b
 }
 
-function filterEmptyActs (play) {
-  return _.filter(play.acts, function(act) {
+function filterEmptyActs (acts) {
+  return _.filter(acts, function(act) {
     if (act.original_line_count > 0 && act.new_line_count > 0) {
+      console.log('act is not empty', act.id)
       return act
     } else if (!act.original_line_count) {
+      console.log('act is not empty', act.id)
       return act
     }
   })
 }
 
-function filterEmptyFrenchScenes (scene) {
-  return _.filter(scene.french_scenes, function(frenchScene) {
-    if (frenchScene.original_line_count > 0 && frenchScene.new_line_count > 0) {
-      return frenchScene
-    } else if (!frenchScene.original_line_count) {
-      return frenchScene
+function filterEmptyContent (content) { //receives array of content items, could be acts, scenes, french scenes
+  return _.filter(content, function(contentItem) {
+    if (contentItem.original_line_count > 0 && contentItem.new_line_count > 0) {
+      return contentItem
+    } else if (!contentItem.original_line_count) {
+      return contentItem
     }
   })
 }
 
-function filterEmptyScenes (act) {
-  return _.filter(act.scenes, function(scene) {
+function filterEmptyScenes (scenes) {
+  return _.filter(scenes, function(scene) {
     if (scene.original_line_count > 0 && scene.new_line_count > 0) {
       return scene
     } else if (!scene.original_line_count) {
@@ -188,9 +190,7 @@ export {
   calculateChange,
   calculateLineCount,
   calculateRunTime,
-  filterEmptyActs,
-  filterEmptyFrenchScenes,
-  filterEmptyScenes,
+  filterEmptyContent,
   getFrenchScenesFromAct,
   getFrenchScenesFromPlay,
   getLinesFromCharacters,

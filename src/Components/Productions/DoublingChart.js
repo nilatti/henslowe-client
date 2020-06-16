@@ -22,6 +22,10 @@ import {
   buildUserName
 } from '../../utils/actorUtils'
 
+import {
+  filterEmptyContent,
+} from '../../utils/playScriptUtils'
+
 class DoublingChart extends Component {
   state={}
 
@@ -34,20 +38,22 @@ class DoublingChart extends Component {
   getOnStages() {
     let onStages = []
     if (this.props.level == 'act') {
-      this.props.production.play.acts.map((act) => {
+      filterEmptyContent(this.props.production.play.acts)
+      .map((act) => {
         onStages.push(getOnStagesFromAct(act))
       })
     } else if (this.props.level == 'scene') {
-      this.props.production.play.acts.map((act) =>
+      filterEmptyContent(this.props.production.play.acts)
+      .map((act) =>
       {
-        act.scenes.map((scene) => {
+        filterEmptyContent(act.scenes).map((scene) => {
           onStages.push(getOnStagesFromScene(scene))
         })
       })
     } else if (this.props.level == 'french_scene') {
-      this.props.production.play.acts.map((act) => {
-        act.scenes.map((scene) => {
-          scene.french_scenes.map((frenchScene) => {
+      filterEmptyContent(this.props.production.play.acts).map((act) => {
+        filterEmptyContent(act.scenes).map((scene) => {
+          filterEmptyContent(scene.french_scenes).map((frenchScene) => {
             onStages.push(frenchScene.on_stages)
           })
         })
@@ -57,17 +63,22 @@ class DoublingChart extends Component {
   }
 
   getJobsForActor(actor) {
-    return _.filter(this.props.production.jobs, {'user_id': actor.id, 'specialization_id': 2}) //again, don't like the hard coding here where actor = 2
+    return _.filter(this.props.production.jobs, function(job) {
+      return job.user_id === actor.id && job.specialization.title === 'Actor'
+    })
   }
 
   generateColumns() {
     let headings = []
     if (this.props.level == 'act') {
-      this.props.production.play.acts.map((act) => headings.push(`Act ${act.number}`))
+      filterEmptyContent(this.props.production.play.acts)
+      .map((act) => headings.push(`Act ${act.number}`))
     } else if (this.props.level == 'scene') {
-      getScenesFromPlay(this.props.production.play).map((scene) => headings.push(scene.pretty_name))
+      filterEmptyContent(getScenesFromPlay(this.props.production.play))
+      .map((scene) => headings.push(scene.pretty_name))
     } else if (this.props.level == 'french_scene') {
-      getFrenchScenesFromPlay(this.props.production.play).map((frenchScene) => headings.push(frenchScene.pretty_name))
+      filterEmptyContent(getFrenchScenesFromPlay(this.props.production.play))
+      .map((frenchScene) => headings.push(frenchScene.pretty_name))
     }
     return headings.map((heading) => <td key={uuid()}>{heading}</td>)
   }
