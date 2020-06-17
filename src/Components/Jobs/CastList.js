@@ -122,7 +122,6 @@ async loadActorsAndAuditionersFromServer(){
           let actorGroup = grouped[actorId]
           let characters = actorGroup.map((item) => item.character)
           let actorLineCount = characters.reduce((a, b) => a + b.new_line_count, 0)
-          })
           let characterNames = characters.map((character) => character.name)
           return <li key={actorId}>{actorName} ({actorLineCount}): {_.join(characterNames, ', ')}</li>
         }
