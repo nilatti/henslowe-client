@@ -69,8 +69,7 @@ class UserJobsList extends Component {
             return <li key={productionId}>{groupedByProduction[productionId][0].production.play.title}:{productionJobTitles.join(', ')}</li>
           }
         })
-        if (nonProductionJobTitles) {
-
+        if (nonProductionJobs.length > 0) {
           productionsForTheater.unshift(nonProductionJobTitles)
         }
         let theaterName = theaterGroup[0].theater.name
