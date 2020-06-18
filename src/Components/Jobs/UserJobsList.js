@@ -50,10 +50,12 @@ class UserJobsList extends Component {
       if (theaterId !== null) {
         let theaterGroup = grouped[theaterId]
         let groupedByProduction = _.groupBy(theaterGroup, 'production_id')
+        let nonProductionJobs = groupedByProduction['null']
+        let nonProductionJobTitles = nonProductionJobs.map((job) => job.specialization.title)
+        let nonProductionJobsForTheater = <li key={theaterId}>{nonProductionJobs.join(', ')}</li>
         let productionIds = _.compact(Object.keys(groupedByProduction))
         let productionsForTheater = productionIds.map((productionId) => {
-          if (productionId !== null) {
-            let productionJobsString = `${groupedByProduction[productionId][0].production.play.title}: `
+          if (productionId >= 1) {
             let productionJobTitles = groupedByProduction[productionId].map((productionJob) => {
               if (productionJob.specialization.title === 'Actor' && productionJob.character) {
                 return productionJob.character.name
@@ -61,10 +63,10 @@ class UserJobsList extends Component {
                 return productionJob.specialization.title
               }
             })
-            productionJobsString += _.join(productionJobTitles, ', ')
-            return <li key={productionId}>{productionJobsString}</li>
+            return <li key={productionId}>{groupedByProduction[productionId][0].production.play.title}:{productionJobTitles.join(', ')}</li>
           }
         })
+        productionsForTheater.unshift(nonProductionJobTitles)
         let theaterName = theaterGroup[0].theater.name
         return <li key={theaterId}>{theaterName}: <ul>{productionsForTheater}</ul>
           </li>
