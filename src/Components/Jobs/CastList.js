@@ -123,7 +123,7 @@ async loadActorsAndAuditionersFromServer(){
           let characters = actorGroup.map((item) => item.character)
           let actorLineCount = characters.reduce((a, b) => a + b.new_line_count, 0)
           let characterNames = characters.map((character) => character.name)
-          return <li key={actorId}>{actorName} ({actorLineCount}): {_.join(characterNames, ', ')}</li>
+          return <li key={actorId}><Link to={`/users/${user.id}`}>{actorName}</Link> ({actorLineCount}): {_.join(characterNames, ', ')}</li>
         }
       }
     })
@@ -198,6 +198,11 @@ async loadActorsAndAuditionersFromServer(){
         <Row>
         <Col md={6}>
         <h2>Casting by Character</h2>
+        if (value === 'admin') {
+          <div>
+            Click on an actor's name to re-cast.
+          </div>
+        }
         <ul>
           {castings}
         </ul>
