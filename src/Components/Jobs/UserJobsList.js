@@ -51,8 +51,11 @@ class UserJobsList extends Component {
         let theaterGroup = grouped[theaterId]
         let groupedByProduction = _.groupBy(theaterGroup, 'production_id')
         let nonProductionJobs = groupedByProduction['null']
-        let nonProductionJobTitles = nonProductionJobs.map((job) => job.specialization.title)
-        let nonProductionJobsForTheater = <li key={theaterId}>{nonProductionJobs.join(', ')}</li>
+        if (nonProductionJobs.length > 0) {
+
+          let nonProductionJobTitles = nonProductionJobs.map((job) => job.specialization.title)
+          let nonProductionJobsForTheater = <li key={theaterId}>{nonProductionJobs.join(', ')}</li>
+        }
         let productionIds = _.compact(Object.keys(groupedByProduction))
         let productionsForTheater = productionIds.map((productionId) => {
           if (productionId >= 1) {
@@ -66,7 +69,10 @@ class UserJobsList extends Component {
             return <li key={productionId}>{groupedByProduction[productionId][0].production.play.title}:{productionJobTitles.join(', ')}</li>
           }
         })
-        productionsForTheater.unshift(nonProductionJobTitles)
+        if (nonProductionJobTitles) {
+
+          productionsForTheater.unshift(nonProductionJobTitles)
+        }
         let theaterName = theaterGroup[0].theater.name
         return <li key={theaterId}>{theaterName}: <ul>{productionsForTheater}</ul>
           </li>
