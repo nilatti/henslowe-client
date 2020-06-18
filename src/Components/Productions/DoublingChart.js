@@ -92,11 +92,18 @@ class DoublingChart extends Component {
       let doublingProblem = ''
       block.map((onStage) => {
         if (_.includes(actorCharacterIds, onStage.character_id)){
-          blockCharacters.push(onStage.character)
+          blockCharacters.push(onStage)
         }
       })
-      let uniqBlockCharacters = _.uniqBy(blockCharacters, 'id')
-      let blockCharactersNames = _.map(uniqBlockCharacters, 'name')
+      let uniqBlockCharacters = _.uniqBy(blockCharacters, function(onStage) {return onStage.character.id})
+      let blockCharactersNames = _.map(uniqBlockCharacters, function(onStage) {
+        if (onStage.nonspeaking) {
+
+          return "(" + onStage.character.name + ")"
+        } else {
+          return onStage.character.name
+        }
+      })
       if (uniqBlockCharacters.length > 1) {
         doublingProblem = 'doubling-problem'
       }

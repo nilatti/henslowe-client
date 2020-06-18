@@ -107,6 +107,9 @@ ul {
   transform: translate(-50%,-50%);
 }
 
+.nonspeaking-onstage {
+  background-color: red;
+}
 .rie-select {
   display: inline-block;
   width: 30px;

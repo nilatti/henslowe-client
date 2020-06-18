@@ -28,7 +28,7 @@ class UsersList extends Component {
       })
     } else {
       this.setState({
-        users: response.data
+        users: response.data.filter(user => !user.fake)
       })
     }
   }

@@ -124,9 +124,9 @@ class CastingShow extends Component {
 
         {lineCount > 0
           ?
-          <em> ({lineCount})</em>
+          <em> ({lineCount}) </em>
           :
-          <span></span>
+          <span> </span>
         }
         <ProductionAuthContext.Consumer>
           {value => { if (value === 'admin') {
