@@ -5,7 +5,7 @@ const THEATER_ADMIN = ['Executive Director', 'Artistic Director', 'Technical Dir
 const PRODUCTION_ADMIN = ['Director', 'Stage Manager']
 // const PRODUCTION_MEMBER = ['Actor']
 
-const SUPERUSERS = ['alisha.huber@gmail.com', 'kate@test.com']
+const SUPERUSERS = ['alisha.huber@gmail.com', 'katherine@test.com']
 
 export function getUserRoleForTheater(user, theaterId) {
   theaterId = Number(theaterId)
