@@ -49,6 +49,7 @@ class ActShow extends Component {
             handleOnStageDeleteClick={this.props.handleOnStageDeleteClick}
             handleOnStageEditFormSubmit={this.props.handleOnStageEditFormSubmit}
             handleSceneEditFormSubmit={this.props.handleSceneEditFormSubmit}
+            scene={scene}
             sceneId={scene.id}
             onDeleteClick={this.props.handleSceneDeleteClick}
             play={this.props.play}

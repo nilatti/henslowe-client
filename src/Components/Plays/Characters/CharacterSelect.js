@@ -13,8 +13,12 @@ import {
 } from 'react-bootstrap-typeahead';
 
 class CharacterSelect extends Component {
-
   render() {
+    if (!this.props.characters){
+      return(
+        <div>Loading characters!</div>
+      )
+    }
     console.log('props', this.props)
     return(
       <Form.Group>
@@ -22,7 +26,7 @@ class CharacterSelect extends Component {
           Character
         </Form.Label>
         <Typeahead
-          labelKey="name"
+          labelKey="label"
           id="character"
           required
           options={this.props.characters}

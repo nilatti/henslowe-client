@@ -78,6 +78,7 @@ SceneInfoTab.propTypes = {
   handleOnStageEditFormSubmit: PropTypes.func.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   play: PropTypes.object.isRequired,
+  scene: PropTypes.object.isRequired,
   sceneId: PropTypes.number.isRequired,
 }
 
