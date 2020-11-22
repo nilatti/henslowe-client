@@ -133,17 +133,18 @@ class PlayScripts extends Component {
   }
 
   updateTextInState (type, lineArray){
+    console.log('update text called', type)
     let oldLines = this.state.text[type]
     let newLines = oldLines.map(obj => {
       let newLine = lineArray.find(p => p.id === obj.id)
       return newLine || obj
     })
-    this.setState(state => ({
+    this.setState({
       text: {
         ...this.state.text,
         [type]: newLines
       }
-    }))
+    })
   }
 
   unloadText = () => {
@@ -239,7 +240,7 @@ class PlayScripts extends Component {
     delete line.diffed_content
     let response
     let kindOfLine = ''
-    if (line.kind.match(/business|delivery|entrance|exit|mixed|modifier/)) {
+    if (line.kind.match(/business|delivery|entrance|exit|mixed|modifier|location/)) {
       kindOfLine = 'stage_direction'
     } else if (line.kind.match(/flourish|music/)) {
       kindOfLine = 'sound_cue'
