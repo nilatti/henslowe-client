@@ -19,7 +19,6 @@ class LineShow extends Component {
   state={
     characterSelectOpen: false,
     editFormOpen: false,
-    line: this.props.line,
     selectedCharacter: [this.props.line.character],
   }
 
@@ -46,7 +45,7 @@ class LineShow extends Component {
 
   handleCutWholeLine = () => {
     let line = {
-      ...this.state.line,
+      ...this.props.line,
       new_content: ' '
     }
     this.props.handleLineSubmit(line)
@@ -54,7 +53,7 @@ class LineShow extends Component {
 
   handleUnCutWholeLine = () => {
     let line = {
-      ...this.state.line,
+      ...this.props.line,
       new_content: ''
     }
     this.props.handleLineSubmit(line)
@@ -92,8 +91,10 @@ class LineShow extends Component {
 
   render() {
     let line = this.props.line
-    if (line.new_content) {
+    if (line.new_content && line.new_content.length > 0){
       line.diffed_content = this.buildLineContentWithDiffs(Diff.diffWordsWithSpace(line.original_content, line.new_content))
+    } else {
+      delete line.diffed_content
     }
     let lineText
     if (line.diffed_content && this.props.showCut) {
@@ -139,7 +140,7 @@ class LineShow extends Component {
         </Col>
         <Col md={2}>
           {
-            this.state.line.new_content != ' '
+            line.new_content != ' '
             ?
             <Button className="toggle-cut" variant="info" size="sm" onClick={() => this.handleCutWholeLine()}>Cut Whole Line</Button>
             :
@@ -170,7 +171,7 @@ class LineShow extends Component {
         </Col>
         <Col md={2}>
           {
-            this.state.line.new_content != ' '
+            line.new_content != ' '
             ?
             <Button className="toggle-cut" variant="info" size="sm" onClick={() => this.handleCutWholeLine()}>Cut Whole Line</Button>
             :

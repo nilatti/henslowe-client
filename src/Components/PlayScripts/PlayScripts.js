@@ -88,14 +88,42 @@ class PlayScripts extends Component {
     )
   }
 
+  cutEntireText(lineArray) {
+    var self = this;
+    const types = ["lines", "stage_directions", "sound_cues"]
+    types.forEach(function(type) {
+      var allTheLines = lineArray[type]
+      let updatedLines = allTheLines.map((line) => {
+        var newLine = {
+          ...line,
+          new_content: ' '
+        }
+        self.handleLineSubmit(newLine)
+        return newLine
+      })
+      self.updateTextInState(type, updatedLines)
+    })
+  }
+
+  unCutEntireText(lineArray) {
+    var self = this;
+    const types = ["lines", "stage_directions", "sound_cues"]
+    types.forEach(function(type) {
+      var allTheLines = lineArray[type]
+      let updatedLines = allTheLines.map((line) => {
+        var newLine = {
+          ...line,
+          new_content: ''
+        }
+        self.handleLineSubmit(newLine)
+        return newLine
+      })
+      self.updateTextInState(type, updatedLines)
+    })
+  }
+
   handleLineSubmit = (line) => {
-    if (line.kind.match(/business|delivery|entrance|exit|mixed|modifier/)) {
-      this.updateStageDirection(line)
-    } else if (line.kind.match(/flourish|music/)) {
-      this.updateSoundCue(line)
-    } else {
-      this.updateLine(line)
-    }
+    this.updateLine(line)
   }
 
   toggleShowCut(){
@@ -104,12 +132,25 @@ class PlayScripts extends Component {
     })
   }
 
+  updateTextInState (type, lineArray){
+    let oldLines = this.state.text[type]
+    let newLines = oldLines.map(obj => {
+      let newLine = lineArray.find(p => p.id === obj.id)
+      return newLine || obj
+    })
+    this.setState(state => ({
+      text: {
+        ...this.state.text,
+        [type]: newLines
+      }
+    }))
+  }
+
   unloadText = () => {
     this.setState({
       text: {}
     })
   }
-
 
   async loadSkeleton(playId) {
     const response = await getPlaySkeleton(playId)
@@ -151,6 +192,7 @@ class PlayScripts extends Component {
     } else {
       this.setState({
         activeItem: frenchSceneId,
+        heading: `French Scene ${response.data.pretty_name}`,
         text: response.data
       })
     }
@@ -187,7 +229,7 @@ class PlayScripts extends Component {
 
       this.setState({
         activeItem: sceneId,
-        heading: response.data.heading,
+        heading: `Scene ${response.data.pretty_name}`,
         text: text
       })
     }
@@ -196,19 +238,22 @@ class PlayScripts extends Component {
   async updateLine(line) {
     delete line.diffed_content
     let response
+    let kindOfLine = ''
     if (line.kind.match(/business|delivery|entrance|exit|mixed|modifier/)) {
-      response = await updateServerItem(line, 'stage_direction')
+      kindOfLine = 'stage_direction'
     } else if (line.kind.match(/flourish|music/)) {
-      response = await updateServerItem(line, 'sound_cue')
+      kindOfLine = 'sound_cue'
     } else {
-      response = await updateServerItem(line, 'line')
+      kindOfLine = 'line'
     }
+    response = await updateServerItem(line, kindOfLine)
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error updating line'
+        errorStatus: `Error updating ${kindOfLine}`
       })
     } else {
-      let newLines = this.state.text.lines.map((oldLine) => {
+      let oldLines = this.state.text[`${kindOfLine}s`]
+      let newLines = oldLines.map(oldLine => {
         if (oldLine.id === line.id) {
           return line
         } else {
@@ -218,55 +263,7 @@ class PlayScripts extends Component {
       this.setState({
         text: {
           ...this.state.text,
-          lines: newLines
-        }
-      })
-    }
-  }
-
-  async updateSoundCue(soundCue) {
-    delete soundCue.diffed_content
-    let response = await updateServerItem(soundCue, 'sound_cue')
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error updating sound cue'
-      })
-    } else {
-      let newSoundCues = this.state.text.sound_cues.map((oldSoundCue) => {
-        if (oldSoundCue.id === soundCue.id) {
-          return soundCue
-        } else {
-          return oldSoundCue
-        }
-      })
-      this.setState({
-        text: {
-          ...this.state.text,
-          sound_cues: newSoundCues
-        }
-      })
-    }
-  }
-
-  async updateStageDirection(stageDirection) {
-    delete stageDirection.diffed_content
-    let response = await updateServerItem(stageDirection, 'stage_direction')
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error updating line'
-      })
-    } else {
-      let newStageDirections = this.state.text.stage_directions.map((oldStageDirection) => {
-        if (oldStageDirection.id === stageDirection.id) {
-          return stageDirection
-        } else {
-          return oldStageDirection
-        }
-      })
-      this.setState({
-        text: {
-          ...this.state.text,
-          stage_directions: newStageDirections
+          [`${kindOfLine}s`]: newLines
         }
       })
     }
@@ -333,7 +330,14 @@ class PlayScripts extends Component {
               </Accordion>
             </Col>
             <Col md={9}>
-              <h2>{this.state.heading}</h2>
+                  <h2>{this.state.heading}</h2>
+                  <Button onClick={() => this.cutEntireText(this.state.text)}>
+                    Cut all of this
+                  </Button>
+                  <Button onClick={() => this.unCutEntireText(this.state.text)}>
+                    Uncut all of this
+                  </Button>
+
               <ScriptContainer
                 activeItem={this.state.activeItem}
                 characters={this.state.play.characters}
