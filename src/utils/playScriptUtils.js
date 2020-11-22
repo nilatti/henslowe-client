@@ -135,13 +135,16 @@ function mergeTextFromFrenchScenes(frenchScenes) {
         let gatheredLines = frenchScene.lines
         let compactLines = _.compact(gatheredLines)
         allText.lines = allText.lines.concat(compactLines)
+        allText.lines = _.uniq(allText.lines, 'line_number')
         let compactStageDirections = _.compact(frenchScene.stage_directions)
         allText.stage_directions = allText.stage_directions.concat(compactStageDirections)
+        allText.stage_directions = _.uniq(allText.stage_directions, 'line_number')
         let compactSoundCues = _.compact(frenchScene.sound_cues)
         allText.sound_cues = allText.sound_cues.concat(compactSoundCues)
+        allText.sound_cues = _.uniq(allText.sound_cues, 'line_number')
       }
     )
-    allText =  _.uniq(allText, 'line_number')
+
     return allText
 }
 
