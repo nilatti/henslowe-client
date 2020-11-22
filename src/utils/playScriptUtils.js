@@ -141,6 +141,7 @@ function mergeTextFromFrenchScenes(frenchScenes) {
         allText.sound_cues = allText.sound_cues.concat(compactSoundCues)
       }
     )
+    allText =  _.uniq(allText, 'line_number')
     return allText
 }
 

@@ -227,7 +227,6 @@ class PlayScripts extends Component {
       })
     } else {
       let text = mergeTextFromFrenchScenes(response.data.french_scenes)
-
       this.setState({
         activeItem: sceneId,
         heading: `Scene ${response.data.pretty_name}`,
