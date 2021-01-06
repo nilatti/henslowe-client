@@ -6,7 +6,7 @@
   "dependencies": {
     "@attently/riek": "^2.0.1",
     "@testing-library/jest-dom": "^5.11.6",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-cli": "^6.26.0",
     "bootstrap": "^4.5.3",
     "chai": "^4.2.0",
