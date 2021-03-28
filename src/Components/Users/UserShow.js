@@ -1,134 +1,158 @@
-import Moment from 'react-moment';
-import PropTypes from 'prop-types';
-import {
-  Col,
-  Row,
-} from 'react-bootstrap'
-import React, {
-  Component
-} from 'react'
+import Moment from "react-moment";
+import PropTypes from "prop-types";
+import { Col, Row } from "react-bootstrap";
+import React, { createContext, useContext, useState } from "react";
 
-import UserJobsList from '../Jobs/UserJobsList'
-import ConflictsList from './Conflicts/ConflictsList'
+import UserJobsList from "../Jobs/UserJobsList";
+import ConflictsList from "../Conflicts/ConflictsList";
 
-import {UserAuthContext} from '../Contexts'
+import { UserAuthContext } from "../Contexts";
 
-import {buildUserName} from '../../utils/actorUtils'
-class UserShow extends Component {
-  constructor(props, context) {
-    super(props, context);
-    this.handleSelect = this.handleSelect.bind(this);
+import { buildUserName } from "../../utils/actorUtils";
+import { ConflictStateProvider } from "../Conflicts/ConflictStateProvider";
 
-    this.state = {
-      key: ''
-    };
+export default function UserShow({ onDeleteClick, onEditClick, user }) {
+  function handleDeleteClick() {
+    onDeleteClick(user.id);
   }
 
-  handleDeleteClick = () => {
-    this.props.onDeleteClick(this.props.user.id)
-  }
-
-  handleSelect(key) {
+  function handleSelect(key) {
     this.setState({
-      key
+      key,
     });
   }
 
-  render() {
-
-    return (
-      <Col md={12}>
+  return (
+    <Col md={12}>
       <Row>
         <Col md={12} className="user-profile">
-          <h2>{buildUserName(this.props.user)}</h2>
+          <h2>{buildUserName(user)}</h2>
           <p>
             <UserAuthContext.Consumer>
-              {value => {
-                if (value === 'theater_admin' || value === 'theater_peer' || value === 'superadmin' || value === 'self') {
-                  return (
-                    <a href={`mailto:${this.props.user.email}`}>{this.props.user.email}</a>
-                  )
+              {(value) => {
+                if (
+                  value === "theater_admin" ||
+                  value === "theater_peer" ||
+                  value === "superadmin" ||
+                  value === "self"
+                ) {
+                  return <a href={`mailto:${user.email}`}>{user.email}</a>;
                 }
               }}
             </UserAuthContext.Consumer>
             <br />
-            <a href={this.props.user.website}>{this.props.user.website}</a>
+            <a href={user.website}>{user.website}</a>
           </p>
           <UserAuthContext.Consumer>
-            {value => {
-              if (value === 'theater_admin' || value === 'theater_peer' || value === 'superadmin' || value === 'self') {
+            {(value) => {
+              if (
+                value === "theater_admin" ||
+                value === "theater_peer" ||
+                value === "superadmin" ||
+                value === "self"
+              ) {
                 return (
                   <p>
-                    {this.props.user.phone_number}<br />
-                    {this.props.user.street_address}<br />
-                    {this.props.user.city}, {this.props.user.state}  {this.props.user.zip}<br />
-                    <strong>Emergency Contact:</strong> {this.props.user.emergency_contact_name}, {this.props.user.emergency_contact_number}
+                    {user.phone_number}
+                    <br />
+                    {user.street_address}
+                    <br />
+                    {user.city}, {user.state} {user.zip}
+                    <br />
+                    <strong>Emergency Contact:</strong>{" "}
+                    {user.emergency_contact_name},{" "}
+                    {user.emergency_contact_number}
                   </p>
-                )
+                );
               }
             }}
           </UserAuthContext.Consumer>
           <UserAuthContext.Consumer>
-            {value => {
-              if (value === 'theater_admin' || value === 'superadmin' || value === 'self') {
+            {(value) => {
+              if (
+                value === "theater_admin" ||
+                value === "superadmin" ||
+                value === "self"
+              ) {
                 return (
                   <div>
-                  <p>
-                    <strong>First name:</strong> {this.props.user.first_name}<br />
-                    <strong>Middle name:</strong> {this.props.user.middle_name}<br />
-                    <strong>Preferred name:</strong> {this.props.user.preferred_name}<br />
-                    <strong>Last name:</strong> {this.props.user.last_name}<br />
-                    <strong>Name for programs:</strong> {this.props.user.program_name}<br />
+                    <p>
+                      <strong>First name:</strong> {user.first_name}
+                      <br />
+                      <strong>Middle name:</strong> {user.middle_name}
+                      <br />
+                      <strong>Preferred name:</strong> {user.preferred_name}
+                      <br />
+                      <strong>Last name:</strong> {user.last_name}
+                      <br />
+                      <strong>Name for programs:</strong> {user.program_name}
+                      <br />
                     </p>
                     <p>
-                      <strong>Date of Birth:</strong> <Moment format="MMMM Do, YYYY">{this.props.user.birthdate}</Moment><br />
-                      <strong>Gender:</strong> {this.props.user.gender}<br />
-                      <strong>Description:</strong> {this.props.user.description}<br />
-                      <strong>Bio:</strong> {this.props.user.bio}<br />
+                      <strong>Date of Birth:</strong>{" "}
+                      <Moment format="MMMM Do, YYYY">{user.birthdate}</Moment>
+                      <br />
+                      <strong>Gender:</strong> {user.gender}
+                      <br />
+                      <strong>Description:</strong> {user.description}
+                      <br />
+                      <strong>Bio:</strong> {user.bio}
+                      <br />
                     </p>
                     <p>
-                      <strong>Timezone:</strong> {this.props.user.timezone}
+                      <strong>Timezone:</strong> {user.timezone}
                     </p>
 
                     <span
-                      className='right floated edit icon'
-                      onClick={this.props.onEditClick}
+                      className="right floated edit icon"
+                      onClick={onEditClick}
                     >
                       <i className="fas fa-pencil-alt"></i>
                     </span>
                     <span
-                      className='right floated trash icon'
-                      onClick={this.handleDeleteClick}
+                      className="right floated trash icon"
+                      onClick={onDeleteClick}
                     >
                       <i className="fas fa-trash-alt"></i>
                     </span>
-                    </div>
-                )
-              } else if (value === 'theater_peer') {
-                return (
-                <div>
-                <p>
-                  <strong>Preferred name:</strong> {this.props.user.preferred_name || this.props.user.first_name}<br />
-                  <strong>Last name:</strong> {this.props.user.last_name}<br />
-                  <strong>Name for programs:</strong> {this.props.user.program_name}<br />
-                  </p>
-                  <p>
-                    <strong>Gender:</strong> {this.props.user.gender}<br />
-                    <strong>Bio:</strong> {this.props.user.bio}<br />
-                  </p>
-                  <p>
-                    <strong>Emergency Contact:</strong> {this.props.user.emergency_contact_name}, {this.props.user.emergency_contact_number}
-                  </p>
                   </div>
-                )
+                );
+              } else if (value === "theater_peer") {
+                return (
+                  <div>
+                    <p>
+                      <strong>Preferred name:</strong>{" "}
+                      {user.preferred_name || user.first_name}
+                      <br />
+                      <strong>Last name:</strong> {user.last_name}
+                      <br />
+                      <strong>Name for programs:</strong> {user.program_name}
+                      <br />
+                    </p>
+                    <p>
+                      <strong>Gender:</strong> {user.gender}
+                      <br />
+                      <strong>Bio:</strong> {user.bio}
+                      <br />
+                    </p>
+                    <p>
+                      <strong>Emergency Contact:</strong>{" "}
+                      {user.emergency_contact_name},{" "}
+                      {user.emergency_contact_number}
+                    </p>
+                  </div>
+                );
               } else {
                 return (
                   <p>
-                    <strong>Name for programs:</strong> {this.props.user.program_name}<br />
-                    <strong>Gender:</strong> {this.props.user.gender}<br />
-                    <strong>Bio:</strong> {this.props.user.bio}<br />
+                    <strong>Name for programs:</strong> {user.program_name}
+                    <br />
+                    <strong>Gender:</strong> {user.gender}
+                    <br />
+                    <strong>Bio:</strong> {user.bio}
+                    <br />
                   </p>
-                )
+                );
               }
             }}
           </UserAuthContext.Consumer>
@@ -136,29 +160,37 @@ class UserShow extends Component {
       </Row>
       <hr />
       <UserAuthContext.Consumer>
-        {value => {
-          if (value === 'theater_admin' || value === 'superadmin' || value === 'self') {
+        {(value) => {
+          if (
+            value === "theater_admin" ||
+            value === "superadmin" ||
+            value === "self"
+          ) {
             return (
-            <Row>
-              <ConflictsList user={this.props.user} />
-              <hr />
-            </Row>
-          )
+              <Row>
+                <ConflictStateProvider
+                  parentId={user.id}
+                  parentType="user"
+                  unsortedConflicts={user.conflicts}
+                  conflictPatterns={user.conflict_patterns}
+                >
+                  <ConflictsList />
+                </ConflictStateProvider>
+                <hr />
+              </Row>
+            );
           }
         }}
       </UserAuthContext.Consumer>
       <Row>
-        <UserJobsList user={this.props.user} />
+        <UserJobsList user={user} />
       </Row>
-      </Col>
-    )
-  }
+    </Col>
+  );
 }
 
 UserShow.propTypes = {
   onDeleteClick: PropTypes.func.isRequired,
   onEditClick: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
-}
-
-export default UserShow
+};
