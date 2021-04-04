@@ -1,83 +1,81 @@
-import PropTypes from 'prop-types';
-import React, {
-  Component
-} from 'react'
+import PropTypes from "prop-types";
+import React, { Component } from "react";
 
-import {
-  getSpace,
-  updateServerSpace
-} from '../../api/spaces'
+import { getSpace, updateServerSpace } from "../../api/spaces";
 
-import SpaceForm from './SpaceForm'
-import SpaceShow from './SpaceShow'
+import SpaceForm from "./SpaceForm";
+import SpaceShow from "./SpaceShow";
 
-import {getUserRoleForSpace} from '../../utils/authorizationUtils'
-import {SpaceAuthContext} from '../Contexts'
+import { getUserRoleForSpace } from "../../utils/authorizationUtils";
+import { SpaceAuthContext } from "../Contexts";
 
 class EditableSpace extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       editFormOpen: false,
       space: null,
-    }
+    };
   }
 
   closeForm = () => {
     this.setState({
       editFormOpen: false,
-    })
-  }
+    });
+  };
 
   componentDidMount = () => {
-    this.loadSpaceFromServer(this.props.match.params.spaceId)
-  }
+    this.loadSpaceFromServer(this.props.match.params.spaceId);
+  };
 
   componentDidUpdate(prevProps) {
-    if (this.state.space === null || prevProps.match.params.spaceId !== this.props.match.params.spaceId) {
+    if (
+      this.state.space === null ||
+      prevProps.match.params.spaceId !== this.props.match.params.spaceId
+    ) {
       this.loadSpaceFromServer(this.props.match.params.spaceId);
     }
   }
 
   handleEditClick = () => {
-    this.openForm()
-  }
+    this.openForm();
+  };
   handleFormClose = () => {
-    this.closeForm()
-  }
+    this.closeForm();
+  };
 
   handleSubmit = (space) => {
-    this.updateSpaceOnServer(space)
-    this.closeForm()
-  }
+    this.updateSpaceOnServer(space);
+    this.closeForm();
+  };
 
   async loadSpaceFromServer(spaceId) {
-    const response = await getSpace(spaceId)
+    const response = await getSpace(spaceId);
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error fetching space'
-      })
+        errorStatus: "Error fetching space",
+      });
     } else {
-      let user = JSON.parse(window.localStorage.getItem('user'))
-        if (user) {
-          this.setState({userRole: getUserRoleForSpace(user, response.data)})
-        }
+      let user = JSON.parse(window.localStorage.getItem("user"));
+      if (user) {
+        this.setState({ userRole: getUserRoleForSpace(user, response.data) });
+      }
       this.setState({
-        space: response.data
-      })
+        space: response.data,
+      });
     }
   }
 
   async updateSpaceOnServer(space) {
-    const response = await updateServerSpace(space)
+    const response = await updateServerSpace(space);
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error updating space'
-      })
+        errorStatus: "Error updating space",
+      });
     } else {
       this.setState({
-        space: response.data
-      })
+        space: response.data,
+      });
     }
   }
 
@@ -96,38 +94,35 @@ class EditableSpace extends Component {
 
   openForm = () => {
     this.setState({
-      editFormOpen: true
-    })
-  }
+      editFormOpen: true,
+    });
+  };
 
   render() {
+    console.log(this.state.userRole);
     if (this.state.space === null) {
-      return (
-        <div>Loading!</div>
-      )
+      return <div>Loading!</div>;
     }
     if (this.state.editFormOpen) {
       return (
-
-          <SpaceForm
-            space={this.state.space}
-            onFormSubmit={this.handleSubmit}
-            onFormClose={this.handleFormClose}
-            isOpen={true}
-          />
-      )
+        <SpaceForm
+          space={this.state.space}
+          onFormSubmit={this.handleSubmit}
+          onFormClose={this.handleFormClose}
+          isOpen={true}
+        />
+      );
     } else {
       return (
-        <SpaceAuthContext.Provider
-        value={this.state.userRole}>
+        <SpaceAuthContext.Provider value={this.state.userRole}>
           <SpaceShow
-          space={this.state.space}
-          onEditClick={this.handleEditClick}
-          onDeleteClick={this.props.onDeleteClick}
-          onFormSubmit={this.handleSubmit}
+            space={this.state.space}
+            onEditClick={this.handleEditClick}
+            onDeleteClick={this.props.onDeleteClick}
+            onFormSubmit={this.handleSubmit}
           />
         </SpaceAuthContext.Provider>
-      )
+      );
     }
   }
 }
@@ -135,6 +130,6 @@ class EditableSpace extends Component {
 EditableSpace.propTypes = {
   match: PropTypes.object.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
-}
+};
 
-export default EditableSpace
+export default EditableSpace;
