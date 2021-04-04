@@ -1,12 +1,12 @@
 import API from "./api";
 
 async function buildConflictPattern(
-  parentType,
   parentId,
+  parentType,
   conflictSchedulePattern
 ) {
   return API.put(`${parentType}s/${parentId}/build_conflict_schedule`, {
-    [parentType]: conflictSchedulePattern,
+    conflict_schedule_pattern: conflictSchedulePattern,
   });
 }
 

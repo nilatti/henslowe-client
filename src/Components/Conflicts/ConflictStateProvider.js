@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import _ from "lodash";
 
 const LocalStateContext = createContext();
@@ -6,14 +6,27 @@ const LocalStateProvider = LocalStateContext.Provider;
 
 function ConflictStateProvider({
   children,
-  unsortedConflicts,
-  conflictPatterns,
+  conflictReasonsArray,
+  propsConflicts,
+  propsConflictPatterns,
   parentId,
   parentType,
 }) {
-  let conflicts = _.sortBy(unsortedConflicts, function (conflict) {
-    return new Date(conflict.start_time);
-  });
+  const [conflicts, setConflicts] = useState(sortConflicts(propsConflicts));
+  const [conflictPatterns, setConflictPatterns] = useState(
+    propsConflictPatterns
+  );
+
+  function sortConflicts(conflicts) {
+    return _.sortBy(conflicts, function (conflict) {
+      return new Date(conflict.start_time);
+    });
+  }
+
+  function updateConflicts(unsortedConflicts) {
+    let updatedConflicts = sortConflicts(unsortedConflicts);
+    setConflicts(updatedConflicts);
+  }
   return (
     <LocalStateProvider
       value={{
@@ -21,6 +34,9 @@ function ConflictStateProvider({
         parentType,
         conflicts,
         conflictPatterns,
+        conflictReasonsArray,
+        setConflictPatterns,
+        updateConflicts,
       }}
     >
       {children}

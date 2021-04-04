@@ -1,70 +1,61 @@
-import moment from "moment";
-import momentLocalizer from "react-widgets-moment";
-import React, { useState } from "react";
+import PropTypes from "prop-types";
+import React from "react";
 import { Col, Form, Button } from "react-bootstrap";
-import DateTimePicker from "react-widgets/lib/DateTimePicker";
+import Datetime from "react-datetime"; //updated!
+
+import { useConflicts } from "../Conflicts/ConflictStateProvider";
+import { useForm, isAfterDate, getMinTime } from "../../utils/environmentUtils";
 import { DAYS_OF_WEEK } from "../../utils/hardcodedConstants";
 import { firstLetterUpcase } from "../../utils/stringUtils";
-import { useForm } from "../../utils/environmentUtils";
-moment.locale("en");
-momentLocalizer();
 
-export default function ConflictPatternCreatorForm({
-  cancel,
-  conflictReasonsArray,
-  submitHandler,
-}) {
-  const { parentType, parentId } = useConflicts();
-  const [daysOfWeek, setDaysOfWeek] = useState([]);
-  const [endDate, setEndDate] = useState();
-  const [endTime, setEndTime] = useState();
-  const [startDate, setStartDate] = useState();
-  const [startTime, setStartTime] = useState();
-  const [validated, setValidated] = useState(false);
-  const [category, setCategory] = useState();
+export default function ConflictPatternCreatorForm({ cancel, onFormSubmit }) {
+  const { inputs, handleChange } = useForm({
+    category: "",
+    end_date: "",
+    end_time: "",
+    start_date: "",
+    start_time: "",
+    days_of_week: [],
+  });
 
-  // const { inputs, handleChange, clearForm, resetForm } = useForm(
-  //   data?.Product || {
-  //     name: '',
-  //     description: '',
-  //     price: '',
-  //   }
-  // );
-
-  // function handleChange(setFunction, event) {
-  //   setFunction(event.target.value);
-  // }
-
-  function handleChangeCheckbox(event) {
-    let day = event.target.id;
-    if (event.target.checked) {
-      setDaysOfWeek((days) => [...days, day]);
-    } else {
-      setDaysOfWeek(daysOfWeek.filter((origDay) => origDay !== day));
-    }
-  }
-  function handleDateTimeChange(setFunction, event) {
-    setFunction(event);
+  function handleDateTimeChange(time, name) {
+    let e = {
+      target: {
+        value: time,
+        name: name,
+        type: "datetime",
+      },
+    };
+    handleChange(e);
   }
 
   function handleSubmit(event) {
-    event.preventDefault();
-    let conflictSchedulePattern = {
-      id: parentId,
-      conflict_schedule_pattern: {
-        category: category,
-        days_of_week: daysOfWeek,
-        end_date: endDate && moment(endDate).format("YYYY-MM-DD"),
-        end_time: moment(endTime).format("HH:mmZZ"),
-        start_date: startDate && moment(startDate).format("YYYY-MM-DD"),
-        start_time: moment(startTime).format("HH:mmZZ"),
-      },
-    };
-    submitHandler(parentId, conflictSchedulePattern);
-    cancel();
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      processSubmit();
+      cancel();
+    }
   }
+
+  function processSubmit() {
+    let parentTypeId = parentType + "_id";
+    onFormSubmit({
+      category: inputs.category,
+      end_date: inputs.end_date,
+      end_time: inputs.end_time,
+      start_date: inputs.start_date,
+      start_time: inputs.start_time,
+      days_of_week: inputs.days_of_week,
+      [parentTypeId]: parentId,
+    });
+  }
+
+  const { parentType, parentId, conflictReasonsArray } = useConflicts();
   return (
-    <Form noValidate onSubmit={handleSubmit} validated={validated}>
+    <Form noValidate onSubmit={(e) => handleSubmit(e)}>
       <Form.Group>
         <Form.Label>I have a conflict every</Form.Label>
         {DAYS_OF_WEEK.map((day) => (
@@ -72,57 +63,55 @@ export default function ConflictPatternCreatorForm({
             id={day}
             key={day}
             label={firstLetterUpcase(day)}
-            name="daysOfWeek"
+            value={firstLetterUpcase(day)}
+            name="days_of_week"
             type="checkbox"
-            onChange={handleChangeCheckbox}
+            onChange={handleChange}
             type="checkbox"
           />
         ))}
       </Form.Group>
       <Form.Group controlId="start_time">
         <Form.Label>Starting at...</Form.Label>
-        <DateTimePicker
-          date={false}
+        <Datetime
+          dateFormat={false}
           format={"hh:mm A"}
-          onChange={(e) => handleDateTimeChange(setStartTime, e)}
+          onChange={(time) => handleDateTimeChange(time, "start_time")}
           required
-          value={startTime}
+          value={inputs.start_time}
         />
       </Form.Group>
       <Form.Group controlId="end_time">
         <Form.Label>and ending at...</Form.Label>
-        <DateTimePicker
-          required
-          date={false}
-          defaultValue={startTime}
+        <Datetime
+          dateFormat={false}
           format={"hh:mm A"}
-          min={startTime}
-          onChange={(e) => handleDateTimeChange(setEndTime, e)}
-          value={endTime}
+          onChange={(time) => handleDateTimeChange(time, "end_time")}
+          required
+          value={inputs.end_time}
+          // timeConstraints={getMinTime(inputs.start_time)}
         />
         <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
       </Form.Group>
       <Form.Group controlId="start_date">
         <Form.Label>From</Form.Label>
-        <DateTimePicker
-          time={false}
-          required
+        <Datetime
+          timeFormat={false}
           format={"MM/DD/YYYY"}
-          onChange={(e) => handleDateTimeChange(setStartDate, e)}
+          onChange={(date) => handleDateTimeChange(date, "start_date")}
           required
-          value={startDate}
+          value={inputs.start_date}
         />
       </Form.Group>
       <Form.Group controlId="end_date">
         <Form.Label>To</Form.Label>
-        <DateTimePicker
-          required
-          time={false}
-          defaultValue={startDate}
+        <Datetime
+          isValidDate={(current) => isAfterDate(inputs.start_date, current)}
+          timeFormat={false}
           format={"MM/DD/YYYY"}
-          min={startTime}
-          onChange={(e) => handleDateTimeChange(setEndDate, e)}
-          value={endDate}
+          onChange={(date) => handleDateTimeChange(date, "end_date")}
+          required
+          value={inputs.end_date}
         />
       </Form.Group>
       <Form.Group as={Form.Row}>
@@ -131,11 +120,11 @@ export default function ConflictPatternCreatorForm({
           {conflictReasonsArray.map((reason) => (
             <Form.Check
               key={reason}
-              checked={category === reason}
-              id={reason}
+              checked={inputs.category === reason}
+              id={`recurring_${reason}`}
               label={firstLetterUpcase(reason)}
               name="category"
-              onChange={(e) => handleChange(setCategory, e)}
+              onChange={handleChange}
               type="radio"
               value={reason}
             />
@@ -151,3 +140,8 @@ export default function ConflictPatternCreatorForm({
     </Form>
   );
 }
+
+ConflictPatternCreatorForm.propTypes = {
+  cancel: PropTypes.func.isRequired,
+  onFormSubmit: PropTypes.func.isRequired,
+};

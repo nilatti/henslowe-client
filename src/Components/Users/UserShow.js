@@ -10,6 +10,7 @@ import { UserAuthContext } from "../Contexts";
 
 import { buildUserName } from "../../utils/actorUtils";
 import { ConflictStateProvider } from "../Conflicts/ConflictStateProvider";
+import { USER_CONFLICT_REASONS } from "../../utils/hardcodedConstants";
 
 export default function UserShow({ onDeleteClick, onEditClick, user }) {
   function handleDeleteClick() {
@@ -171,8 +172,9 @@ export default function UserShow({ onDeleteClick, onEditClick, user }) {
                 <ConflictStateProvider
                   parentId={user.id}
                   parentType="user"
-                  unsortedConflicts={user.conflicts}
-                  conflictPatterns={user.conflict_patterns}
+                  propsConflicts={user.conflicts}
+                  propsConflictPatterns={user.conflict_patterns}
+                  conflictReasonsArray={USER_CONFLICT_REASONS}
                 >
                   <ConflictsList />
                 </ConflictStateProvider>

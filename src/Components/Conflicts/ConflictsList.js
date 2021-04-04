@@ -16,100 +16,103 @@ import EditableConflict from "./EditableConflict";
 import ConflictPatternShow from "./ConflictPatternShow";
 import { useConflicts } from "../Conflicts/ConflictStateProvider";
 
-async function createConflict(parentId, parentType, conflict) {
-  const response = await createItemWithParent(
+export default function ConflictsList() {
+  const {
+    conflicts,
+    conflictPatterns,
     parentType,
     parentId,
-    "conflict",
-    conflict
-  );
-  if (response.status >= 400) {
-    this.setState({
-      errorStatus: "Error creating conflict",
-    });
-  } else {
-    let newConflicts = _.sortBy(
-      [...this.state.conflicts, response.data],
-      function (conflict) {
-        return new Date(conflict.start_time);
-      }
+    setConflictPatterns,
+    updateConflicts,
+  } = useConflicts();
+
+  async function createConflict(parentId, parentType, conflict) {
+    const response = await createItemWithParent(
+      parentType,
+      parentId,
+      "conflict",
+      conflict
     );
-    this.setState({
-      conflicts: newConflicts,
-    });
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: "Error creating conflict",
+      });
+    } else {
+      updateConflicts([...conflicts, response.data]);
+    }
   }
-}
 
-async function deleteConflict(conflictId) {
-  const response = await deleteItem(conflictId, "conflict");
-  if (response.status >= 400) {
-    this.setState({
-      errorStatus: "Error deleting conflict",
-    });
-  } else {
-    this.setState({
-      conflicts: this.state.conflicts.filter(
-        (conflict) => conflict.id !== conflictId
-      ),
-    });
-  }
-}
-
-async function deleteConflictPattern(conflictPatternId) {
-  const response = await deleteItem(conflictPatternId, "conflict_pattern");
-  if (response.status >= 400) {
-    this.setState({
-      errorStatus: "Error deleting conflict pattern",
-    });
-  } else {
-    this.setState({
-      conflictPatterns: this.state.conflictPatterns.filter(
-        (conflictPattern) => conflictPattern.id !== conflictPatternId
-      ),
-      conflicts: this.state.conflicts.filter(
-        (conflict) => conflict.conflict_pattern_id !== conflictPatternId
-      ),
-    });
-  }
-}
-
-async function updateConflict(updatedConflict) {
-  const response = await updateServerItem(updatedConflict, "conflict");
-  if (response.status >= 400) {
-    this.setState({
-      errorStatus: "Error updating conflict",
-    });
-  } else {
-    let newConflicts = this.state.conflicts.map((conflict) => {
-      if (conflict.id === updatedConflict.id) {
-        return { ...conflict, ...updatedConflict };
-      } else {
-        return conflict;
-      }
-    });
-    this.setState({
-      conflicts: newConflicts,
-    });
-  }
-}
-
-async function createConflictSchedulePattern(
-  parentId,
-  parentType,
-  conflictSchedulePattern
-) {
-  let response = await buildConflictPattern(
+  async function createConflictSchedulePattern(
     parentId,
     parentType,
     conflictSchedulePattern
-  );
-  this.setState({
-    conflictPatterns: response.data.conflict_patterns,
-  });
-}
+  ) {
+    let response = await buildConflictPattern(
+      parentId,
+      parentType,
+      conflictSchedulePattern
+    );
+    console.log(response);
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: "Error deleting conflict",
+      });
+    } else {
+      setConflictPatterns(response.data.conflict_patterns);
+      // updateConflicts() theoretically should update conflicts to reflect all the patterned ones, but currently we're not showing those at all and they seem annoying to set up.
+    }
+  }
 
-export default function ConflictsList() {
-  const { conflicts, conflictPatterns, parentType, parentId } = useConflicts();
+  async function deleteConflict(conflictId) {
+    const response = await deleteItem(conflictId, "conflict");
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: "Error deleting conflict",
+      });
+    } else {
+      updateConflicts(
+        conflicts.filter((conflict) => conflict.id !== conflictId)
+      );
+    }
+  }
+
+  async function deleteConflictPattern(conflictPatternId) {
+    const response = await deleteItem(conflictPatternId, "conflict_pattern");
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: "Error deleting conflict pattern",
+      });
+    } else {
+      setConflictPatterns(
+        conflictPatterns.filter(
+          (conflictPattern) => conflictPattern.id !== conflictPatternId
+        )
+      );
+      updateConflicts(
+        conflicts.filter(
+          (conflict) => conflict.conflict_pattern_id !== conflictPatternId
+        )
+      );
+    }
+  }
+
+  async function updateConflict(updatedConflict) {
+    const response = await updateServerItem(updatedConflict, "conflict");
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: "Error updating conflict",
+      });
+    } else {
+      let newConflicts = conflicts.map((conflict) => {
+        if (conflict.id === updatedConflict.id) {
+          return { ...conflict, ...updatedConflict };
+        } else {
+          return conflict;
+        }
+      });
+      updateConflicts(newConflicts);
+    }
+  }
 
   function handleConflictCreate(conflict) {
     createConflict(parentId, parentType, conflict);
@@ -124,19 +127,19 @@ export default function ConflictsList() {
   }
 
   function handleConflictPatternCreate(conflictSchedulePattern) {
-    console.log(127);
-    console.log(parentId);
+    console.log("inside conflict pattern handler");
     createConflictSchedulePattern(
       parentId,
       parentType,
       conflictSchedulePattern
     );
   }
+
   function handleConflictPatternDelete(conflictPatternId) {
     deleteConflictPattern(conflictPatternId);
   }
 
-  if (conflicts === null || conflictPatterns === null) {
+  if (!conflicts) {
     return <div>Loading conflicts</div>;
   }
   if (conflicts) {
@@ -175,7 +178,7 @@ export default function ConflictsList() {
         <Row>
           <ConflictPatternCreatorToggle
             open={false}
-            submitHandler={handleConflictPatternCreate}
+            onFormSubmit={handleConflictPatternCreate}
           />
         </Row>
       </Col>
@@ -184,3 +187,5 @@ export default function ConflictsList() {
     return <div></div>;
   }
 }
+
+ConflictsList.propTypes = {};

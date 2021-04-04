@@ -1,16 +1,12 @@
-import moment from "moment";
 import PropTypes from "prop-types";
-import { useConflicts } from "../Conflicts/ConflictStateProvider";
-import React, { useState } from "react";
+import React from "react";
 import { Button, Col, Form } from "react-bootstrap";
-import momentLocalizer from "react-widgets-moment";
 import Datetime from "react-datetime"; //updated!
-import { useForm } from "../../utils/environmentUtils";
 
-import { USER_CONFLICT_REASONS } from "../../utils/hardcodedConstants";
+import { useConflicts } from "../Conflicts/ConflictStateProvider";
+import { useForm } from "../../utils/environmentUtils";
 import { firstLetterUpcase } from "../../utils/stringUtils";
-moment.locale("en");
-momentLocalizer();
+
 // const validate = ({ startTime, endTime }) => {
 //   return {
 //     endTime:
@@ -68,8 +64,7 @@ export default function ConflictForm({ conflict, onFormClose, onFormSubmit }) {
     );
   }
   // const { validated } = this.state;
-  const { parentType, parentId } = useConflicts();
-  console.log(80, inputs);
+  const { parentType, parentId, conflictReasonsArray } = useConflicts();
   return (
     <Col
       md={{
@@ -90,7 +85,7 @@ export default function ConflictForm({ conflict, onFormClose, onFormSubmit }) {
         <Form.Group controlId="end_time">
           <Form.Label>End Time</Form.Label>
           <Datetime
-            min={inputs.start_time}
+            isValidDate={(current) => isAfterDate(inputs.start_date, current)}
             onChange={(time) => handleDateTimeChange(time, "end_time")}
             type="datetime"
             value={inputs.end_time}
@@ -101,7 +96,7 @@ export default function ConflictForm({ conflict, onFormClose, onFormSubmit }) {
           <Form.Group as={Form.Row}>
             <Form.Label as="legend">Category</Form.Label>
             <Col sm={10} className="form-radio">
-              {USER_CONFLICT_REASONS.map((reason) => (
+              {conflictReasonsArray.map((reason) => (
                 <Form.Check
                   key={reason}
                   checked={inputs.category === reason}

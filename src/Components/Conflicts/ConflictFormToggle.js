@@ -23,10 +23,6 @@ class ConflictFormToggle extends Component {
       isOpen: false,
     });
   };
-  handleFormSubmit = (conflict) => {
-    this.handleFormClose();
-    this.props.onFormSubmit(conflict);
-  };
 
   render() {
     if (this.state.isOpen) {

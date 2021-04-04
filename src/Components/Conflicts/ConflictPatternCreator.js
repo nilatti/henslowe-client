@@ -5,11 +5,7 @@ import { USER_CONFLICT_REASONS } from "../../utils/hardcodedConstants";
 
 import ConflictPatternCreatorForm from "./ConflictPatternCreatorForm";
 
-export default function ConflictPatternCreator({
-  submitHandler,
-  userId,
-  cancel,
-}) {
+export default function ConflictPatternCreator({ onFormSubmit, cancel }) {
   return (
     <Col
       md={{
@@ -37,7 +33,7 @@ export default function ConflictPatternCreator({
       <ConflictPatternCreatorForm
         cancel={cancel}
         conflictReasonsArray={USER_CONFLICT_REASONS}
-        submitHandler={submitHandler}
+        onFormSubmit={onFormSubmit}
       />
       <hr />
     </Col>
