@@ -1,53 +1,51 @@
-import API from './api'
+import API from "./api";
 
 async function buildRehearsalSchedule(productionId, rehearsalSchedulePattern) {
   return API.put(`productions/${productionId}/build_rehearsal_schedule`, {
-    production: rehearsalSchedulePattern
-  })
+    production: rehearsalSchedulePattern,
+  });
 }
 async function createProduction(production) {
-  return API.post(
-    'productions', {
-      production
-    }
-  )
+  return API.post("productions", {
+    production,
+  });
 }
 
 async function deleteProduction(productionId) {
-  return API.delete(`productions/${productionId}`)
+  return API.delete(`productions/${productionId}`);
 }
 
 async function getProduction(productionId) {
-  return API.request(`productions/${productionId}`)
+  return API.request(`productions/${productionId}`);
 }
 
 async function getProductionWithPlayText(productionId) {
-  return API.request(`productions/play_text/${productionId}`)
+  return API.request(
+    `productions/${productionId}/get_production_with_play_text`
+  );
 }
 
 async function getProductionNames() {
-  return API.request(`productions/production_names`)
+  return API.request(`productions/production_names`);
 }
 
-
 async function getProductions() {
-  return API.request(`productions`)
+  return API.request(`productions`);
 }
 
 async function getProductionsForTheater(theaterId) {
   return API.request(`productions/get_productions_for_theater`, {
     params: {
-      theater: theaterId
-    }
-  })
+      theater: theaterId,
+    },
+  });
 }
 
 async function updateServerProduction(production) {
   return API.put(`productions/${production.id}`, {
-    production: production
-  })
+    production: production,
+  });
 }
-
 
 export {
   buildRehearsalSchedule,
@@ -57,5 +55,6 @@ export {
   getProductionNames,
   getProductions,
   getProductionsForTheater,
-  updateServerProduction
-}
+  getProductionWithPlayText,
+  updateServerProduction,
+};

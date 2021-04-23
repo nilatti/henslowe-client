@@ -1,8 +1,31 @@
 import { useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import moment from "moment";
 export function useQuery() {
   return new URLSearchParams(useLocation().search);
+}
+
+export function getMinTime(minTime) {
+  if (minTime === "")
+    return {
+      hour: {},
+      minute: {},
+    };
+  let obj = {
+    hour: {
+      min: minTime.hour(),
+    },
+    minute: {
+      min: minTime.minute(),
+    },
+  };
+  return obj;
+}
+
+export function isAfterDate(date, current) {
+  var startDate = moment(date);
+  if (!startDate) return true;
+  return current.isAfter(startDate);
 }
 
 export function useForm(initial = {}) {
@@ -53,25 +76,22 @@ export function useForm(initial = {}) {
   };
 }
 
-export function isAfterDate(date, current) {
-  var startDate = moment(date);
-  if (!startDate) return true;
-  return current.isAfter(startDate);
-}
+export function useInterval(callback, delay) {
+  const savedCallback = useRef();
 
-export function getMinTime(minTime) {
-  if (minTime === "")
-    return {
-      hour: {},
-      minute: {},
-    };
-  let obj = {
-    hour: {
-      min: minTime.hour(),
-    },
-    minute: {
-      min: minTime.minute(),
-    },
-  };
-  return obj;
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
 }
