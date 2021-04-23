@@ -7,7 +7,7 @@ import { getTheaterNames } from "../../api/theaters";
 
 import { getPlayTitles } from "../../api/plays";
 
-import { useQuery } from "../../utils/environmentUtils";
+import { useQuery } from "../../hooks/environmentUtils";
 class NewProductionForm extends Component {
   constructor(props) {
     super(props);

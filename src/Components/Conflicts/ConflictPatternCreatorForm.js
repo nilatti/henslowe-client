@@ -4,7 +4,7 @@ import { Col, Form, Button } from "react-bootstrap";
 import Datetime from "react-datetime"; //updated!
 
 import { useConflicts } from "../Conflicts/ConflictStateProvider";
-import { useForm, isAfterDate, getMinTime } from "../../utils/environmentUtils";
+import { useForm, isAfterDate, getMinTime } from "../../hooks/environmentUtils";
 import { DAYS_OF_WEEK } from "../../utils/hardcodedConstants";
 import { firstLetterUpcase } from "../../utils/stringUtils";
 

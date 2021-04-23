@@ -60,15 +60,11 @@ export function isAfterDate(date, current) {
 }
 
 export function getMinTime(minTime) {
-  console.log("get mintimecalled");
-  console.log(minTime);
-  console.log(typeof minTime);
   if (minTime === "")
     return {
       hour: {},
       minute: {},
     };
-  console.log("coming back");
   let obj = {
     hour: {
       min: minTime.hour(),
@@ -77,6 +73,5 @@ export function getMinTime(minTime) {
       min: minTime.minute(),
     },
   };
-  console.log(obj);
   return obj;
 }

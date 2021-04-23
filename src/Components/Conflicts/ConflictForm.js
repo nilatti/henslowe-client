@@ -4,7 +4,7 @@ import { Button, Col, Form } from "react-bootstrap";
 import Datetime from "react-datetime"; //updated!
 
 import { useConflicts } from "../Conflicts/ConflictStateProvider";
-import { useForm } from "../../utils/environmentUtils";
+import { useForm } from "../../hooks/environmentUtils";
 import { firstLetterUpcase } from "../../utils/stringUtils";
 
 // const validate = ({ startTime, endTime }) => {
