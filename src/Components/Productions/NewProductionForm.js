@@ -8,7 +8,8 @@ import { getTheaterNames } from "../../api/theaters";
 
 import { getPlayTitles } from "../../api/plays";
 
-import { isAfterDate, useForm } from "../../hooks/environmentUtils";
+import { useForm } from "../../hooks/environmentUtils";
+import { StartEndDatePair } from "../../utils/formUtils";
 
 export default function NewProductionForm({
   onFormClose,
@@ -75,7 +76,6 @@ export default function NewProductionForm({
   }
 
   function handleSubmit(event) {
-    console.log("handler called");
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -139,27 +139,11 @@ export default function NewProductionForm({
             Theater is required
           </Form.Control.Feedback>
         </Form.Group>
-        <Form.Group controlId="start_date">
-          <Form.Label>From</Form.Label>
-          <Datetime
-            timeFormat={false}
-            format={"MM/DD/YYYY"}
-            onChange={(date) => handleDateTimeChange(date, "start_date")}
-            required
-            value={inputs.start_date}
-          />
-        </Form.Group>
-        <Form.Group controlId="end_date">
-          <Form.Label>To</Form.Label>
-          <Datetime
-            isValidDate={(current) => isAfterDate(inputs.start_date, current)}
-            timeFormat={false}
-            format={"MM/DD/YYYY"}
-            onChange={(date) => handleDateTimeChange(date, "end_date")}
-            required
-            value={inputs.end_date}
-          />
-        </Form.Group>
+        <StartEndDatePair
+          endDate={inputs.end_date}
+          handleChange={handleChange}
+          startDate={inputs.start_date}
+        />
         <Button type="submit" variant="primary" block>
           Submit
         </Button>

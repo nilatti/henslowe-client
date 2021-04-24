@@ -38,7 +38,6 @@ export function useForm(initial = {}) {
   }, []);
 
   function handleChange(e) {
-    console.log(e.target);
     let { value, name, type } = e.target;
     if (type === "number") {
       value = parseInt(value);
