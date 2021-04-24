@@ -1,48 +1,38 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
+import { Col, Row } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
+import { useQuery } from "../../hooks/environmentUtils";
 
-import React, {
-  Component
-} from 'react'
+import NewProductionForm from "./NewProductionForm";
 
-import {
-  Col,
-  Row
-} from 'react-bootstrap'
+export default function NewProduction({ onFormSubmit }) {
+  let query = useQuery();
 
-import NewProductionForm from './NewProductionForm'
-
-class NewProduction extends Component {
-
-  handleFormClose = () => {
-    this.setState({
-      isOpen: false
-    })
+  function handleFormClose() {
+    let history = useHistory();
+    history.back();
   }
 
-  handleFormSubmit = (production) => {
-    this.handleFormClose()
-    this.props.onFormSubmit(production)
+  async function handleFormSubmit(production) {
+    await onFormSubmit(production);
   }
 
-  render() {
-    return (
-      <Row>
-        <Col md={12} >
-          <div id="new-production-form">
-            <NewProductionForm
-            onFormSubmit={this.handleFormSubmit}
-            onFormClose={this.handleFormClose}
-             />
-          </div>
-        </Col>
-      </Row>
-    )
-  }
+  return (
+    <Row>
+      <Col md={12}>
+        <div id="new-production-form">
+          <NewProductionForm
+            onFormSubmit={handleFormSubmit}
+            onFormClose={handleFormClose}
+            playId={parseInt(query.get("playId"))}
+            theaterId={parseInt(query.get("theaterId"))}
+          />
+        </div>
+      </Col>
+    </Row>
+  );
 }
 
 NewProduction.propTypes = {
   onFormSubmit: PropTypes.func.isRequired,
-}
-
-
-export default NewProduction
+};
