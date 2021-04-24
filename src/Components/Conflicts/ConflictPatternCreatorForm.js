@@ -5,6 +5,7 @@ import Datetime from "react-datetime"; //updated!
 
 import { useConflicts } from "../Conflicts/ConflictStateProvider";
 import { useForm, isAfterDate, getMinTime } from "../../hooks/environmentUtils";
+import { StartEndDatePair, StartEndTimePair } from "../../utils/formUtils";
 import { DAYS_OF_WEEK } from "../../utils/hardcodedConstants";
 import { firstLetterUpcase } from "../../utils/stringUtils";
 
@@ -42,6 +43,7 @@ export default function ConflictPatternCreatorForm({ cancel, onFormSubmit }) {
 
   function processSubmit() {
     let parentTypeId = parentType + "_id";
+    console.log(inputs);
     onFormSubmit({
       category: inputs.category,
       end_date: inputs.end_date,
@@ -71,49 +73,16 @@ export default function ConflictPatternCreatorForm({ cancel, onFormSubmit }) {
           />
         ))}
       </Form.Group>
-      <Form.Group controlId="start_time">
-        <Form.Label>Starting at...</Form.Label>
-        <Datetime
-          dateFormat={false}
-          format={"hh:mm A"}
-          onChange={(time) => handleDateTimeChange(time, "start_time")}
-          required
-          value={inputs.start_time}
-        />
-      </Form.Group>
-      <Form.Group controlId="end_time">
-        <Form.Label>and ending at...</Form.Label>
-        <Datetime
-          dateFormat={false}
-          format={"hh:mm A"}
-          onChange={(time) => handleDateTimeChange(time, "end_time")}
-          required
-          value={inputs.end_time}
-          // timeConstraints={getMinTime(inputs.start_time)}
-        />
-        <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
-      </Form.Group>
-      <Form.Group controlId="start_date">
-        <Form.Label>From</Form.Label>
-        <Datetime
-          timeFormat={false}
-          format={"MM/DD/YYYY"}
-          onChange={(date) => handleDateTimeChange(date, "start_date")}
-          required
-          value={inputs.start_date}
-        />
-      </Form.Group>
-      <Form.Group controlId="end_date">
-        <Form.Label>To</Form.Label>
-        <Datetime
-          isValidDate={(current) => isAfterDate(inputs.start_date, current)}
-          timeFormat={false}
-          format={"MM/DD/YYYY"}
-          onChange={(date) => handleDateTimeChange(date, "end_date")}
-          required
-          value={inputs.end_date}
-        />
-      </Form.Group>
+      <StartEndTimePair
+        endTime={inputs.end_time}
+        handleChange={handleChange}
+        startTime={inputs.start_time}
+      />
+      <StartEndDatePair
+        endDate={inputs.end_date}
+        handleChange={handleChange}
+        startDate={inputs.start_date}
+      />
       <Form.Group as={Form.Row}>
         <Form.Label as="legend">Category</Form.Label>
         <Col sm={10} className="form-radio">

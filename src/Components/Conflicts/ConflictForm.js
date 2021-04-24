@@ -5,6 +5,7 @@ import Datetime from "react-datetime"; //updated!
 
 import { useConflicts } from "../Conflicts/ConflictStateProvider";
 import { useForm } from "../../hooks/environmentUtils";
+import { StartEndDateTimePair } from "../../utils/formUtils";
 import { firstLetterUpcase } from "../../utils/stringUtils";
 
 // const validate = ({ startTime, endTime }) => {
@@ -25,16 +26,6 @@ export default function ConflictForm({ conflict, onFormClose, onFormSubmit }) {
     }
   );
 
-  function handleDateTimeChange(time, name) {
-    let e = {
-      target: {
-        value: time,
-        name: name,
-        type: "datetime",
-      },
-    };
-    handleChange(e);
-  }
   function handleSubmit(event) {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
@@ -73,25 +64,11 @@ export default function ConflictForm({ conflict, onFormClose, onFormSubmit }) {
       }}
     >
       <Form noValidate onSubmit={(e) => handleSubmit(e)}>
-        <Form.Group controlId="start_time">
-          <Form.Label>Start Time</Form.Label>
-          <Datetime
-            type="datetime"
-            onChange={(time) => handleDateTimeChange(time, "start_time")}
-            name="start_time"
-            value={inputs.start_time}
-          />
-        </Form.Group>
-        <Form.Group controlId="end_time">
-          <Form.Label>End Time</Form.Label>
-          <Datetime
-            isValidDate={(current) => isAfterDate(inputs.start_date, current)}
-            onChange={(time) => handleDateTimeChange(time, "end_time")}
-            type="datetime"
-            value={inputs.end_time}
-          />
-          <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
-        </Form.Group>
+        <StartEndDateTimePair
+          endTime={inputs.end_time}
+          startTime={inputs.start_time}
+          handleChange={handleChange}
+        />
         <fieldset>
           <Form.Group as={Form.Row}>
             <Form.Label as="legend">Category</Form.Label>
