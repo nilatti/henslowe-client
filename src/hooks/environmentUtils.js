@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import moment from "moment";
+
 export function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
@@ -37,6 +38,7 @@ export function useForm(initial = {}) {
   }, []);
 
   function handleChange(e) {
+    console.log(e.target);
     let { value, name, type } = e.target;
     if (type === "number") {
       value = parseInt(value);
