@@ -1,35 +1,32 @@
-import PropTypes from 'prop-types';
-import React, {
-  Component
-} from 'react'
-import {
-  Button,
-} from 'react-bootstrap'
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import { Button } from "react-bootstrap";
 
-import RehearsalForm from './RehearsalForm.js'
+import RehearsalForm from "./RehearsalForm.js";
 
-class RehearsalFormToggle extends Component { //opens form for create action
+class RehearsalFormToggle extends Component {
+  //opens form for create action
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       isOpen: this.props.isOpen,
-    }
+    };
   }
 
   handleFormOpen = () => {
     this.setState({
-      isOpen: true
-    })
-  }
+      isOpen: true,
+    });
+  };
   handleFormClose = () => {
     this.setState({
-      isOpen: false
-    })
-  }
+      isOpen: false,
+    });
+  };
   handleFormSubmit = (rehearsal) => {
-    this.handleFormClose()
-    this.props.onFormSubmit(rehearsal)
-  }
+    this.handleFormClose();
+    this.props.onFormSubmit(rehearsal);
+  };
 
   render() {
     if (this.state.isOpen) {
@@ -38,25 +35,22 @@ class RehearsalFormToggle extends Component { //opens form for create action
           onFormClose={this.handleFormClose}
           onFormSubmit={this.props.onFormSubmit}
           production={this.props.production}
-
         />
       );
     } else {
       return (
-          <Button variant="info"
-            onClick={this.handleFormOpen}
-          >
-            Add New Rehearsal
-          </Button>
+        <Button variant="info" onClick={this.handleFormOpen}>
+          Add New Rehearsal
+        </Button>
       );
     }
   }
 }
 
 RehearsalFormToggle.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onFormSubmit: PropTypes.func.isRequired,
-  production: PropTypes.object.isRequired,
-}
+  // isOpen: PropTypes.bool.isRequired,
+  // onFormSubmit: PropTypes.func.isRequired,
+  // production: PropTypes.object.isRequired,
+};
 
-export default RehearsalFormToggle
+export default RehearsalFormToggle;

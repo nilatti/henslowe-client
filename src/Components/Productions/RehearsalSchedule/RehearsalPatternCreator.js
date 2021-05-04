@@ -3,6 +3,7 @@ import { Button, Col, Form, InputGroup } from "react-bootstrap";
 import moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import DateTimePicker from "react-widgets/lib/DateTimePicker";
+import StartEndDatePair from "../../../utils/formUtils";
 import { buildRehearsalSchedule } from "../../../api/productions.js";
 
 moment.locale("en");

@@ -1,60 +1,46 @@
-import PropTypes from 'prop-types';
-import React, {
-  Component
-} from 'react'
+import PropTypes from "prop-types";
+import { useState } from "react";
 
-import RehearsalPeopleForm from './RehearsalPeopleForm'
-import RehearsalPeopleShow from './RehearsalPeopleShow'
+import RehearsalPeopleForm from "./RehearsalPeopleForm";
+import RehearsalPeopleShow from "./RehearsalPeopleShow";
+import { useProductionState } from "../../../lib/productionState";
 
-class EditableRehearsalPeople extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      editFormOpen: false,
-    }
+export default function EditableRehearsalPeople({ rehearsal }) {
+  const { updateRehearsal } = useProductionState();
+  const [formOpen, setFormOpen] = useState(false);
+
+  function handleEditClick() {
+    setFormOpen(true);
+  }
+  function handleSubmit(rehearsal) {
+    updateRehearsal(rehearsal);
+    setFormOpen(false);
   }
 
-  handleEditClick = () => {
-    this.toggleForm()
+  function toggleForm() {
+    setFormOpen(!formOpen);
   }
 
-  toggleForm = () => {
-    this.setState({
-      editFormOpen: !this.state.editFormOpen
-    })
+  if (formOpen) {
+    return (
+      <RehearsalPeopleForm
+        calledUsers={rehearsal.users}
+        rehearsal={rehearsal}
+        handleEditClick={handleEditClick}
+        onFormClose={toggleForm}
+        onFormSubmit={handleSubmit}
+      />
+    );
   }
 
-  render() {
-      if (this.props.rehearsal === null) {
-        return (
-          <div>Loading!</div>
-        )
-      }
-      if (this.state.editFormOpen) {
-        return (
-          <RehearsalPeopleForm
-            hiredUsers={this.props.hiredUsers}
-            rehearsal={this.props.rehearsal}
-            isOpen={this.state.editFormOpen}
-            onFormSubmit={this.props.onFormSubmit}
-            onFormClose={this.toggleForm}
-          />
-        )
-      } else {
-        return (
-          <RehearsalPeopleShow
-            handleEditClick={this.handleEditClick}
-            users={this.props.rehearsal.users}
-          />
-        )
-      }
-  }
+  return (
+    <RehearsalPeopleShow
+      handleEditClick={handleEditClick}
+      calledUsers={rehearsal.users}
+    />
+  );
 }
 
 EditableRehearsalPeople.propTypes = {
-  hiredUsers: PropTypes.array.isRequired,
-  onFormSubmit: PropTypes.func.isRequired,
   rehearsal: PropTypes.object.isRequired,
-}
-
-export default EditableRehearsalPeople
+};

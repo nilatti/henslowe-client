@@ -31,6 +31,7 @@ export function isAfterDate(date, current) {
 
 export function useForm(initial = {}) {
   // create a state object for our inputs
+  //tktktk add a way to set null inputs to empty strings
   const [inputs, setInputs] = useState(initial);
   useEffect(() => {
     // This function runs when the things we are watching change
@@ -50,6 +51,7 @@ export function useForm(initial = {}) {
       checkbox.push(value);
       value = checkbox;
     }
+
     setInputs({
       // copy the existing state
       ...inputs,

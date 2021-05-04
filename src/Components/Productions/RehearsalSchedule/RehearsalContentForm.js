@@ -1,391 +1,413 @@
-import _ from 'lodash'
-import PropTypes from 'prop-types';
-import React, {
-  Component
-} from 'react'
-import {
-  Button,
-  Col,
-  Form,
-  Row,
-} from 'react-bootstrap'
+//1. form that asks if user wants to work with acts, scenes, or french scenes
+//2. load acts, scenes, or french scenes
+//3. make recommendations and mark up the content blocks (func organizeContent)
+// recommendations based on:
+// users in scene not available.
+//4. organize content checks what users are not available, and recommends or doesn't recommend content depending on that.
+//5. mark what else is scheduled for this time that is not the content type we're working with (contentNotToEdit). Make a list of it to display in "also rehearsing" (contentNotToEdit)
+//6. take contentNotToEdit and mark anything within them as "rehearsing in part of another thing" in playContent. Remove from displayed checkboxes. In otherwords, if Act 1 is in contentNotToEdit and we're scheduling scenes, don't show any Act 1 scenes as options.
 
-import {buildUserName} from '../../../utils/actorUtils'
-import {unavailableUsers} from '../../../utils/rehearsalUtils'
-import DraggableLists from '../../../utils/DraggableLists'
+import _ from "lodash";
+import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
+
+import { useForm } from "../../../hooks/environmentUtils";
+import { buildUserName } from "../../../utils/actorUtils";
+import { unavailableUsers } from "../../../utils/rehearsalUtils";
+import { useProductionState } from "../../../lib/productionState";
 
 import {
   getPlayActOnStages,
   getPlayFrenchSceneOnStages,
   getPlaySceneOnStages,
-} from '../../../api/plays.js'
+} from "../../../api/plays.js";
 
-class RehearsalContentForm extends Component {
-  constructor(props) {
-    super(props)
-    let availableUsers = this.availableUsers(this.props.hiredUsers, this.props.rehearsal)
-
-    this.state={
-      acts: this.props.rehearsal.acts,
-      frenchScenes: this.props.rehearsal.french_scenes,
-      availableUsers: availableUsers,
-      buttonsEnabled: false,
-      calledUsers: this.props.rehearsal.users,
-      content: [],
-      contentNotToEdit:[],
-      playContent: [],
-      radiosEnabled: true,
-      scenes: this.props.rehearsal.scenes,
+export default function RehearsalContentForm({
+  onFormClose,
+  onFormSubmit,
+  rehearsal,
+}) {
+  const { hiredUsers, production } = useProductionState();
+  const [buttonsEnabled, setButtonsEnabled] = useState(false);
+  const [rehearsalContent, setRehearsalContent] = useState([]);
+  const [contentNotToEdit, setContentNotToEdit] = useState([]);
+  const [contentNotToEditList, setContentNotToEditList] = useState("");
+  const [playContent, setPlayContent] = useState([]);
+  const [radiosEnabled, setRadiosEnabled] = useState(true);
+  const { inputs, handleChange } = useForm(
+    rehearsal || {
+      textUnit: "",
     }
-  }
+  );
 
-  availableUsers(users, rehearsal) {
-    let availableUsers = users.map((user) => {
-      if (user.conflicts.length === 0) {
-        return user
-      } else {
-        let conflicts_with_this_rehearsal = 0
-        user.conflicts.map((conflict) => {
-          if (conflict.start_time <= rehearsal.end_time && rehearsal.start_time <= conflict.end_time) {
-            conflicts_with_this_rehearsal += 1
-          }
-        })
-        if (conflicts_with_this_rehearsal <= 0) {
-          return user
-        }
-      }
-    })
-    return availableUsers.filter(Boolean)
-  }
+  const possibleTextUnits = ["acts", "scenes", "french_scenes"];
 
-  filterAlreadyScheduledContent = (playContent) => {
-    let contentIds = this.state.content.map((item) => item.id)
-    let filtered = playContent.map((item) => {
-      if (_.includes(contentIds, item.id)) {
-        return
-      } else {
-        return item
-      }
-    })
-    return _.compact(filtered)
-  }
+  useEffect(() => {
+    setPlayContent(markContentScheduled);
+  }, [rehearsalContent, playContent.length]);
 
-  handleChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value,
-      buttonsEnabled: true,
-    })
-  }
+  useEffect(() => {
+    setNonworkingContent(inputs.textUnit);
+  }, [buttonsEnabled]);
 
-  handleListChange = (listName, listContent) => {
-    this.setState({
-      [listName]: listContent
-    })
-  }
+  useEffect(() => {
+    setContentNotToEditList(listNotEditingContent(contentNotToEdit));
+    let markedPlayContent = markContentIncludedInParent(playContent);
+    setPlayContent(markedPlayContent);
+  }, [contentNotToEdit, playContent.length]);
 
-  listNotEditingContent = () => {
-    let notEditing = []
-    if (this.state.contentNotToEdit.french_scenes){
-      this.state.contentNotToEdit.french_scenes.map((item) =>{
-        notEditing = _.concat(notEditing, item.pretty_name)
-      })
-    }
-    if (this.state.contentNotToEdit.scenes) {
-      this.state.contentNotToEdit.scenes.map((item) =>{
-        notEditing = _.concat(notEditing, item.pretty_name)})
-    }
-    if (this.state.contentNotToEdit.acts){
-      this.state.contentNotToEdit.acts.map((item) =>{
-      notEditing = _.concat(notEditing, item.heading)
-      })
-    }
-
-    return _.join(notEditing, ', ')
-  }
-
-  loadOnStages = (e) => {
-    e.preventDefault()
-    if (this.state.textUnit === 'french_scene') {
-      this.loadFrenchSceneOnStages(263)
-      this.setNonworkingContent(['acts', 'scenes'])
-      this.setWorkingContent('french_scenes')
-    } else if (this.state.textUnit === 'scene') {
-      this.loadSceneOnStages(263)
-      this.setNonworkingContent(['french_scenes', 'acts'])
-      this.setWorkingContent('scenes')
-    } else if (this.state.textUnit === 'act') {
-      this.loadActOnStages(263)
-      this.setNonworkingContent(['french_scenes', 'scenes'])
-      this.setWorkingContent('acts')
-    }
-  }
-
-  mapOnStagesToUsers(users, onStages) {
-    let calledUsers = this.state.content.map((item) => {
-      return item.on_stages.map((onStage) => {
-        return _.find(this.props.hiredUsers, ['id', onStage.user_id])
-      })
-    })
-    calledUsers = _.flatten(calledUsers)
-    calledUsers = _.uniq(calledUsers)
-    return calledUsers
-  }
-
-  markContentRecommended(newPlayContent) {
-    return newPlayContent.map((content) => {
-      if (content.hasOwnProperty('isRecommended')) {
-        return content
-      } else {
-        return {...content, isRecommended: true}
-      }
-    })
-  }
-
-  markContentUserUnavailable(newPlayContent, unavailableUsers){
-    unavailableUsers.map((unavailableUser) => {
-      newPlayContent = newPlayContent.map((item) => {
-        let contentUsers = item.on_stages.map((on_stage) => on_stage.user_id)
-        if (contentUsers.includes(unavailableUser.id)) {
-          let reasonForRecommendation = ''
-          if (item.reasonForRecommendation) { // tk add a thing t splice in and add more names if we have multiple "is not available"
-            reasonForRecommendation += item.reasonForRecommendation
-          }
-          reasonForRecommendation += buildUserName(unavailableUser) + " is not available."
-          return {...item, isRecommended: false, reasonForRecommendation: reasonForRecommendation}
-        } else {
-          return {...item, isRecommended: true}
-        }
-      })
-    })
-    return newPlayContent
-  }
-
-  markItemCallList(newPlayContent) {
-    newPlayContent = newPlayContent.map((item) => {
-      let callList = []
-      let contentUsers = item.on_stages.map((on_stage) => on_stage.user_id)
-      callList = _.concat(callList, contentUsers)
-      callList = callList.map((userId) => {
-        let user = _.find(this.props.hiredUsers, ['id', userId])
-        return buildUserName(user)
-      })
-      callList = callList.sort()
-      callList = callList.join(', ')
-      return {...item, furtherInfo: callList} //this will let it easily pop into the furtherInfo slot in DraggableList
-    })
-    return newPlayContent
-  }
-
-  organizeContent(playContent) {
-    let rehearsalUnavailableUsers = unavailableUsers(this.props.hiredUsers, this.props.rehearsal)
-    let unavailableUsersMarked = this.markContentUserUnavailable(playContent, rehearsalUnavailableUsers)
-    let recommendedContentMarked = this.markContentRecommended(unavailableUsersMarked)
-    let withCallLists = this.markItemCallList(recommendedContentMarked)
-    let filteredContent = this.filterAlreadyScheduledContent(withCallLists)
-    this.setState({
-      playContent: filteredContent
-    })
-  }
-
-  processSubmit = () => {
-    this.props.onFormClose()
-    this.props.onFormSubmit({
-      content: this.state.content,
-      id: this.props.rehearsal.id,
-      users: this.props.rehearsal.users
-    }, "rehearsal")
-  }
-
-  setContent = (e) => {
-    let newUsers = this.mapOnStagesToUsers(this.props.hiredUsers,this.state.content)
+  function formatRehearsalContent(e) {
+    let newUsers = mapOnStagesToUsers(hiredUsers, rehearsalContent);
+    let currentUsers = rehearsal.users;
+    let allUsers = newUsers.concat(currentUsers);
+    let newRehearsalContent = playContent.filter((item) => item.isScheduled);
+    let singularTextUnit =
+      `${inputs.textUnit}`.substring(0, inputs.textUnit.length - 1) + "_ids"; // annoying, have to drop it to singular to pass to rails
     let newRehearsal = {
-      id: this.props.rehearsal.id,
-      user_ids: newUsers.map((user) => user.id),
-      [`${this.state.textUnit}_ids`]: this.state.content.map((item) => item.id)
-    }
-    this.props.onFormClose()
-    this.props.onFormSubmit(newRehearsal, "rehearsal")
+      id: rehearsal.id,
+      user_ids: allUsers.map((user) => user.id),
+      [`${singularTextUnit}`]: newRehearsalContent.map((item) => item.id),
+    };
+    onFormClose();
+    onFormSubmit(newRehearsal);
   }
 
-  setNonworkingContent = (nonworkingContent) => { //arr
-    let newNonworkingContent = {}
-    nonworkingContent.map((item) => {
-      newNonworkingContent[item] = this.props.rehearsal[item]
+  function listNotEditingContent() {
+    let notEditing = [];
+    possibleTextUnits.forEach((unit) => {
+      if (contentNotToEdit[unit]) {
+        contentNotToEdit[unit].map((item) => {
+          notEditing = _.concat(notEditing, item.pretty_name || item.heading);
+        });
       }
-    )
-    this.setState({
-      contentNotToEdit: newNonworkingContent
-    })
+    });
+    return _.join(notEditing, ", ");
   }
-
-  setWorkingContent = (workingContentType) => { //string name of content type eg 'acts', 'scenes' etc
-    let workingContent = this.props.rehearsal[workingContentType]
-    if (workingContentType == 'french_scenes' || workingContentType == 'scenes') {
-      workingContent.map((item) => item.heading = item.pretty_name)
-    }
-    let rehearsalUnavailableUsers = unavailableUsers(this.props.hiredUsers, this.props.rehearsal)
-    let unavailableUsersMarked = this.markContentUserUnavailable(workingContent, rehearsalUnavailableUsers)
-    let callListMarked = this.markItemCallList(unavailableUsersMarked)
-    let recommendedContentMarked = this.markContentRecommended(callListMarked)
-    this.setState({
-      content: recommendedContentMarked
-    })
-  }
-
-  async loadActOnStages(playId) {
-    const response = await getPlayActOnStages(playId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error retrieving content'
-      })
-    } else {
-      this.setState({playContent: response.data}, function() {
-        this.organizeContent(response.data)
-      })
+  async function loadOnStages(e, rehearsalContent) {
+    e.preventDefault();
+    setNonworkingContent(inputs.textUnit);
+    if (inputs.textUnit === "french_scenes") {
+      await setWorkingContent("french_scenes");
+      loadFrenchSceneOnStages(production.play.id);
+    } else if (inputs.textUnit === "scenes") {
+      await setWorkingContent("scenes");
+      loadSceneOnStages(production.play.id);
+    } else if (inputs.textUnit === "acts") {
+      await setWorkingContent("acts", rehearsalContent);
+      loadActOnStages(production.play.id, rehearsalContent);
     }
   }
 
-  async loadFrenchSceneOnStages(playId) {
-    const response = await getPlayFrenchSceneOnStages(playId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error retrieving content'
-      })
-    } else {
-      let rehearsalUnavailableUsers = unavailableUsers(this.props.hiredUsers, this.props.rehearsal)
-      let playContent = response.data.map((french_scene) => {
-        let prettyName = french_scene.pretty_name
-        return {
-          ...french_scene, heading: french_scene.pretty_name
+  function mapOnStagesToUsers(hiredUsers, rehearsalContent) {
+    let calledUsers = rehearsalContent.map((item) => {
+      return item.find_on_stages.map((onStage) => {
+        return _.find(hiredUsers, ["id", onStage.user_id]);
+      });
+    });
+    calledUsers = _.flatten(calledUsers);
+    calledUsers = _.uniq(calledUsers);
+    calledUsers = _.compact(calledUsers);
+    console.log(calledUsers);
+    return calledUsers;
+  }
+
+  function markContentIncludedInParent(tempContent) {
+    if (inputs.textUnit === "acts") {
+      return tempContent;
+    }
+    let actsNotToEdit = contentNotToEdit["acts"]?.map((act) => act.id) || [];
+    let allScenesForActsNotToEdit = contentNotToEdit["acts"]?.map((act) => {
+      return act.scenes.map((scene) => scene.id);
+    });
+    let scenesNotToEdit =
+      contentNotToEdit["scenes"]?.map((scene) => scene.id) || [];
+    scenesNotToEdit = _.flatten(
+      _.concat(allScenesForActsNotToEdit, scenesNotToEdit)
+    );
+    return tempContent.map((item) => {
+      if (actsNotToEdit && actsNotToEdit.includes(item.act_id)) {
+        return { ...item, isIncludedInParent: true };
+      } else if (scenesNotToEdit && scenesNotToEdit.includes(item.scene_id)) {
+        return { ...item, isIncludedInParent: true };
+      } else {
+        return item;
+      }
+    });
+  }
+
+  function markContentRecommended(tempContent) {
+    //have to mark content as recommended or not bc there is a function that marks it all as false, but not one that marks it as true
+    return tempContent.map((content) => {
+      if (content.hasOwnProperty("isRecommended")) {
+        return content;
+      } else {
+        return { ...content, isRecommended: true };
+      }
+    });
+  }
+
+  function markContentScheduled(tempPlayContent) {
+    let rehearsalContentIds = rehearsalContent.map((item) => item.id);
+    return tempPlayContent.map((content) => {
+      if (rehearsalContentIds.includes(content.id)) {
+        return { ...content, isScheduled: true };
+      } else {
+        return { ...content, isScheduled: false };
+      }
+    });
+  }
+
+  function markContentUserUnavailable(tempContent, unavailableUsers) {
+    //if a user is not available, mark content not recommended and put the user's name as the reason
+    unavailableUsers.map((unavailableUser) => {
+      tempContent = tempContent.map((item) => {
+        let contentUsers = item.find_on_stages.map(
+          (on_stage) => on_stage.user_id
+        );
+        if (contentUsers.includes(unavailableUser.id)) {
+          let reasonForRecommendation = "";
+          if (item.reasonForRecommendation) {
+            // tk add a thing t splice in and add more names if we have multiple "is not available"
+            reasonForRecommendation += item.reasonForRecommendation;
+          }
+          reasonForRecommendation +=
+            buildUserName(unavailableUser) + " is not available.";
+          return {
+            ...item,
+            isRecommended: false,
+            reasonForRecommendation: reasonForRecommendation,
+          };
+        } else {
+          return { ...item, isRecommended: true };
         }
-      })
-      this.setState({playContent: playContent}, function() {
-          this.organizeContent(playContent)
-        }
+      });
+    });
+    return tempContent;
+  }
+
+  function markItemCallList(tempContent) {
+    //who is called for this item?
+    tempContent = tempContent.map((item) => {
+      let callList = [];
+      let contentUsers = item.find_on_stages?.map(
+        (on_stage) => on_stage.user_id
+      );
+      contentUsers = _.compact(contentUsers);
+      callList = _.concat(callList, contentUsers);
+      callList = callList.map((userId) => {
+        let user = _.find(hiredUsers, ["id", userId]);
+        return buildUserName(user);
+      });
+      callList = callList.sort();
+      callList = callList.join(", ");
+      return { ...item, furtherInfo: callList }; //this will let it easily pop into the furtherInfo slot in DraggableList
+    });
+    return tempContent;
+  }
+
+  async function organizeContent(tempContent) {
+    let rehearsalUnavailableUsers = unavailableUsers(hiredUsers, rehearsal);
+    let unavailableUsersMarked = markContentUserUnavailable(
+      tempContent,
+      rehearsalUnavailableUsers
+    );
+    let recommendedContentMarked = markContentRecommended(
+      unavailableUsersMarked
+    );
+    let scheduledContentMarked = markContentScheduled(recommendedContentMarked);
+    return markItemCallList(scheduledContentMarked);
+  }
+
+  function processChangeAndEnableLoad(e) {
+    handleChange(e);
+    setButtonsEnabled(true);
+  }
+
+  function setNonworkingContent(workingContent) {
+    let nonworkingContentTypes = possibleTextUnits.filter(
+      (textUnit) => textUnit != workingContent
+    );
+    let newNonworkingContent = {};
+    nonworkingContentTypes.map((item) => {
+      newNonworkingContent[item] = rehearsal[item];
+    });
+    setContentNotToEdit(newNonworkingContent);
+  }
+
+  async function setWorkingContent(workingContentType) {
+    ///string name of content type eg 'acts', 'scenes' etc
+    let workingContent = rehearsal[workingContentType];
+    if (
+      workingContentType == "french_scenes" ||
+      workingContentType == "scenes"
+    ) {
+      workingContent.map((item) => (item.heading = item.pretty_name));
+    }
+    let organizedRehearsalContent = await organizeContent(
+      workingContent,
+      rehearsalContent
+    );
+    setRehearsalContent(organizedRehearsalContent);
+  }
+
+  function updateCheckedContent(e) {
+    const targetId = Number(e.target.id);
+    // const playItem = playContent.find((item) => item.id === targetId);
+    setPlayContent(
+      playContent.map((item) =>
+        item.id === targetId
+          ? { ...item, isScheduled: !item.isScheduled }
+          : item
       )
-    }
+    );
   }
 
-  async loadSceneOnStages(playId) {
-    const response = await getPlaySceneOnStages(playId)
+  async function loadActOnStages(playId, rehearsalContent) {
+    const response = await getPlayActOnStages(playId);
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error retrieving content'
-      })
+        errorStatus: "Error retrieving content",
+      });
     } else {
-      let rehearsalUnavailableUsers = unavailableUsers(this.props.hiredUsers, this.props.rehearsal)
-      let playContent = response.data.map((scene) => {
-        let prettyName = scene.pretty_name
-        return {
-          ...scene, heading: scene.pretty_name
-        }
-      })
-      this.setState({playContent: playContent}, function() {
-        this.organizeContent(playContent)
-      })
+      let organizedPlayContent = await organizeContent(response.data);
+      setPlayContent(organizedPlayContent);
     }
   }
 
-  render() {
-    const {
-      validated
-    } = this.state
-    if (this.state.playContent && this.state.playContent.length && this.state.playContent[0].hasOwnProperty('isRecommended')) {
-      let listContents = [
-        {
-          listId: 'playContent',
-          listContent: this.state.playContent,
-          header: 'Don\'t rehearse'
-        },
-        {
-          header: 'Rehearse',
-          listId: 'content',
-          listContent: this.state.content
-        }
-      ]
-      let notEditing = this.listNotEditingContent()
+  async function loadFrenchSceneOnStages(playId) {
+    const response = await getPlayFrenchSceneOnStages(playId);
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: "Error retrieving content",
+      });
+    } else {
+      let playContentData = response.data.map((french_scene) => {
+        return {
+          ...french_scene,
+          heading: french_scene.pretty_name,
+        };
+      });
+      let organizedPlayContent = await organizeContent(playContentData);
+      setPlayContent(organizedPlayContent);
+    }
+  }
 
-      return(
-        <Col>
-          <Col>
-            <p>
-              Also rehearsing {notEditing}.
-            </p>
-
-          </Col>
-          <Row>
-            <DraggableLists
-              listContents={listContents}
-              handleListChange={this.handleListChange}
+  async function loadSceneOnStages(playId) {
+    const response = await getPlaySceneOnStages(playId);
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: "Error retrieving content",
+      });
+    } else {
+      let playContentData = response.data.map((scene) => {
+        return {
+          ...scene,
+          heading: scene.pretty_name,
+        };
+      });
+      let organizedPlayContent = await organizeContent(playContentData);
+      setPlayContent(organizedPlayContent);
+    }
+  }
+  if (
+    playContent &&
+    playContent.length &&
+    playContent[0].hasOwnProperty("isRecommended")
+  ) {
+    let playContentCheckboxes = playContent.map((item) => {
+      if (!item.isIncludedInParent) {
+        return (
+          <div key={item.id}>
+            <Form.Check
+              type="checkbox"
+              id={`${item.id}`}
+              key={`${item.id}`}
+              label={`${item.heading}`}
+              checked={item.isScheduled}
+              onChange={updateCheckedContent}
             />
-          </Row>
-          <Row>
-            <Button onClick={this.setContent}>Schedule this content</Button>
-          </Row>
-          <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
-        </Col>
-
-      )
-    }
+            <p>{item.furtherInfo}</p>
+          </div>
+        );
+      }
+    });
     return (
-      <Col md={ {
-          span: 8,
-          offset: 2
-        } }>
-      <h2>How do you want to schedule this rehearsal?</h2>
-      <Form
-        onSubmit={e => this.loadOnStages(e)}
-      >
-      <Form.Group as={Form.Row}>
-        <Form.Label as="legend">
-          Unit of text
-        </Form.Label>
-        <Col sm={10} className="form-radio">
-          <Form.Check
-            checked={this.state.textUnit === 'french_scene'}
-            disabled={!this.state.radiosEnabled}
-            id="french_scene"
-            label="French Scene"
-            name="textUnit"
-            onChange={this.handleChange}
-            type="radio"
-            value="french_scene"
-          />
-          <Form.Check
-            checked={this.state.textUnit === 'scene'}
-            disabled={!this.state.radiosEnabled}
-            id="scene"
-            label="Scene"
-            name="textUnit"
-            onChange={this.handleChange}
-            type="radio"
-            value="scene"
-          />
-          <Form.Check
-            checked={this.state.textUnit === 'act'}
-            disabled={!this.state.radiosEnabled}
-            id="act"
-            label="Act"
-            name="textUnit"
-            onChange={this.handleChange}
-            type="radio"
-            value="act"
-          />
+      <Col>
+        <Col>
+          <p>Also rehearsing {contentNotToEditList}.</p>
         </Col>
-      </Form.Group>
-      <Button disabled={!this.state.buttonsEnabled} type="submit" variant="primary" block>Load Text Options</Button>
-      <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
-    </Form>
-  </Col>
-    )
+        <Row>
+          <Form>{_.compact(playContentCheckboxes)}</Form>
+        </Row>
+        <Row>
+          <Button onClick={formatRehearsalContent}>
+            Schedule this content
+          </Button>
+        </Row>
+        <Button type="button" onClick={onFormClose} block>
+          Cancel
+        </Button>
+      </Col>
+    );
   }
+  //first figure out what level of content we want to rehearse (act, scene, french scene)
+  return (
+    <Col
+      md={{
+        span: 8,
+        offset: 2,
+      }}
+    >
+      <h2>How do you want to schedule this rehearsal?</h2>
+      <Form onSubmit={(e) => loadOnStages(e)}>
+        <Form.Group as={Form.Row}>
+          <Form.Label as="legend">Unit of text</Form.Label>
+          <Col sm={10} className="form-radio">
+            <Form.Check
+              checked={inputs.textUnit === "french_scenes"}
+              disabled={!radiosEnabled}
+              id="french_scene"
+              label="French Scene"
+              name="textUnit"
+              onChange={(e) => processChangeAndEnableLoad(e)}
+              type="radio"
+              value="french_scenes"
+            />
+            <Form.Check
+              checked={inputs.textUnit === "scenes"}
+              disabled={!radiosEnabled}
+              id="scene"
+              label="Scene"
+              name="textUnit"
+              onChange={(e) => processChangeAndEnableLoad(e)}
+              type="radio"
+              value="scenes"
+            />
+            <Form.Check
+              checked={inputs.textUnit === "acts"}
+              disabled={!radiosEnabled}
+              id="act"
+              label="Act"
+              name="textUnit"
+              onChange={(e) => processChangeAndEnableLoad(e)}
+              type="radio"
+              value="acts"
+            />
+          </Col>
+        </Form.Group>
+        <Button
+          disabled={!buttonsEnabled}
+          type="submit"
+          variant="primary"
+          block
+        >
+          Load Text Options
+        </Button>
+        <Button type="button" onClick={onFormClose} block>
+          Cancel
+        </Button>
+      </Form>
+    </Col>
+  );
 }
-
-RehearsalContentForm.propTypes = {
-  hiredUsers: PropTypes.array.isRequired,
-  onFormClose: PropTypes.func.isRequired,
-  onFormSubmit: PropTypes.func.isRequired,
-  rehearsal: PropTypes.object.isRequired,
-}
-
-export default RehearsalContentForm

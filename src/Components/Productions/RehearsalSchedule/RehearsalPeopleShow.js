@@ -1,45 +1,31 @@
-import _ from 'lodash'
-import PropTypes from 'prop-types';
-import {
-  Button,
-  Col,
-  Row,
-} from 'react-bootstrap'
-import React, {
-  Component
-} from 'react'
-import uuid from 'react-uuid'
-import {buildUserName} from '../../../utils/actorUtils'
+import _ from "lodash";
+import PropTypes from "prop-types";
+import { Button, Col, Row } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import uuid from "react-uuid";
+import { buildUserName } from "../../../utils/actorUtils";
 
-class RehearsalPeopleShow extends Component {
-  constructor(props, context) {
-    super(props, context)
-  }
-
-  buildPeopleList(people){
-    let peopleList = _.sortBy(people, ['first_name'])
-    return peopleList.map((person) =>
+export default function RehearsalPeopleShow({ handleEditClick, calledUsers }) {
+  const [people, setPeople] = useState([]);
+  useEffect(() => {
+    let peopleList = _.sortBy(calledUsers, ["first_name"]);
+    let peopleListLis = peopleList.map((person) => (
       <li key={uuid()}>{buildUserName(person)}</li>
-    )
-  }
+    ));
+    console.log(peopleList);
+    setPeople(peopleListLis);
+  }, [calledUsers]);
 
-  render() {
-    let people = this.buildPeopleList(this.props.users)
-    return (
-      <Col md={12}>
-        <h2>People called:</h2>
-        <ul>
-          {people}
-        </ul>
-        <Button onClick={this.props.handleEditClick}>Edit people called</Button>
-      </Col>
-    )
-  }
+  return (
+    <Col md={12}>
+      <h2>People called:</h2>
+      <ul>{people}</ul>
+      <Button onClick={handleEditClick}>Edit people called</Button>
+    </Col>
+  );
 }
 
 RehearsalPeopleShow.propTypes = {
   handleEditClick: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired
-}
-
-export default RehearsalPeopleShow
+  calledUsers: PropTypes.array.isRequired,
+};
