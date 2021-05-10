@@ -44,7 +44,7 @@ function ConflictStateProvider({
   );
 }
 
-// make a custom hook for accessing the cart local state
+// make a custom hook for accessing the local state
 function useConflicts() {
   // We use a consumer here to access the local state
   const all = useContext(LocalStateContext);

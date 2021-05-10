@@ -3,6 +3,7 @@ import { Col, Container } from "react-bootstrap";
 
 import { MainApp } from "./Components/MainApp";
 import SignUpInOut from "./Components/SignUpInOut";
+import { GlobalStyles } from "./Components/GlobalStyles";
 import "./App.css";
 import "react-datetime/css/react-datetime.css";
 export const AuthContext = React.createContext();
@@ -40,20 +41,23 @@ const reducer = (state, action) => {
 export default function App() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   return (
-    <Container fluid={true}>
-      <div className="App">
-        <AuthContext.Provider
-          value={{
-            state,
-            dispatch,
-          }}
-        >
-          <div className="App">
-            <SignUpInOut />
-            {state.isAuthenticated ? <MainApp /> : <span></span>}
-          </div>
-        </AuthContext.Provider>
-      </div>
-    </Container>
+    <>
+      <GlobalStyles />
+      <Container fluid={true}>
+        <div className="App">
+          <AuthContext.Provider
+            value={{
+              state,
+              dispatch,
+            }}
+          >
+            <div className="App">
+              <SignUpInOut />
+              {state.isAuthenticated ? <MainApp /> : <span></span>}
+            </div>
+          </AuthContext.Provider>
+        </div>
+      </Container>
+    </>
   );
 }

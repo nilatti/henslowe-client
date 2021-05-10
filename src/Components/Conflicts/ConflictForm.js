@@ -3,7 +3,7 @@ import React from "react";
 import { Button, Col, Form } from "react-bootstrap";
 import Datetime from "react-datetime"; //updated!
 
-import { useConflicts } from "../Conflicts/ConflictStateProvider";
+import { useConflicts } from "../../lib/conflictState";
 import { useForm } from "../../hooks/environmentUtils";
 import { StartEndDateTimePair } from "../../utils/formUtils";
 import { firstLetterUpcase } from "../../utils/stringUtils";

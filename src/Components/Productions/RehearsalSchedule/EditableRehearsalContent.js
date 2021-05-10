@@ -1,9 +1,14 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
+import styled from "styled-components";
 import RehearsalContentForm from "./RehearsalContentForm";
 import RehearsalContentShow from "./RehearsalContentShow";
 import { useProductionState } from "../../../lib/productionState";
 
+const Content = styled.div`
+  display: flex;
+  flex: 1 1 0;
+`;
 export default function EditableRehearsalContent({ rehearsal }) {
   const { updateRehearsal } = useProductionState();
   const [formOpen, setFormOpen] = useState(false);
@@ -23,25 +28,25 @@ export default function EditableRehearsalContent({ rehearsal }) {
   if (rehearsal === null) {
     return <div>Loading!</div>;
   }
-  if (formOpen) {
-    return (
-      <RehearsalContentForm
-        rehearsal={rehearsal}
-        handleEditClick={handleEditClick}
-        onFormClose={toggleForm}
-        onFormSubmit={handleSubmit}
-      />
-    );
-  }
-
   return (
-    <RehearsalContentShow
-      handleEditClick={handleEditClick}
-      onFormSubmit={handleSubmit}
-      acts={rehearsal.acts}
-      frenchScenes={rehearsal.french_scenes}
-      scenes={rehearsal.scenes}
-    />
+    <Content>
+      {formOpen ? (
+        <RehearsalContentForm
+          rehearsal={rehearsal}
+          handleEditClick={handleEditClick}
+          onFormClose={toggleForm}
+          onFormSubmit={handleSubmit}
+        />
+      ) : (
+        <RehearsalContentShow
+          handleEditClick={handleEditClick}
+          onFormSubmit={handleSubmit}
+          acts={rehearsal.acts}
+          frenchScenes={rehearsal.french_scenes}
+          scenes={rehearsal.scenes}
+        />
+      )}
+    </Content>
   );
 }
 

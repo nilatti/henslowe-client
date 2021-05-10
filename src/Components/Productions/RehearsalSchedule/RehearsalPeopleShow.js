@@ -1,31 +1,47 @@
 import _ from "lodash";
 import PropTypes from "prop-types";
-import { Button, Col, Row } from "react-bootstrap";
-import { useEffect, useState } from "react";
-import uuid from "react-uuid";
-import { buildUserName } from "../../../utils/actorUtils";
 
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+// import uuid from "react-uuid";
+import styled from "styled-components";
+import { buildUserName } from "../../../utils/actorUtils";
+import { EditIcons } from "../../Styled";
+
+const PeopleShow = styled.div`
+  display: flex;
+  flex: 1 1 0px;
+  flex-flow: column nowrap;
+  align-items: center;
+`;
 export default function RehearsalPeopleShow({ handleEditClick, calledUsers }) {
   const [people, setPeople] = useState([]);
   useEffect(() => {
     let peopleList = _.sortBy(calledUsers, ["first_name"]);
     let peopleListLis = peopleList.map((person) => (
-      <li key={uuid()}>{buildUserName(person)}</li>
+      <li key={person.id}>
+        <Link to={`/users/${person.id}`}>{buildUserName(person)}</Link>
+      </li>
     ));
-    console.log(peopleList);
     setPeople(peopleListLis);
   }, [calledUsers]);
 
   return (
-    <Col md={12}>
-      <h2>People called:</h2>
+    <PeopleShow>
+      <h4>
+        People called:{" "}
+        <EditIcons>
+          <span className="right floated edit icon" onClick={handleEditClick}>
+            <i className="fas fa-pencil-alt"></i>
+          </span>
+        </EditIcons>
+      </h4>
       <ul>{people}</ul>
-      <Button onClick={handleEditClick}>Edit people called</Button>
-    </Col>
+    </PeopleShow>
   );
 }
 
 RehearsalPeopleShow.propTypes = {
   handleEditClick: PropTypes.func.isRequired,
-  calledUsers: PropTypes.array.isRequired,
+  calledUsers: PropTypes.array,
 };

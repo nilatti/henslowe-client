@@ -4,6 +4,14 @@ import PropTypes from "prop-types";
 import moment from "moment";
 
 import { isAfterDate } from "../hooks/environmentUtils";
+
+// let valid = function( current, startOrEnd, startTime ){
+//   if (startOrEnd == 'start') {
+//     return current.isBefore( moment() ) && current.isAfter( moment().subtract(3, 'months'));
+//   } else if (startOrEnd == 'end') {
+//     return current.isBefore( moment() ) && current.isAfter( startTime );
+//   }
+// };
 export function StartEndDatePair({ endDate, handleChange, startDate }) {
   function handleDateTimeChange(time, name) {
     let event = {

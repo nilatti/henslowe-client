@@ -3,8 +3,13 @@ import { Button, Col, Form } from "react-bootstrap";
 import { useForm } from "../../../hooks/environmentUtils";
 import { useProductionState } from "../../../lib/productionState";
 import { StartEndDateTimePair } from "../../../utils/formUtils";
+import { formatDateTimeForRails } from "../../../utils/dateTimeUtils";
 
-export default function RehearsalForm({ onFormClose, rehearsal }) {
+export default function RehearsalForm({
+  onFormClose,
+  onFormSubmit,
+  rehearsal,
+}) {
   const { inputs, handleChange } = useForm(
     rehearsal || {
       end_time: new Date(),
@@ -14,19 +19,19 @@ export default function RehearsalForm({ onFormClose, rehearsal }) {
     }
   );
 
-  const { productionId, updateRehearsal } = useProductionState();
+  const { productionId } = useProductionState();
 
   function processSubmit() {
     let id;
     if (rehearsal) {
       id = rehearsal.id;
     }
-    updateRehearsal({
+    onFormSubmit({
       id: id,
-      end_time: inputs.endTime,
+      end_time: formatDateTimeForRails(inputs.endTime),
       notes: inputs.notes,
       space_id: "",
-      start_time: inputs.startTime,
+      start_time: formatDateTimeForRails(inputs.startTime),
       title: inputs.title,
       production_id: productionId,
     });
@@ -41,9 +46,6 @@ export default function RehearsalForm({ onFormClose, rehearsal }) {
       processSubmit();
       onFormClose();
     }
-    // this.setState({
-    //   validated: true
-    // })
   }
 
   return (

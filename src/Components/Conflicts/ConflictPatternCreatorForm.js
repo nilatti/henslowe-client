@@ -3,7 +3,7 @@ import React from "react";
 import { Col, Form, Button } from "react-bootstrap";
 import Datetime from "react-datetime"; //updated!
 
-import { useConflicts } from "../Conflicts/ConflictStateProvider";
+import { useConflicts } from "../../lib/conflictState";
 import { useForm, isAfterDate, getMinTime } from "../../hooks/environmentUtils";
 import { StartEndDatePair, StartEndTimePair } from "../../utils/formUtils";
 import { DAYS_OF_WEEK } from "../../utils/hardcodedConstants";

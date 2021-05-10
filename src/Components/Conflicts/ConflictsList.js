@@ -14,7 +14,7 @@ import ConflictFormToggle from "./ConflictFormToggle";
 import ConflictPatternCreatorToggle from "./ConflictPatternCreatorToggle";
 import EditableConflict from "./EditableConflict";
 import ConflictPatternShow from "./ConflictPatternShow";
-import { useConflicts } from "../Conflicts/ConflictStateProvider";
+import { useConflicts } from "../../lib/conflictState";
 
 export default function ConflictsList() {
   const {

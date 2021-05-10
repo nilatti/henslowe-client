@@ -1,8 +1,15 @@
 import PropTypes from "prop-types";
-import { Button, Col } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import uuid from "react-uuid";
+import styled from "styled-components";
+import { EditIcons } from "../../Styled";
 
+const ContentShow = styled.div`
+  display: flex;
+  flex: 1 1 0px;
+  flex-flow: column nowrap;
+  align-items: center;
+`;
 export default function RehearsalContentShow({
   acts,
   frenchScenes,
@@ -12,24 +19,31 @@ export default function RehearsalContentShow({
   const [content, setContent] = useState([]);
   useEffect(() => {
     let content = [];
-    if (acts.length) {
+    if (acts && acts.length) {
       acts.map((item) => content.push(item.heading));
     }
-    if (scenes.length) {
+    if (scenes && scenes.length) {
       scenes.map((item) => content.push(item.pretty_name));
     }
-    if (frenchScenes.length) {
+    if (frenchScenes && frenchScenes.length) {
       frenchScenes.map((item) => content.push(item.pretty_name));
     }
+    content = content.sort();
     setContent(content.map((item) => <li key={uuid()}>{item}</li>));
   }, [acts, scenes, frenchScenes]);
 
   return (
-    <Col md={12}>
-      <h2>Planned Content:</h2>
+    <ContentShow>
+      <h4>
+        Planned Content:
+        <EditIcons>
+          <span className="right floated edit icon" onClick={handleEditClick}>
+            <i className="fas fa-pencil-alt"></i>
+          </span>
+        </EditIcons>
+      </h4>
       <ul>{content}</ul>
-      <Button onClick={handleEditClick}>Edit content</Button>
-    </Col>
+    </ContentShow>
   );
 }
 

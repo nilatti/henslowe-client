@@ -1,3 +1,5 @@
+import _ from "lodash";
+import moment from "moment";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 const ProductionStateContext = createContext();
@@ -17,6 +19,7 @@ function ProductionProvider({ children }) {
   const [production, setProduction] = useState({});
   const [productionId, setProductionId] = useState(id);
   const [rehearsals, setRehearsals] = useState([]);
+  const [isLoadingComplete, setLoadingComplete] = useState(false);
 
   //get production
   useEffect(async () => {
@@ -54,12 +57,46 @@ function ProductionProvider({ children }) {
       productionId,
       "rehearsal"
     );
+    if (response) {
+      setLoadingComplete(true);
+    }
     if (response.status >= 400) {
       console.log("error getting rehearsals");
     } else {
-      setRehearsals(response.data);
+      let sortedRehearsals = _.sortBy(response.data, "start_time");
+      let datedRehearsals = sortedRehearsals.map((rehearsal) => {
+        return {
+          ...rehearsal,
+          date: moment(rehearsal.start_time).format("YYYY-MM-DD"),
+        };
+      });
+
+      setRehearsals(datedRehearsals);
     }
   }, []);
+
+  async function createRehearsal(rehearsal) {
+    const response = await createItemWithParent(
+      "production",
+      productionId,
+      "rehearsal",
+      rehearsal
+    );
+    if (response.status >= 400) {
+      console.log("error creating rehearsal");
+    } else {
+      console.log(rehearsals);
+      console.log(response.data);
+      let newRehearsals = rehearsals.concat({
+        ...response.data,
+        date: moment(rehearsal.start_time).format("YYYY-MM-DD"),
+      });
+      console.log(newRehearsals);
+      newRehearsals = _.sortBy(newRehearsals, "start_time");
+      console.log(newRehearsals);
+      setRehearsals(newRehearsals);
+    }
+  }
 
   async function deleteRehearsal(rehearsalId) {
     const response = await deleteItem(rehearsalId, "rehearsal");
@@ -73,6 +110,11 @@ function ProductionProvider({ children }) {
   }
 
   async function updateRehearsal(updatedRehearsal) {
+    delete updatedRehearsal.acts;
+    delete updatedRehearsal.french_scenes;
+    delete updatedRehearsal.scenes;
+    delete updatedRehearsal.spaces;
+    delete updatedRehearsal.users;
     const response = await updateServerItem(updatedRehearsal, "rehearsal");
     if (response.status >= 400) {
       this.setState({
@@ -81,7 +123,10 @@ function ProductionProvider({ children }) {
     } else {
       let newRehearsals = rehearsals.map((rehearsal) => {
         if (rehearsal.id === updatedRehearsal.id) {
-          return response.data;
+          return {
+            ...response.data,
+            date: moment(rehearsal.start_time).format("YYYY-MM-DD"),
+          };
         } else {
           return rehearsal;
         }
@@ -93,7 +138,9 @@ function ProductionProvider({ children }) {
   return (
     <ProductionStateProvider
       value={{
+        createRehearsal,
         deleteRehearsal,
+        isLoadingComplete,
         hiredUsers,
         setHiredUsers,
         production,

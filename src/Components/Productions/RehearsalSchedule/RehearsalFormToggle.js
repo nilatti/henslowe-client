@@ -1,56 +1,48 @@
 import PropTypes from "prop-types";
-import React, { Component } from "react";
-import { Button } from "react-bootstrap";
+import { useState } from "react";
+import { Button } from "../../Button";
 
 import RehearsalForm from "./RehearsalForm.js";
+import { useProductionState } from "../../../lib/productionState";
 
-class RehearsalFormToggle extends Component {
-  //opens form for create action
-  constructor(props) {
-    super(props);
-    this.state = {
-      isOpen: this.props.isOpen,
-    };
+export default function RehearsalFormToggle() {
+  const [formOpen, setFormOpen] = useState(false);
+
+  const { createRehearsal, productionId } = useProductionState();
+
+  function handleFormOpen() {
+    setFormOpen(true);
+  }
+  function handleFormClose() {
+    setFormOpen(false);
+  }
+  function handleFormSubmit(rehearsal) {
+    handleFormClose();
+    createRehearsal(rehearsal);
   }
 
-  handleFormOpen = () => {
-    this.setState({
-      isOpen: true,
-    });
-  };
-  handleFormClose = () => {
-    this.setState({
-      isOpen: false,
-    });
-  };
-  handleFormSubmit = (rehearsal) => {
-    this.handleFormClose();
-    this.props.onFormSubmit(rehearsal);
-  };
-
-  render() {
-    if (this.state.isOpen) {
-      return (
-        <RehearsalForm
-          onFormClose={this.handleFormClose}
-          onFormSubmit={this.props.onFormSubmit}
-          production={this.props.production}
-        />
-      );
-    } else {
-      return (
-        <Button variant="info" onClick={this.handleFormOpen}>
-          Add New Rehearsal
-        </Button>
-      );
-    }
+  if (formOpen) {
+    return (
+      <RehearsalForm
+        onFormClose={handleFormClose}
+        onFormSubmit={handleFormSubmit}
+        productionId={productionId}
+      />
+    );
+  } else {
+    return (
+      <Button
+        borderColor={"var(--color-very-dark)"}
+        backgroundColor={"var(--color-very-dark)"}
+        onClick={handleFormOpen}
+      >
+        Add New Rehearsal
+      </Button>
+    );
   }
 }
-
 RehearsalFormToggle.propTypes = {
   // isOpen: PropTypes.bool.isRequired,
   // onFormSubmit: PropTypes.func.isRequired,
   // production: PropTypes.object.isRequired,
 };
-
-export default RehearsalFormToggle;

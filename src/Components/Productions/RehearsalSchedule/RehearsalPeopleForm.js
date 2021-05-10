@@ -2,11 +2,15 @@ import _ from "lodash";
 import PropTypes from "prop-types";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
-
+import styled from "styled-components";
 import { useProductionState } from "../../../lib/productionState";
 import { buildUserName } from "../../../utils/actorUtils";
-import { unavailableUsers } from "../../../utils/rehearsalUtils";
 
+const PeopleForm = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 1 0;
+`;
 export default function RehearsalPeopleForm({
   calledUsers,
   onFormClose,
@@ -101,16 +105,14 @@ export default function RehearsalPeopleForm({
   });
 
   return (
-    <Col>
-      <Row>
-        <Form>{_.compact(userContentCheckboxes)}</Form>
-      </Row>
-      <Row>
-        <Button onClick={formatRehearsalPeople}>Schedule these folks</Button>
-      </Row>
+    <PeopleForm>
+      <Form>{_.compact(userContentCheckboxes)}</Form>
+
+      <Button onClick={formatRehearsalPeople}>Schedule these folks</Button>
+
       <Button type="button" onClick={onFormClose} block>
         Cancel
       </Button>
-    </Col>
+    </PeopleForm>
   );
 }

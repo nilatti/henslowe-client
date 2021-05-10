@@ -6,12 +6,20 @@
 //4. organize content checks what users are not available, and recommends or doesn't recommend content depending on that.
 //5. mark what else is scheduled for this time that is not the content type we're working with (contentNotToEdit). Make a list of it to display in "also rehearsing" (contentNotToEdit)
 //6. take contentNotToEdit and mark anything within them as "rehearsing in part of another thing" in playContent. Remove from displayed checkboxes. In otherwords, if Act 1 is in contentNotToEdit and we're scheduling scenes, don't show any Act 1 scenes as options.
-
+// TKTKTK if there is a change, figure out which of the users currently called are no longer in any called scenes (but are actors) and offer to remove them.
 import _ from "lodash";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { forwardRef, useEffect, useRef, useState } from "react";
+import { Form } from "react-bootstrap";
+import styled from "styled-components";
 
+import { Button } from "../../Button";
+import {
+  FancyCheckBox,
+  FancyCheckBoxLabel,
+  FancyRadio,
+  FancyRadioLabelBox,
+} from "../../Styled";
 import { useForm } from "../../../hooks/environmentUtils";
 import { buildUserName } from "../../../utils/actorUtils";
 import { unavailableUsers } from "../../../utils/rehearsalUtils";
@@ -23,6 +31,20 @@ import {
   getPlaySceneOnStages,
 } from "../../../api/plays.js";
 
+const Label = styled.label`
+  display: block;
+  font-size: 1.15rem;
+`;
+
+const ContentForm = styled.div`
+  align-items: center;
+  display: flex;
+  flex: 1 1 0px;
+  flex-flow: column nowrap;
+  h4 {
+    font-size: 1.25rem;
+  }
+`;
 export default function RehearsalContentForm({
   onFormClose,
   onFormSubmit,
@@ -43,9 +65,10 @@ export default function RehearsalContentForm({
 
   const possibleTextUnits = ["acts", "scenes", "french_scenes"];
 
-  useEffect(() => {
-    setPlayContent(markContentScheduled);
-  }, [rehearsalContent, playContent.length]);
+  useEffect(async () => {
+    let scheduledContent = await organizeContent(playContent);
+    setPlayContent(scheduledContent);
+  }, [playContent.length]);
 
   useEffect(() => {
     setNonworkingContent(inputs.textUnit);
@@ -61,12 +84,15 @@ export default function RehearsalContentForm({
     let newUsers = mapOnStagesToUsers(hiredUsers, rehearsalContent);
     let currentUsers = rehearsal.users;
     let allUsers = newUsers.concat(currentUsers);
+    let allUserIds = allUsers.map((user) => user.id);
+    let uniqUserIds = _.uniq(allUserIds);
     let newRehearsalContent = playContent.filter((item) => item.isScheduled);
     let singularTextUnit =
       `${inputs.textUnit}`.substring(0, inputs.textUnit.length - 1) + "_ids"; // annoying, have to drop it to singular to pass to rails
     let newRehearsal = {
+      ...rehearsal,
       id: rehearsal.id,
-      user_ids: allUsers.map((user) => user.id),
+      user_ids: uniqUserIds,
       [`${singularTextUnit}`]: newRehearsalContent.map((item) => item.id),
     };
     onFormClose();
@@ -84,20 +110,6 @@ export default function RehearsalContentForm({
     });
     return _.join(notEditing, ", ");
   }
-  async function loadOnStages(e, rehearsalContent) {
-    e.preventDefault();
-    setNonworkingContent(inputs.textUnit);
-    if (inputs.textUnit === "french_scenes") {
-      await setWorkingContent("french_scenes");
-      loadFrenchSceneOnStages(production.play.id);
-    } else if (inputs.textUnit === "scenes") {
-      await setWorkingContent("scenes");
-      loadSceneOnStages(production.play.id);
-    } else if (inputs.textUnit === "acts") {
-      await setWorkingContent("acts", rehearsalContent);
-      loadActOnStages(production.play.id, rehearsalContent);
-    }
-  }
 
   function mapOnStagesToUsers(hiredUsers, rehearsalContent) {
     let calledUsers = rehearsalContent.map((item) => {
@@ -108,7 +120,6 @@ export default function RehearsalContentForm({
     calledUsers = _.flatten(calledUsers);
     calledUsers = _.uniq(calledUsers);
     calledUsers = _.compact(calledUsers);
-    console.log(calledUsers);
     return calledUsers;
   }
 
@@ -147,8 +158,8 @@ export default function RehearsalContentForm({
     });
   }
 
-  function markContentScheduled(tempPlayContent) {
-    let rehearsalContentIds = rehearsalContent.map((item) => item.id);
+  function markContentScheduled(tempPlayContent, tempRehearsalContent) {
+    let rehearsalContentIds = tempRehearsalContent.map((item) => item.id);
     return tempPlayContent.map((content) => {
       if (rehearsalContentIds.includes(content.id)) {
         return { ...content, isScheduled: true };
@@ -206,19 +217,6 @@ export default function RehearsalContentForm({
     return tempContent;
   }
 
-  async function organizeContent(tempContent) {
-    let rehearsalUnavailableUsers = unavailableUsers(hiredUsers, rehearsal);
-    let unavailableUsersMarked = markContentUserUnavailable(
-      tempContent,
-      rehearsalUnavailableUsers
-    );
-    let recommendedContentMarked = markContentRecommended(
-      unavailableUsersMarked
-    );
-    let scheduledContentMarked = markContentScheduled(recommendedContentMarked);
-    return markItemCallList(scheduledContentMarked);
-  }
-
   function processChangeAndEnableLoad(e) {
     handleChange(e);
     setButtonsEnabled(true);
@@ -244,16 +242,12 @@ export default function RehearsalContentForm({
     ) {
       workingContent.map((item) => (item.heading = item.pretty_name));
     }
-    let organizedRehearsalContent = await organizeContent(
-      workingContent,
-      rehearsalContent
-    );
+    let organizedRehearsalContent = await organizeContent(workingContent);
     setRehearsalContent(organizedRehearsalContent);
   }
 
   function updateCheckedContent(e) {
     const targetId = Number(e.target.id);
-    // const playItem = playContent.find((item) => item.id === targetId);
     setPlayContent(
       playContent.map((item) =>
         item.id === targetId
@@ -261,17 +255,20 @@ export default function RehearsalContentForm({
           : item
       )
     );
+    let newRehearsalContent = playContent.filter(
+      (item) => item.id === targetId
+    );
+    setRehearsalContent(rehearsalContent.concat(newRehearsalContent));
   }
 
-  async function loadActOnStages(playId, rehearsalContent) {
+  async function loadActOnStages(playId) {
     const response = await getPlayActOnStages(playId);
     if (response.status >= 400) {
       this.setState({
         errorStatus: "Error retrieving content",
       });
     } else {
-      let organizedPlayContent = await organizeContent(response.data);
-      setPlayContent(organizedPlayContent);
+      setPlayContent(response.data);
     }
   }
 
@@ -288,8 +285,21 @@ export default function RehearsalContentForm({
           heading: french_scene.pretty_name,
         };
       });
-      let organizedPlayContent = await organizeContent(playContentData);
-      setPlayContent(organizedPlayContent);
+      setPlayContent(playContentData);
+    }
+  }
+  async function loadOnStages(e, rehearsalContent) {
+    e.preventDefault();
+    setNonworkingContent(inputs.textUnit);
+    if (inputs.textUnit === "french_scenes") {
+      await setWorkingContent("french_scenes");
+      loadFrenchSceneOnStages(production.play.id);
+    } else if (inputs.textUnit === "scenes") {
+      await setWorkingContent("scenes");
+      loadSceneOnStages(production.play.id);
+    } else if (inputs.textUnit === "acts") {
+      await setWorkingContent("acts", rehearsalContent);
+      loadActOnStages(production.play.id, rehearsalContent);
     }
   }
 
@@ -306,9 +316,24 @@ export default function RehearsalContentForm({
           heading: scene.pretty_name,
         };
       });
-      let organizedPlayContent = await organizeContent(playContentData);
-      setPlayContent(organizedPlayContent);
+      setPlayContent(playContentData);
     }
+  }
+  async function organizeContent(tempContent) {
+    let rehearsalUnavailableUsers = unavailableUsers(hiredUsers, rehearsal);
+    let unavailableUsersMarked = markContentUserUnavailable(
+      tempContent,
+      rehearsalUnavailableUsers
+    );
+    let recommendedContentMarked = markContentRecommended(
+      unavailableUsersMarked
+    );
+    let scheduledContentMarked = markContentScheduled(
+      recommendedContentMarked,
+      rehearsalContent
+    );
+    let marked = markItemCallList(scheduledContentMarked);
+    return markItemCallList(scheduledContentMarked);
   }
   if (
     playContent &&
@@ -319,83 +344,103 @@ export default function RehearsalContentForm({
       if (!item.isIncludedInParent) {
         return (
           <div key={item.id}>
-            <Form.Check
-              type="checkbox"
-              id={`${item.id}`}
-              key={`${item.id}`}
-              label={`${item.heading}`}
-              checked={item.isScheduled}
-              onChange={updateCheckedContent}
-            />
-            <p>{item.furtherInfo}</p>
+            <FancyCheckBox htmlFor={item.id}>
+              <FancyRadio
+                type="checkbox"
+                id={`${item.id}`}
+                data-checked={item.isScheduled}
+                checked={item.isScheduled}
+                onChange={updateCheckedContent}
+              />
+              <FancyCheckBoxLabel>
+                <h4>{item.heading}</h4>
+                {item.furtherInfo.length > 0 && (
+                  <div>
+                    Called:
+                    <p>{item.furtherInfo}</p>
+                  </div>
+                )}
+              </FancyCheckBoxLabel>
+            </FancyCheckBox>
           </div>
         );
       }
     });
     return (
-      <Col>
-        <Col>
-          <p>Also rehearsing {contentNotToEditList}.</p>
-        </Col>
-        <Row>
-          <Form>{_.compact(playContentCheckboxes)}</Form>
-        </Row>
-        <Row>
-          <Button onClick={formatRehearsalContent}>
-            Schedule this content
-          </Button>
-        </Row>
+      <ContentForm>
+        {contentNotToEditList.length > 0 && (
+          <p>
+            <em>Also rehearsing {contentNotToEditList}.</em>
+          </p>
+        )}
+
+        <Form>{_.compact(playContentCheckboxes)}</Form>
+
+        <Button onClick={formatRehearsalContent}>Schedule this content</Button>
+
         <Button type="button" onClick={onFormClose} block>
           Cancel
         </Button>
-      </Col>
+      </ContentForm>
     );
   }
   //first figure out what level of content we want to rehearse (act, scene, french scene)
   return (
-    <Col
-      md={{
-        span: 8,
-        offset: 2,
-      }}
-    >
-      <h2>How do you want to schedule this rehearsal?</h2>
-      <Form onSubmit={(e) => loadOnStages(e)}>
-        <Form.Group as={Form.Row}>
-          <Form.Label as="legend">Unit of text</Form.Label>
-          <Col sm={10} className="form-radio">
-            <Form.Check
-              checked={inputs.textUnit === "french_scenes"}
-              disabled={!radiosEnabled}
-              id="french_scene"
-              label="French Scene"
-              name="textUnit"
-              onChange={(e) => processChangeAndEnableLoad(e)}
-              type="radio"
-              value="french_scenes"
-            />
-            <Form.Check
-              checked={inputs.textUnit === "scenes"}
-              disabled={!radiosEnabled}
-              id="scene"
-              label="Scene"
-              name="textUnit"
-              onChange={(e) => processChangeAndEnableLoad(e)}
-              type="radio"
-              value="scenes"
-            />
-            <Form.Check
-              checked={inputs.textUnit === "acts"}
-              disabled={!radiosEnabled}
-              id="act"
-              label="Act"
-              name="textUnit"
-              onChange={(e) => processChangeAndEnableLoad(e)}
-              type="radio"
-              value="acts"
-            />
-          </Col>
-        </Form.Group>
+    <ContentForm>
+      <h4>How do you want to schedule this rehearsal?</h4>
+      <form onSubmit={(e) => loadOnStages(e)}>
+        <div>
+          <Label>Unit of text</Label>
+          <div className="textUnit">
+            <label>
+              <FancyRadio
+                checked={inputs.textUnit === "french_scenes"}
+                disabled={!radiosEnabled}
+                id="french_scene"
+                label="French Scene"
+                name="textUnit"
+                onChange={(e) => processChangeAndEnableLoad(e)}
+                type="radio"
+                value="french_scenes"
+              />
+              <FancyRadioLabelBox>
+                <span>French Scene</span>
+              </FancyRadioLabelBox>
+            </label>
+          </div>
+          <div className="textUnit">
+            <label>
+              <FancyRadio
+                checked={inputs.textUnit === "scenes"}
+                disabled={!radiosEnabled}
+                id="scene"
+                name="textUnit"
+                onChange={(e) => processChangeAndEnableLoad(e)}
+                type="radio"
+                value="scenes"
+              />
+              <FancyRadioLabelBox>
+                <span>Scene</span>
+              </FancyRadioLabelBox>
+            </label>
+          </div>
+          <div className="textUnit">
+            <label>
+              <FancyRadio
+                checked={inputs.textUnit === "acts"}
+                disabled={!radiosEnabled}
+                id="acts"
+                name="textUnit"
+                onChange={(e) => processChangeAndEnableLoad(e)}
+                type="radio"
+                value="acts"
+              />
+              <FancyRadioLabelBox>
+                <span>Act</span>
+              </FancyRadioLabelBox>
+            </label>
+          </div>
+        </div>
         <Button
           disabled={!buttonsEnabled}
           type="submit"
@@ -404,10 +449,15 @@ export default function RehearsalContentForm({
         >
           Load Text Options
         </Button>
-        <Button type="button" onClick={onFormClose} block>
+        <Button
+          backgroundColor={"var(--cancel-button-background-color)"}
+          borderColor={"var(--cancel-button-border-color)"}
+          colorProp={"var(--cancel-button-color)"}
+          onClick={onFormClose}
+        >
           Cancel
         </Button>
-      </Form>
-    </Col>
+      </form>
+    </ContentForm>
   );
 }

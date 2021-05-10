@@ -1,19 +1,16 @@
-import React, {useContext} from 'react'
-import {
-  Col,
-  Container
-} from 'react-bootstrap'
+import React, { useContext } from "react";
+import { Col, Container } from "react-bootstrap";
 
-import Footer from './Footer'
-import Main from './Main'
-import Navigation from './Navigation'
-import {getSuperAdminRole} from '../utils/authorizationUtils'
-import {AppAuthContext} from './Contexts'
+import Footer from "./Footer";
+import Main from "./Main";
+import Navigation from "./Navigation";
+import { getSuperAdminRole } from "../utils/authorizationUtils";
+import { AppAuthContext } from "./Contexts";
 
-const user = JSON.parse(window.localStorage.getItem('user'))
-const userRole = getSuperAdminRole(user)
+const user = JSON.parse(window.localStorage.getItem("user"));
+const userRole = getSuperAdminRole(user);
 
-export function MainApp () {
+export function MainApp() {
   return (
     <AppAuthContext.Provider value={userRole}>
       <Col xs={12}>
@@ -22,5 +19,5 @@ export function MainApp () {
         <Footer />
       </Col>
     </AppAuthContext.Provider>
-  )
+  );
 }

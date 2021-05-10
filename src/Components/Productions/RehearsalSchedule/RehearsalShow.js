@@ -1,24 +1,51 @@
 import PropTypes from "prop-types";
-import { Col, Row } from "react-bootstrap";
 import Moment from "react-moment";
+import styled from "styled-components";
 
 import EditableRehearsalContent from "./EditableRehearsalContent";
 import EditableRehearsalPeople from "./EditableRehearsalPeople";
 import { useProductionState } from "../../../lib/productionState";
 
+const EditIcons = styled.div``;
+
+const Notes = styled.div`
+  padding-bottom: 30px;
+`;
+
+const RehearsalContainer = styled.div`
+  align-items: center;
+  display: flex;
+  flex-flow: column nowrap;
+`;
+
+const RehearsalDetails = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  width: 100%;
+`;
+
+const Time = styled.div``;
+
+const Space = styled.div``;
+
 export default function RehearsalShow({ handleEditClick, rehearsal }) {
-  const { deleteRehearsal } = useProductionState();
+  const { deleteRehearsal, updateRehearsal } = useProductionState();
   return (
-    <Col md={12}>
-      <Row>
-        <Moment format="h:mm MMM D, YYYY">{rehearsal.start_time}</Moment>-
-        <Moment format="h:mm MMM D, YYYY">{rehearsal.end_time}</Moment>:
-        {rehearsal.title}
+    <RehearsalContainer>
+      <h4>{rehearsal.title}</h4>
+      <Time>
+        <Moment format="h:mm ">{rehearsal.start_time}</Moment>-
+        <Moment format=" h:mm">{rehearsal.end_time}</Moment>
+      </Time>
+      <Space>
         {rehearsal.space_id ? (
           <span>at {rehearsal.space_id}</span>
         ) : (
           <span></span>
         )}
+      </Space>
+      <EditIcons>
         <span className="right floated edit icon" onClick={handleEditClick}>
           <i className="fas fa-pencil-alt"></i>
         </span>
@@ -28,20 +55,14 @@ export default function RehearsalShow({ handleEditClick, rehearsal }) {
         >
           <i className="fas fa-trash-alt"></i>
         </span>
-      </Row>
-      <Row>
-        {rehearsal.notes ? <Row>{rehearsal.notes}</Row> : <span></span>}
-      </Row>
-      <Row>
-        <Col md={8}>
-          <EditableRehearsalContent rehearsal={rehearsal} />
-        </Col>
-        <Col md={4}>
-          <EditableRehearsalPeople rehearsal={rehearsal} />
-        </Col>
-      </Row>
+      </EditIcons>
+      <Notes>{rehearsal.notes && rehearsal.notes}</Notes>
+      <RehearsalDetails>
+        <EditableRehearsalContent rehearsal={rehearsal} />
+        <EditableRehearsalPeople rehearsal={rehearsal} />
+      </RehearsalDetails>
       <hr />
-    </Col>
+    </RehearsalContainer>
   );
 }
 

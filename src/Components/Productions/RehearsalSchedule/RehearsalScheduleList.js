@@ -1,21 +1,24 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Col } from "react-bootstrap";
+import _ from "lodash";
 
 import EditableRehearsal from "./EditableRehearsal";
-
-import { useProductionState } from "../../../lib/productionState";
-import { useQuery } from "../../../hooks/environmentUtils";
-import { getEndOfWeek, getStartOfWeek } from "../../../utils/dateTimeUtils";
+import RehearsalDayGroup from "./RehearsalDayGroup";
 import RehearsalFormToggle from "./RehearsalFormToggle";
 import RehearsalPatternCreatorToggle from "./RehearsalPatternCreatorToggle";
+import { Button } from "../../Button";
+import Modal from "../../Modal";
+import { Spinner } from "../../Loaders";
+import { useQuery } from "../../../hooks/environmentUtils";
+import { useProductionState } from "../../../lib/productionState";
+import { getEndOfWeek, getStartOfWeek } from "../../../utils/dateTimeUtils";
 export default function RehearsalScheduleList() {
   let query = useQuery();
-  const { hiredUsers, rehearsals, production } = useProductionState();
+  const { isLoadingComplete, rehearsals, production } = useProductionState();
   const [thisWeekRehearsals, setThisWeekRehearsals] = useState([]);
   const [nextWeekRehearsals, setNextWeekRehearsals] = useState(false);
   const [lastWeekRehearsals, setLastWeekRehearsals] = useState(false);
-  const [userRole, setUserRole] = useState();
   const [endTime, setEndTime] = useState(
     query.get("endTime") || getEndOfWeek(moment())
   );
@@ -34,6 +37,36 @@ export default function RehearsalScheduleList() {
   const [nextWeekEndTime, setNextWeekEndTime] = useState(
     moment(endTime).add(7, "d").format("YYYY-MM-DD")
   );
+
+  const rehearsalsList = useMemo(() => rehearsals);
+  useEffect(() => {
+    if (rehearsals) {
+      let currentRehearsals = getRehearsalsForTimeRange(
+        rehearsals,
+        endTime,
+        startTime
+      );
+      setThisWeekRehearsals(currentRehearsals);
+    }
+  }, [endTime, startTime, rehearsalsList]);
+
+  useEffect(() => {
+    let lastWeekRehearsalsBool = !!getRehearsalsForTimeRange(
+      rehearsals,
+      lastWeekEndTime,
+      lastWeekStartTime
+    ).length;
+    setLastWeekRehearsals(lastWeekRehearsalsBool);
+  }, [endTime, startTime, rehearsals]);
+
+  useEffect(() => {
+    let nextWeekRehearsalsBool = !!getRehearsalsForTimeRange(
+      rehearsals,
+      nextWeekEndTime,
+      nextWeekStartTime
+    ).length;
+    setNextWeekRehearsals(nextWeekRehearsalsBool);
+  }, [endTime, startTime, rehearsals]);
 
   function getRehearsalsForTimeRange(rehearsals, endTime, startTime) {
     return rehearsals.filter(function (rehearsal) {
@@ -70,71 +103,61 @@ export default function RehearsalScheduleList() {
     setNextWeekStartTime(nextWeekStart);
   }
 
-  useEffect(() => {
-    if (rehearsals) {
-      let currentRehearsals = getRehearsalsForTimeRange(
-        rehearsals,
-        endTime,
-        startTime
-      );
-      setThisWeekRehearsals(currentRehearsals);
-    }
-  }, [endTime, startTime, rehearsals]);
+  let groupedRehearsals = _.groupBy(thisWeekRehearsals, "date");
 
-  useEffect(() => {
-    let lastWeekRehearsalsBool = !!getRehearsalsForTimeRange(
-      rehearsals,
-      lastWeekEndTime,
-      lastWeekStartTime
-    ).length;
-    setLastWeekRehearsals(lastWeekRehearsalsBool);
-  }, [endTime, startTime, rehearsals]);
+  let formattedRehearsals = Object.keys(groupedRehearsals).map((group, i) => {
+    return (
+      <RehearsalDayGroup
+        key={group}
+        date={moment(group).format("MMMM D, YYYY")}
+      >
+        {groupedRehearsals[group].map((rehearsal) => {
+          return <EditableRehearsal key={rehearsal.id} rehearsal={rehearsal} />;
+        })}
+      </RehearsalDayGroup>
+    );
+  });
 
-  useEffect(() => {
-    let nextWeekRehearsalsBool = !!getRehearsalsForTimeRange(
-      rehearsals,
-      nextWeekEndTime,
-      nextWeekStartTime
-    ).length;
-    setNextWeekRehearsals(nextWeekRehearsalsBool);
-  }, [endTime, startTime, rehearsals]);
+  if (!isLoadingComplete) {
+    return (
+      <Modal>
+        <h1>Loading!</h1>
+        <Spinner />
+      </Modal>
+    );
+  }
 
-  let formattedRehearsals = thisWeekRehearsals?.map((rehearsal) => (
-    <EditableRehearsal key={rehearsal.id} rehearsal={rehearsal} />
-  ));
   return (
     <>
-      {/* <ProductionAuthContext.Provider> */}
       <h2>Rehearsal Schedule</h2>
       <h3>
         {moment(startTime).format("MMM D, YYYY")}-
         {moment(endTime).format("MMM D, YYYY")}
       </h3>
       {lastWeekRehearsals && (
-        <button onClick={updateDatesLast}>Last Week</button>
+        <Button onClick={updateDatesLast}>Last Week</Button>
       )}
       {nextWeekRehearsals && (
-        <button onClick={updateDatesNext}>Next Week</button>
+        <Button
+          onClick={updateDatesNext}
+          backgroundColor={"var(--color-med)"}
+          borderColor={"var(--color-med)"}
+          color={"var(--color-text-light)"}
+        >
+          Next Week
+        </Button>
       )}
 
       <Col>
-        {/* {userRole === "admin" ? ( */}
         <RehearsalPatternCreatorToggle production={production} open={false} />
-        {/* ) : (
-          <span></span>
-        )} */}
+        <RehearsalFormToggle isOpen={false} production={production} />
+        <hr />
         {!!thisWeekRehearsals?.length ? (
           <div>{formattedRehearsals}</div>
         ) : (
           <div>Rehearsals not found</div>
         )}
-        <RehearsalFormToggle
-          isOpen={false}
-          // onFormSubmit={this.handleRehearsalCreate}
-          production={production}
-        />
       </Col>
-      {/* </ProductionAuthContext.Provider> */}
     </>
   );
 }
