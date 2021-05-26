@@ -1,18 +1,27 @@
-import React, {
-  useState,
-} from 'react'
+import React, { useState } from "react";
 
-import {Button} from 'react-bootstrap'
+import { Button } from "../../Button";
 
-import RehearsalPatternCreator from './RehearsalPatternCreator'
+import RehearsalPatternCreator from "./RehearsalPatternCreator";
 
-export default function RehearsalPatternCreatorToggle ({open, production}) {
-  const [formOpen, setFormOpen] = useState(open)
-  return(
+export default function RehearsalPatternCreatorToggle({ isOpen, production }) {
+  const [formOpen, setFormOpen] = useState(isOpen);
+  return (
     <>
-    {
-      formOpen ? <RehearsalPatternCreator production={production} cancel={setFormOpen}/> : <Button onClick={() => {setFormOpen(true)}}>Add Rehearsal Schedule Pattern</Button>
-    }
+      {formOpen ? (
+        <RehearsalPatternCreator production={production} cancel={setFormOpen} />
+      ) : (
+        <Button
+          backgroundColor={"var(--color-light)"}
+          borderColor={"var(--color-light)"}
+          colorProp={"var(--color-very-dark)"}
+          onClick={() => {
+            setFormOpen(true);
+          }}
+        >
+          Add Rehearsal Schedule Pattern
+        </Button>
+      )}
     </>
-  )
+  );
 }

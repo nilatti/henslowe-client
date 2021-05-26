@@ -9,7 +9,7 @@ import ConflictsList from "../Conflicts/ConflictsList";
 import { UserAuthContext } from "../Contexts";
 
 import { buildUserName } from "../../utils/actorUtils";
-import { ConflictStateProvider } from "../Conflicts/ConflictStateProvider";
+import { ConflictStateProvider } from "../../lib/conflictState";
 import { USER_CONFLICT_REASONS } from "../../utils/hardcodedConstants";
 
 export default function UserShow({ onDeleteClick, onEditClick, user }) {

@@ -1,36 +1,14 @@
 import { useLocation } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import moment from "moment";
+import { isAfterTime } from "../utils/dateTimeUtils";
 
 export function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-export function getMinTime(minTime) {
-  if (minTime === "")
-    return {
-      hour: {},
-      minute: {},
-    };
-  let obj = {
-    hour: {
-      min: minTime.hour(),
-    },
-    minute: {
-      min: minTime.minute(),
-    },
-  };
-  return obj;
-}
-
-export function isAfterDate(date, current) {
-  var startDate = moment(date);
-  if (!startDate) return true;
-  return current.isAfter(startDate);
-}
-
 export function useForm(initial = {}) {
   // create a state object for our inputs
+  //tktktk add a way to set null inputs to empty strings
   const [inputs, setInputs] = useState(initial);
   useEffect(() => {
     // This function runs when the things we are watching change
@@ -70,10 +48,10 @@ export function useForm(initial = {}) {
 
   // return the things we want to surface from this custom hook
   return {
+    clearForm,
     inputs,
     handleChange,
     resetForm,
-    clearForm,
   };
 }
 

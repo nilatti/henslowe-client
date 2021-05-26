@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { getProductionWithPlayText } from "../../api/productions";
 
 import DoublingChart from "./DoublingChart";
+import { ACTOR_SPECIALIZATION_ID } from "../../utils/hardcodedConstants";
 
 class DoublingCharts extends Component {
   state = {};
@@ -31,8 +32,10 @@ class DoublingCharts extends Component {
 
   getJobsForActor(actor) {
     let uncastRemoved = this.state.production.jobs.map((job) => {
-      if (job.user_id !== null && job.specialization_id === 2) {
-        //again, don't like the hard coding here where actor = 2
+      if (
+        job.user_id !== null &&
+        job.specialization_id === ACTOR_SPECIALIZATION_ID
+      ) {
         return job;
       } else {
         return;

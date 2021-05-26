@@ -51,7 +51,6 @@ class UserJobsList extends Component {
       if (theaterId !== null) {
         let theaterGroup = grouped[theaterId];
         let groupedByProduction = _.groupBy(theaterGroup, "production_id");
-        console.log(groupedByProduction);
         let nonProductionJobs = groupedByProduction["null"];
         let nonProductionJobsForTheater;
         if (nonProductionJobs) {

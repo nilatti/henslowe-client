@@ -7,7 +7,7 @@ import TheaterInfoTab from "../Theaters/TheaterInfoTab";
 import { SPACE_CONFLICT_REASONS } from "../../utils/hardcodedConstants";
 
 import { SpaceAuthContext } from "../Contexts";
-import { ConflictStateProvider } from "../Conflicts/ConflictStateProvider";
+import { ConflictStateProvider } from "../../lib/conflictState";
 import ConflictsList from "../Conflicts/ConflictsList";
 
 export default function SpaceShow({
