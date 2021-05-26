@@ -29,10 +29,8 @@ import { ProductionAuthContext } from "../Contexts";
 export default function ProductionShow({
   production,
   onEditClick,
-  onDeleteClick,
-  onFormSubmit,
+  onDeleteClick
 }) {
-  console.log(production);
   let [productionCopyComplete, setProductionCopyComplete] = useState(
     production.play.production_copy_complete
   );

@@ -12,8 +12,6 @@ export default function ConflictPatternShow({
     (day) => day[0].toUpperCase() + day.substring(1) + "s"
   );
   daysOfWeek = daysOfWeek.join(", ");
-  console.log(conflictPattern.start_time);
-  console.log(conflictPattern.end_time);
   return (
     <Col md={12}>
       {daysOfWeek} from {moment(conflictPattern.start_time).format("h:mm a")}-

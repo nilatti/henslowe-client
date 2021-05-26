@@ -1,12 +1,14 @@
 import _ from "lodash";
 import PropTypes from "prop-types";
-import { Button, Col, Form, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useProductionState } from "../../../lib/productionState";
-import { buildUserName } from "../../../utils/actorUtils";
+
+import PeopleCheckboxes from "./PeopleCheckboxes";
+import { Button } from "../../../Button";
+import { useProductionState } from "../../../../lib/productionState";
 
 const PeopleForm = styled.div`
+  align-items: center;
   display: flex;
   flex-flow: column nowrap;
   flex: 1 1 0;
@@ -23,12 +25,13 @@ export default function RehearsalPeopleForm({
   useEffect(() => {
     let calledForScenes = markCalledForScenes(productionArtists);
     let unavailableUsers = markUnavailable(calledForScenes);
-    let sortedUsers = sortUsers(unavailableUsers);
-    setProductionArtists(sortedUsers);
+    console.log(unavailableUsers);
+    setProductionArtists(unavailableUsers);
   }, []);
 
   function formatRehearsalPeople(e) {
     let newRehearsal = {
+      ...rehearsal,
       id: rehearsal.id,
       user_ids: productionArtists.map((user) => {
         if (user.isCalled) {
@@ -74,10 +77,6 @@ export default function RehearsalPeopleForm({
     });
   }
 
-  function sortUsers(users) {
-    return _.sortBy(users, ["first_name"]);
-  }
-
   function updateCheckedContent(e) {
     const targetId = Number(e.target.id);
     setProductionArtists(
@@ -87,32 +86,27 @@ export default function RehearsalPeopleForm({
     );
   }
 
-  let userContentCheckboxes = productionArtists.map((item) => {
+  if (productionArtists[0].hasOwnProperty("isCalled"))
     return (
-      <div key={item.id}>
-        <Form.Check
-          type="checkbox"
-          id={`${item.id}`}
-          key={`${item.id}`}
-          label={`${buildUserName(item)}`}
-          checked={item.isCalled || ""}
-          onChange={updateCheckedContent}
-          value={item.isCalled || ""}
-        />
-        <p>{item.furtherInfo}</p>
-      </div>
+      <PeopleForm>
+        <form>
+          <PeopleCheckboxes
+            onChange={updateCheckedContent}
+            users={productionArtists}
+          />
+        </form>
+
+        <Button onClick={formatRehearsalPeople}>Schedule these folks</Button>
+
+        <Button
+          backgroundColor={"var(--cancel-button-background-color)"}
+          borderColor={"var(--cancel-button-border-color)"}
+          colorProp={"var(--cancel-button-color)"}
+          onClick={onFormClose}
+        >
+          Cancel
+        </Button>
+      </PeopleForm>
     );
-  });
-
-  return (
-    <PeopleForm>
-      <Form>{_.compact(userContentCheckboxes)}</Form>
-
-      <Button onClick={formatRehearsalPeople}>Schedule these folks</Button>
-
-      <Button type="button" onClick={onFormClose} block>
-        Cancel
-      </Button>
-    </PeopleForm>
-  );
+  return <div>Loading</div>;
 }

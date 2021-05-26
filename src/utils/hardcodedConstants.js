@@ -22,3 +22,6 @@ export const USER_CONFLICT_REASONS = [
   "rehearsal",
   "work",
 ];
+
+export const AUDITION_SPECIALIZATION_ID = 3;
+export const ACTOR_SPECIALIZATION_ID = 2;

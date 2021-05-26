@@ -2,8 +2,15 @@ import _ from "lodash";
 import moment from "moment";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import {
+  ACTOR_SPECIALIZATION_ID,
+  AUDITION_SPECIALIZATION_ID,
+} from "../utils/hardcodedConstants";
+import { buildRehearsalSchedule } from "../api/productions.js";
+
 const ProductionStateContext = createContext();
 const ProductionStateProvider = ProductionStateContext.Provider;
+
 import {
   createItemWithParent,
   deleteItem,
@@ -16,6 +23,8 @@ import { getJobs } from "../api/jobs";
 function ProductionProvider({ children }) {
   const { id } = useParams();
   const [hiredUsers, setHiredUsers] = useState([]);
+  const [actors, setActors] = useState([]);
+  const [notActors, setNotActors] = useState([]);
   const [production, setProduction] = useState({});
   const [productionId, setProductionId] = useState(id);
   const [rehearsals, setRehearsals] = useState([]);
@@ -39,14 +48,20 @@ function ProductionProvider({ children }) {
       console.log("error getting jobs");
     } else {
       const hiredJobs = _.filter(response.data, function (o) {
-        return o.specialization_id !== 4;
+        return o.specialization_id !== AUDITION_SPECIALIZATION_ID;
       });
       const hiredJobUsers = hiredJobs.map((job) => job.user);
       let compactHiredUsers = _.compact(hiredJobUsers);
       let uniqueHiredUsers = _.uniqBy(compactHiredUsers, function (o) {
         return o.id;
       });
-      setHiredUsers(uniqueHiredUsers);
+      let uniqueHiredUsersWithJobs = uniqueHiredUsers.map((user) => {
+        let userJobs = _.filter(hiredJobs, function (j) {
+          return j.user_id === user.id;
+        });
+        return { ...user, jobs: userJobs };
+      });
+      setHiredUsers(uniqueHiredUsersWithJobs);
     }
   }, []);
 
@@ -75,6 +90,25 @@ function ProductionProvider({ children }) {
     }
   }, []);
 
+  useEffect(() => {
+    setActors(
+      _.filter(hiredUsers, function (j) {
+        let specializationIds = j.jobs.map((job) => job.specialization_id);
+        if (specializationIds.length) {
+          return specializationIds.includes(ACTOR_SPECIALIZATION_ID);
+        }
+      })
+    );
+    setNotActors(
+      _.filter(hiredUsers, function (j) {
+        let specializationIds = j.jobs.map((job) => job.specialization_id);
+        if (specializationIds.length) {
+          return !specializationIds.includes(ACTOR_SPECIALIZATION_ID);
+        }
+      })
+    );
+  }, [hiredUsers]);
+
   async function createRehearsal(rehearsal) {
     const response = await createItemWithParent(
       "production",
@@ -85,16 +119,52 @@ function ProductionProvider({ children }) {
     if (response.status >= 400) {
       console.log("error creating rehearsal");
     } else {
-      console.log(rehearsals);
-      console.log(response.data);
       let newRehearsals = rehearsals.concat({
         ...response.data,
         date: moment(rehearsal.start_time).format("YYYY-MM-DD"),
       });
-      console.log(newRehearsals);
       newRehearsals = _.sortBy(newRehearsals, "start_time");
-      console.log(newRehearsals);
       setRehearsals(newRehearsals);
+    }
+  }
+
+  async function createRehearsalSchedulePattern(
+    productionId,
+    rehearsalSchedulePattern
+  ) {
+    let response = await buildRehearsalSchedule(
+      productionId,
+      rehearsalSchedulePattern
+    );
+    if (response.status >= 400) {
+      console.log("error creating rehearsals");
+    } else {
+      setLoadingComplete(false);
+      const allRehearsalResponse = await getItemsWithParent(
+        "production",
+        productionId,
+        "rehearsal"
+      );
+      if (allRehearsalResponse) {
+        setLoadingComplete(true);
+      }
+      if (allRehearsalResponse.status >= 400) {
+        console.log("error getting rehearsals");
+      } else {
+        let sortedRehearsals = _.sortBy(
+          allRehearsalResponse.data,
+          "start_time"
+        );
+        let datedRehearsals = sortedRehearsals.map((rehearsal) => {
+          return {
+            ...rehearsal,
+            date: moment(rehearsal.start_time).format("YYYY-MM-DD"),
+          };
+        });
+
+        setRehearsals(datedRehearsals);
+        setLoadingComplete(true);
+      }
     }
   }
 
@@ -138,11 +208,14 @@ function ProductionProvider({ children }) {
   return (
     <ProductionStateProvider
       value={{
+        actors,
         createRehearsal,
+        createRehearsalSchedulePattern,
         deleteRehearsal,
         isLoadingComplete,
         hiredUsers,
         setHiredUsers,
+        notActors,
         production,
         productionId,
         rehearsals,

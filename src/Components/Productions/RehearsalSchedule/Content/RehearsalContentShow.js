@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import uuid from "react-uuid";
 import styled from "styled-components";
-import { EditIcons } from "../../Styled";
+import { EditIcons } from "../../../Styled";
 
 const ContentShow = styled.div`
   display: flex;

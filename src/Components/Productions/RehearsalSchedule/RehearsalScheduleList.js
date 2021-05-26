@@ -1,7 +1,7 @@
+import _ from "lodash";
 import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
-import { Col } from "react-bootstrap";
-import _ from "lodash";
+import styled from "styled-components";
 
 import EditableRehearsal from "./EditableRehearsal";
 import RehearsalDayGroup from "./RehearsalDayGroup";
@@ -13,12 +13,29 @@ import { Spinner } from "../../Loaders";
 import { useQuery } from "../../../hooks/environmentUtils";
 import { useProductionState } from "../../../lib/productionState";
 import { getEndOfWeek, getStartOfWeek } from "../../../utils/dateTimeUtils";
+
+const EditButtons = styled.div`
+  display: ${(props) => (props.show ? "flex" : "none")};
+  flex-flow: row wrap;
+  justify-content: center;
+`;
+
+const RehearsalScheduleListStyles = styled.div`
+  h2 {
+    span {
+      font-size: 0.45em;
+      cursor: pointer;
+    }
+  }
+`;
+
 export default function RehearsalScheduleList() {
   let query = useQuery();
   const { isLoadingComplete, rehearsals, production } = useProductionState();
   const [thisWeekRehearsals, setThisWeekRehearsals] = useState([]);
   const [nextWeekRehearsals, setNextWeekRehearsals] = useState(false);
   const [lastWeekRehearsals, setLastWeekRehearsals] = useState(false);
+  const [addRehearsalsOpen, setAddRehearsalsOpen] = useState(false);
   const [endTime, setEndTime] = useState(
     query.get("endTime") || getEndOfWeek(moment())
   );
@@ -79,6 +96,10 @@ export default function RehearsalScheduleList() {
     });
   }
 
+  function toggleAddRehearsal() {
+    setAddRehearsalsOpen(!addRehearsalsOpen);
+  }
+
   function updateDatesLast() {
     let lastWeekStart = moment(startTime)
       .subtract(14, "d")
@@ -109,7 +130,7 @@ export default function RehearsalScheduleList() {
     return (
       <RehearsalDayGroup
         key={group}
-        date={moment(group).format("MMMM D, YYYY")}
+        date={moment(group).format("dddd, MMMM D")}
       >
         {groupedRehearsals[group].map((rehearsal) => {
           return <EditableRehearsal key={rehearsal.id} rehearsal={rehearsal} />;
@@ -128,12 +149,21 @@ export default function RehearsalScheduleList() {
   }
 
   return (
-    <>
-      <h2>Rehearsal Schedule</h2>
+    <RehearsalScheduleListStyles>
+      <h2>
+        Rehearsal Schedule{" "}
+        <span className="right floated edit icon" onClick={toggleAddRehearsal}>
+          <i className="fas fa-pencil-alt"></i>
+        </span>
+      </h2>
       <h3>
         {moment(startTime).format("MMM D, YYYY")}-
         {moment(endTime).format("MMM D, YYYY")}
       </h3>
+      <EditButtons show={addRehearsalsOpen}>
+        <RehearsalPatternCreatorToggle production={production} isOpen={false} />
+        <RehearsalFormToggle isOpen={false} production={production} />
+      </EditButtons>
       {lastWeekRehearsals && (
         <Button onClick={updateDatesLast}>Last Week</Button>
       )}
@@ -148,16 +178,14 @@ export default function RehearsalScheduleList() {
         </Button>
       )}
 
-      <Col>
-        <RehearsalPatternCreatorToggle production={production} open={false} />
-        <RehearsalFormToggle isOpen={false} production={production} />
+      <div>
         <hr />
         {!!thisWeekRehearsals?.length ? (
           <div>{formattedRehearsals}</div>
         ) : (
           <div>Rehearsals not found</div>
         )}
-      </Col>
-    </>
+      </div>
+    </RehearsalScheduleListStyles>
   );
 }

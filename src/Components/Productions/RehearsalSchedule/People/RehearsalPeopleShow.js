@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 // import uuid from "react-uuid";
 import styled from "styled-components";
-import { buildUserName } from "../../../utils/actorUtils";
-import { EditIcons } from "../../Styled";
+import { buildUserName } from "../../../../utils/actorUtils";
+import { EditIcons } from "../../../Styled";
 
 const PeopleShow = styled.div`
   display: flex;

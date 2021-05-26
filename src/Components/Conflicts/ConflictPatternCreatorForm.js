@@ -4,7 +4,8 @@ import { Col, Form, Button } from "react-bootstrap";
 import Datetime from "react-datetime"; //updated!
 
 import { useConflicts } from "../../lib/conflictState";
-import { useForm, isAfterDate, getMinTime } from "../../hooks/environmentUtils";
+import { useForm } from "../../hooks/environmentUtils";
+import { isAfterDate, getMinTime } from "../../utils/dateTimeUtils";
 import { StartEndDatePair, StartEndTimePair } from "../../utils/formUtils";
 import { DAYS_OF_WEEK } from "../../utils/hardcodedConstants";
 import { firstLetterUpcase } from "../../utils/stringUtils";
@@ -19,17 +20,6 @@ export default function ConflictPatternCreatorForm({ cancel, onFormSubmit }) {
     days_of_week: [],
   });
 
-  function handleDateTimeChange(time, name) {
-    let e = {
-      target: {
-        value: time,
-        name: name,
-        type: "datetime",
-      },
-    };
-    handleChange(e);
-  }
-
   function handleSubmit(event) {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
@@ -43,7 +33,6 @@ export default function ConflictPatternCreatorForm({ cancel, onFormSubmit }) {
 
   function processSubmit() {
     let parentTypeId = parentType + "_id";
-    console.log(inputs);
     onFormSubmit({
       category: inputs.category,
       end_date: inputs.end_date,

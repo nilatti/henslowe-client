@@ -1,9 +1,17 @@
 import PropTypes from "prop-types";
-import { Button, Col, Form } from "react-bootstrap";
+import styled from "styled-components";
 import { useForm } from "../../../hooks/environmentUtils";
+import { Button } from "../../Button";
+import { Form, FormGroup } from "../../Form";
 import { useProductionState } from "../../../lib/productionState";
 import { StartEndDateTimePair } from "../../../utils/formUtils";
 import { formatDateTimeForRails } from "../../../utils/dateTimeUtils";
+
+const RehearsalFormStyles = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+`;
 
 export default function RehearsalForm({
   onFormClose,
@@ -49,49 +57,47 @@ export default function RehearsalForm({
   }
 
   return (
-    <Col
-      md={{
-        span: 8,
-        offset: 2,
-      }}
-    >
+    <RehearsalFormStyles>
+      <h2>New Rehearsal</h2>
       <Form
         noValidate
         onSubmit={(e) => handleSubmit(e)}
         // validated={validated}
       >
-        <StartEndDateTimePair
-          endTime={inputs.end_time}
-          startTime={inputs.start_time}
-          handleChange={handleChange}
-        />
-        <Form.Group controlId="title">
-          <Form.Label>Title:</Form.Label>
-          <Form.Control
-            name="title"
-            onChange={handleChange}
-            value={inputs.title}
+        <fieldset>
+          <StartEndDateTimePair
+            endTime={inputs.end_time}
+            startTime={inputs.start_time}
+            handleChange={handleChange}
           />
-        </Form.Group>
-        <Form.Group controlId="notes">
-          <Form.Label>Notes:</Form.Label>
-          <Form.Control
-            as="textarea"
-            name="notes"
-            onChange={handleChange}
-            rows="3"
-            value={inputs.notes}
-          />
-        </Form.Group>
-        <Button type="submit" variant="primary" block>
-          Submit
-        </Button>
-        <Button type="button" onClick={onFormClose} block>
-          Cancel
-        </Button>
+          <FormGroup>
+            <label htmlFor="title">Title:</label>
+            <input
+              id="title"
+              name="title"
+              onChange={handleChange}
+              value={inputs.title}
+            />
+          </FormGroup>
+          <FormGroup>
+            <label htmlFor="notes">Notes:</label>
+            <input
+              id="notes"
+              as="textarea"
+              name="notes"
+              onChange={handleChange}
+              rows="3"
+              value={inputs.notes}
+            />
+          </FormGroup>
+          <Button type="submit">Submit</Button>
+          <Button type="button" onClick={onFormClose}>
+            Cancel
+          </Button>
+        </fieldset>
       </Form>
       <hr />
-    </Col>
+    </RehearsalFormStyles>
   );
 }
 

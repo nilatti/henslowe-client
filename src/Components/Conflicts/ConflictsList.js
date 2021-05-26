@@ -52,7 +52,6 @@ export default function ConflictsList() {
       parentType,
       conflictSchedulePattern
     );
-    console.log(response);
     if (response.status >= 400) {
       this.setState({
         errorStatus: "Error deleting conflict",
@@ -127,7 +126,6 @@ export default function ConflictsList() {
   }
 
   function handleConflictPatternCreate(conflictSchedulePattern) {
-    console.log("inside conflict pattern handler");
     createConflictSchedulePattern(
       parentId,
       parentType,

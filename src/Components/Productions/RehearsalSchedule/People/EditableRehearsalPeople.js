@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 import RehearsalPeopleForm from "./RehearsalPeopleForm";
 import RehearsalPeopleShow from "./RehearsalPeopleShow";
-import { useProductionState } from "../../../lib/productionState";
+import { useProductionState } from "../../../../lib/productionState";
 
 const People = styled.div`
   display: flex;
@@ -12,6 +12,16 @@ const People = styled.div`
 export default function EditableRehearsalPeople({ rehearsal }) {
   const { updateRehearsal } = useProductionState();
   const [formOpen, setFormOpen] = useState(false);
+  const thisRehearsal = useRef(null);
+  function closeForm() {
+    setFormOpen(false);
+    if (thisRehearsal.current) {
+      window.scrollTo({
+        behavior: "smooth",
+        top: thisRehearsal.current.offsetTop,
+      });
+    }
+  }
 
   function handleEditClick() {
     setFormOpen(true);
@@ -26,13 +36,13 @@ export default function EditableRehearsalPeople({ rehearsal }) {
   }
 
   return (
-    <People>
+    <People ref={thisRehearsal}>
       {formOpen ? (
         <RehearsalPeopleForm
           calledUsers={rehearsal.users}
           rehearsal={rehearsal}
           handleEditClick={handleEditClick}
-          onFormClose={toggleForm}
+          onFormClose={closeForm}
           onFormSubmit={handleSubmit}
         />
       ) : (

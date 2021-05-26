@@ -4,8 +4,8 @@ import { Button } from "../../Button";
 
 import RehearsalPatternCreator from "./RehearsalPatternCreator";
 
-export default function RehearsalPatternCreatorToggle({ open, production }) {
-  const [formOpen, setFormOpen] = useState(open);
+export default function RehearsalPatternCreatorToggle({ isOpen, production }) {
+  const [formOpen, setFormOpen] = useState(isOpen);
   return (
     <>
       {formOpen ? (

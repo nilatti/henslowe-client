@@ -8,6 +8,7 @@ export const Button = styled.button`
   color: ${(props) => props.colorProp || "var(--color-text-light)"};
   cursor: pointer;
   margin: 5px;
+  max-width: 200px;
 
   padding: 7px;
   &:hover {

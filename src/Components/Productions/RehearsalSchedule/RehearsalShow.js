@@ -2,14 +2,21 @@ import PropTypes from "prop-types";
 import Moment from "react-moment";
 import styled from "styled-components";
 
-import EditableRehearsalContent from "./EditableRehearsalContent";
-import EditableRehearsalPeople from "./EditableRehearsalPeople";
+import EditableRehearsalContent from "./Content/EditableRehearsalContent";
+import EditableRehearsalPeople from "./People/EditableRehearsalPeople";
 import { useProductionState } from "../../../lib/productionState";
+import { unavailableUsers } from "../../../utils/rehearsalUtils";
+import { buildUserName } from "../../../utils/actorUtils";
 
 const EditIcons = styled.div``;
 
 const Notes = styled.div`
   padding-bottom: 30px;
+`;
+
+const OtherUsersConflicts = styled.div`
+  font-size: 0.75em;
+  font-style: italic;
 `;
 
 const RehearsalContainer = styled.div`
@@ -30,13 +37,15 @@ const Time = styled.div``;
 const Space = styled.div``;
 
 export default function RehearsalShow({ handleEditClick, rehearsal }) {
-  const { deleteRehearsal, updateRehearsal } = useProductionState();
+  const { deleteRehearsal, notActors } = useProductionState();
+
+  let unavailableNotActors = unavailableUsers(notActors, rehearsal);
   return (
     <RehearsalContainer>
       <h4>{rehearsal.title}</h4>
       <Time>
-        <Moment format="h:mm ">{rehearsal.start_time}</Moment>-
-        <Moment format=" h:mm">{rehearsal.end_time}</Moment>
+        <Moment format="h:mm a">{rehearsal.start_time}</Moment>-
+        <Moment format=" h:mm a">{rehearsal.end_time}</Moment>
       </Time>
       <Space>
         {rehearsal.space_id ? (
@@ -57,6 +66,12 @@ export default function RehearsalShow({ handleEditClick, rehearsal }) {
         </span>
       </EditIcons>
       <Notes>{rehearsal.notes && rehearsal.notes}</Notes>
+      {unavailableNotActors.length > 0 && (
+        <OtherUsersConflicts>
+          Other conflicts:{" "}
+          {unavailableNotActors.map((user) => buildUserName(user)).join()}
+        </OtherUsersConflicts>
+      )}
       <RehearsalDetails>
         <EditableRehearsalContent rehearsal={rehearsal} />
         <EditableRehearsalPeople rehearsal={rehearsal} />

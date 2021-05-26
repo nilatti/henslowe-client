@@ -46,6 +46,10 @@ export const FancyRadioLabelBox = styled.div`
 `;
 
 export const FancyCheckBox = styled.label`
+  .not-recommended {
+    background-color: var(--color-light-disabled);
+    font-style: italic;
+  }
   & > ${FancyRadio}:checked ~ div {
     background-color: var(--color-dark);
     color: var(--color-text-light);

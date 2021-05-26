@@ -1,32 +1,9 @@
 import { useLocation } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import moment from "moment";
+import { isAfterTime } from "../utils/dateTimeUtils";
 
 export function useQuery() {
   return new URLSearchParams(useLocation().search);
-}
-
-export function getMinTime(minTime) {
-  if (minTime === "")
-    return {
-      hour: {},
-      minute: {},
-    };
-  let obj = {
-    hour: {
-      min: minTime.hour(),
-    },
-    minute: {
-      min: minTime.minute(),
-    },
-  };
-  return obj;
-}
-
-export function isAfterDate(date, current) {
-  var startDate = moment(date);
-  if (!startDate) return true;
-  return current.isAfter(startDate);
 }
 
 export function useForm(initial = {}) {
@@ -51,7 +28,6 @@ export function useForm(initial = {}) {
       checkbox.push(value);
       value = checkbox;
     }
-
     setInputs({
       // copy the existing state
       ...inputs,
@@ -72,10 +48,10 @@ export function useForm(initial = {}) {
 
   // return the things we want to surface from this custom hook
   return {
+    clearForm,
     inputs,
     handleChange,
     resetForm,
-    clearForm,
   };
 }
 

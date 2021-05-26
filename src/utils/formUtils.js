@@ -1,27 +1,27 @@
+import { useState } from "react";
 import { Form } from "react-bootstrap";
 import Datetime from "react-datetime"; //updated!
 import PropTypes from "prop-types";
-import moment from "moment";
 
-import { isAfterDate } from "../hooks/environmentUtils";
+import { isAfterDate, isAfterTime } from "../utils/dateTimeUtils";
 
-// let valid = function( current, startOrEnd, startTime ){
-//   if (startOrEnd == 'start') {
-//     return current.isBefore( moment() ) && current.isAfter( moment().subtract(3, 'months'));
-//   } else if (startOrEnd == 'end') {
-//     return current.isBefore( moment() ) && current.isAfter( startTime );
-//   }
-// };
+function handleDateTimeChange(time, name, handleChange) {
+  let event = {
+    target: {
+      value: time,
+      name: name,
+      type: "datetime",
+    },
+  };
+  handleChange(event);
+}
 export function StartEndDatePair({ endDate, handleChange, startDate }) {
-  function handleDateTimeChange(time, name) {
-    let event = {
-      target: {
-        value: time,
-        name: name,
-        type: "datetime",
-      },
-    };
-    handleChange(event);
+  const [tempStartDate, setTempStartDate] = useState(startDate);
+
+  function handleStartDateChange(date, handleChange) {
+    //this is a hacky workaround that keeps the end time after the start time.
+    setTempStartDate(date);
+    handleDateTimeChange(date, "start_date", handleChange);
   }
   return (
     <>
@@ -30,7 +30,7 @@ export function StartEndDatePair({ endDate, handleChange, startDate }) {
         <Datetime
           timeFormat={false}
           format={"MM/DD/YYYY"}
-          onChange={(date) => handleDateTimeChange(date, "start_date")}
+          onChange={(date) => handleStartDateChange(date, handleChange)}
           required
           value={startDate}
         />
@@ -38,10 +38,12 @@ export function StartEndDatePair({ endDate, handleChange, startDate }) {
       <Form.Group controlId="end_date">
         <Form.Label>To</Form.Label>
         <Datetime
-          isValidDate={(current) => isAfterDate(startDate, current)}
+          isValidDate={(current) => isAfterDate(tempStartDate, current)}
           timeFormat={false}
           format={"MM/DD/YYYY"}
-          onChange={(date) => handleDateTimeChange(date, "end_date")}
+          onChange={(date) =>
+            handleDateTimeChange(date, "end_date", handleChange)
+          }
           required
           value={endDate}
         />
@@ -51,16 +53,6 @@ export function StartEndDatePair({ endDate, handleChange, startDate }) {
 }
 
 export function StartEndTimePair({ endTime, handleChange, startTime }) {
-  function handleDateTimeChange(time, name) {
-    let event = {
-      target: {
-        value: time,
-        name: name,
-        type: "datetime",
-      },
-    };
-    handleChange(event);
-  }
   return (
     <>
       <Form.Group controlId="start_time">
@@ -68,9 +60,11 @@ export function StartEndTimePair({ endTime, handleChange, startTime }) {
         <Datetime
           dateFormat={false}
           format={"hh:mm A"}
-          onChange={(time) => handleDateTimeChange(time, "start_time")}
+          onChange={(time) =>
+            handleDateTimeChange(time, "start_time", handleChange)
+          }
           required
-          value={moment(startTime)}
+          value={startTime}
         />
       </Form.Group>
       <Form.Group controlId="end_time">
@@ -78,27 +72,22 @@ export function StartEndTimePair({ endTime, handleChange, startTime }) {
         <Datetime
           dateFormat={false}
           format={"hh:mm A"}
-          onChange={(time) => handleDateTimeChange(time, "end_time")}
+          onChange={(time) =>
+            handleDateTimeChange(time, "end_time", handleChange)
+          }
           required
-          value={moment(endTime)}
-          // timeConstraints={getMinTime(inputs.start_time)}
+          value={endTime}
         />
-        <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
       </Form.Group>
     </>
   );
 }
 
 export function StartEndDateTimePair({ endTime, handleChange, startTime }) {
-  function handleDateTimeChange(time, name) {
-    let event = {
-      target: {
-        value: time,
-        name: name,
-        type: "datetime",
-      },
-    };
-    handleChange(event);
+  function handleStartDateChange(date, handleChange) {
+    //this is a hacky workaround that keeps the end time after the start time.
+    setTempStartDate(date);
+    handleDateTimeChange(date, "start_date", handleChange);
   }
   return (
     <>
@@ -106,17 +95,20 @@ export function StartEndDateTimePair({ endTime, handleChange, startTime }) {
         <Form.Label>Start Time</Form.Label>
         <Datetime
           type="datetime"
-          onChange={(time) => handleDateTimeChange(time, "start_time")}
+          onChange={(date) => handleStartDateChange(date, handleChange)}
           name="start_time"
-          value={moment(startTime)}
+          value={startTime}
         />
       </Form.Group>
       <Form.Group controlId="end_time">
         <Form.Label>End Time</Form.Label>
         <Datetime
-          onChange={(time) => handleDateTimeChange(time, "end_time")}
+          name="end_time"
+          onChange={(time) =>
+            handleDateTimeChange(time, "end_time", handleChange)
+          }
           type="datetime"
-          value={moment(endTime)}
+          value={endTime}
         />
         <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
       </Form.Group>
