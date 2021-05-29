@@ -8,9 +8,6 @@ import {
 } from "../utils/hardcodedConstants";
 import { buildRehearsalSchedule } from "../api/productions.js";
 
-const ProductionStateContext = createContext();
-const ProductionStateProvider = ProductionStateContext.Provider;
-
 import {
   createItemWithParent,
   deleteItem,
@@ -19,6 +16,9 @@ import {
   updateServerItem,
 } from "../api/crud";
 import { getJobs } from "../api/jobs";
+
+const ProductionStateContext = createContext();
+const ProductionStateProvider = ProductionStateContext.Provider;
 
 function ProductionProvider({ children }) {
   const { id } = useParams();

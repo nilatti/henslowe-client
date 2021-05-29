@@ -1,24 +1,19 @@
-import React, {
-  Component,
-  useContext
-} from 'react'
-import {AuthContext} from '../App.js'
-import SignOut from './SignOut'
-import SignIn from './SignIn'
-import {buildUserName} from '../utils/actorUtils'
+import SignOut from "./SignOut";
+import SignIn from "./SignIn";
+import { useMeState } from "../lib/meState";
+
 export default function SignUpInOut() {
-const authContext = React.useContext(AuthContext);
-return (
-  <div>
-  {
-    !authContext.state.isAuthenticated ?
-    <SignIn isAuthenticated={authContext.state.isAuthenticated}/>
-    :
-  <div>
-    Welcome, {buildUserName(JSON.parse(window.localStorage.getItem('user')))}!
-    <SignOut />
+  const { me, meName } = useMeState();
+  return (
+    <div>
+      {me ? (
+        <div>
+          Welcome, {meName}!
+          <SignOut />
+        </div>
+      ) : (
+        <SignIn />
+      )}
     </div>
-  }
-  </div>
-)
+  );
 }

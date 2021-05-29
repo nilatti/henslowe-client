@@ -1,5 +1,13 @@
 import styled from "styled-components";
 
+export const Container = styled.div`
+  align-items: center;
+  display: flex;
+  flex-flow: column nowrap;
+  margin: auto;
+  width: 80%;
+`;
+
 export const EditIcons = styled.div`
   display: inline;
   font-size: 17px;

@@ -7,8 +7,8 @@ export const Button = styled.button`
   border-style: solid;
   color: ${(props) => props.colorProp || "var(--color-text-light)"};
   cursor: pointer;
-  margin: 5px;
-  max-width: 200px;
+  margin: ${(props) => props.margin || "5px"};
+  max-width: ${(props) => props.maxWidth || "200px"};
 
   padding: 7px;
   &:hover {

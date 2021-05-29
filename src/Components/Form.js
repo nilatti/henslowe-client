@@ -3,15 +3,8 @@ import styled from "styled-components";
 export const Form = styled.form`
   display: flex;
   flex-flow: column nowrap;
-  width: 35%;
+  width: ${(props) => props.width || "35%"};
   margin: 0 auto;
-`;
-
-export const FormGroup = styled.div`
-  display: flex;
-  flex-flow: column nowrap;
-  margin: 10px 0;
-  width: 100%;
   label {
     flex-basis: 25%;
   }
@@ -20,6 +13,7 @@ export const FormGroup = styled.div`
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
     font-weight: 400;
+    flex: 1 0 0;
     line-height: 1.5;
     color: #495057;
     background-color: #fff;
@@ -30,6 +24,29 @@ export const FormGroup = styled.div`
     &:disabled {
       background-color: #c8c8c8;
       font-style: italic;
+    }
+  }
+`;
+
+export const FormGroup = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  margin: 10px 0;
+  width: 100%;
+`;
+
+export const FormGroupInline = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+
+  margin: 10px 0;
+  width: 100%;
+  justify-content: space-between;
+  label {
+    @media screen and (min-width: var(--breakpoint-phone)) {
+      padding-left: 10px;
+      flex-flow: row wrap;
+      text-align: left;
     }
   }
 `;

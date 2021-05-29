@@ -4,11 +4,12 @@ import Authors from "./Authors/Authors";
 import Dashboard from "./Dashboard/Dashboard";
 import DoublingCharts from "./Productions/DoublingCharts";
 import Jobs from "./Jobs/Jobs";
+import PasswordReset from "./PasswordReset";
+import PasswordResetRequest from "./PasswordResetRequest";
 import Plays from "./Plays/Plays";
 import PlayScripts from "./PlayScripts/PlayScripts";
 import Productions from "./Productions/Productions";
 import ProductionRehearsalSchedule from "./Productions/RehearsalSchedule/ProductionRehearsalSchedule";
-import SignIn from "./SignIn";
 import Spaces from "./Spaces/Spaces";
 import Specializations from "./Specializations/Specializations";
 import Theaters from "./Theaters/Theaters";
@@ -22,6 +23,11 @@ export default function Main() {
         <Route
           path="/authors"
           render={(props) => <Authors {...props} authorFormOpen={false} />}
+        />
+        <Route path="/password/reset" component={PasswordReset} />
+        <Route
+          path="/password_reset_request/"
+          component={PasswordResetRequest}
         />
         <Route path="/plays/:id/playscripts/" component={PlayScripts} />
         <Route path="/plays" component={Plays} />
