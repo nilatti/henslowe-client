@@ -1,4 +1,4 @@
-import React from "react";
+import styled from "styled-components";
 import { Switch, Route } from "react-router-dom";
 import Authors from "./Authors/Authors";
 import Dashboard from "./Dashboard/Dashboard";
@@ -15,9 +15,13 @@ import Specializations from "./Specializations/Specializations";
 import Theaters from "./Theaters/Theaters";
 import Users from "./Users/Users";
 
+const MainStyle = styled.div`
+  width: 100%;
+`;
+
 export default function Main() {
   return (
-    <main>
+    <MainStyle>
       <Switch>
         <Route exact path="/" component={Dashboard} />
         <Route
@@ -45,6 +49,6 @@ export default function Main() {
         <Route path="/specializations" component={Specializations} />
         <Route path="/jobs" component={Jobs} />
       </Switch>
-    </main>
+    </MainStyle>
   );
 }

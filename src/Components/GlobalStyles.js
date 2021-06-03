@@ -15,11 +15,16 @@ export const GlobalStyles = createGlobalStyle`
     --cancel-button-border-color: #005a41;
     --cancel-button-color: #005a41;
 
-    --breakpoint-phone: 480px;
-    --breakpoint-tablet: 769px;
     background-color: var(--color-background);
+    h1 {
+      text-align: center;
+    }
     hr {
       color: var(--color-light);
     }
   }
 `;
+
+//can't set BP vars so here's where we'll document them.
+//--breakpoint-phone: 480px;
+//--breakpoint-tablet: 769px;

@@ -2,8 +2,7 @@ import { useHistory } from "react-router-dom";
 import { useGoogleLogin } from "react-google-login";
 import { refreshTokenSetup } from "../utils/refreshToken";
 
-const clientId =
-  "247444257677-eeu6fplpufskarhr4k7n9e1sooqe9c66.apps.googleusercontent.com"; // make this in an env or something
+const clientId = process.env.REACT_APP_GOOGLE_CLIENT_KEY; // make this in an env or something
 function onSignIn(googleUser) {
   var accessToken = googleUser.getAuthResponse().access_token;
   let email = googleUser.profileObj.email;

@@ -41,12 +41,15 @@ export const FormGroupInline = styled.div`
 
   margin: 10px 0;
   width: 100%;
-  justify-content: space-between;
+  justify-content: space-around;
+  @media screen and (min-width: 480px) {
+    flex-flow: row wrap;
+  }
   label {
-    @media screen and (min-width: var(--breakpoint-phone)) {
-      padding-left: 10px;
-      flex-flow: row wrap;
-      text-align: left;
+    @media screen and (min-width: 480px) {
+      padding-right: 25px;
+
+      text-align: right;
     }
   }
 `;

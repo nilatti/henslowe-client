@@ -52,38 +52,31 @@ class Users extends Component {
 
   render() {
     return (
-      <Row>
-        <Col md={12}>
-          <div id="users">
-            <h2>
-              <Link to="/users">Users</Link>
-            </h2>
-            <hr />
-            <Switch>
-              <Route
-                path="/users/new"
-                render={(props) => (
-                  <NewUser
-                    {...props}
-                    onFormSubmit={this.handleCreateFormSubmit}
-                    onFormClose={this.handleCreateFormClose}
-                  />
-                )}
+      <div id="users">
+        <h2>
+          <Link to="/users">Users</Link>
+        </h2>
+        <hr />
+        <Switch>
+          <Route
+            path="/users/new"
+            render={(props) => (
+              <NewUser
+                {...props}
+                onFormSubmit={this.handleCreateFormSubmit}
+                onFormClose={this.handleCreateFormClose}
               />
-              <Route
-                path={`/users/:userId`}
-                render={(props) => (
-                  <EditableUser
-                    {...props}
-                    onDeleteClick={this.handleDeleteClick}
-                  />
-                )}
-              />
-              <Route path="/users/" component={UsersList} />
-            </Switch>
-          </div>
-        </Col>
-      </Row>
+            )}
+          />
+          <Route
+            path={`/users/:userId`}
+            render={(props) => (
+              <EditableUser {...props} onDeleteClick={this.handleDeleteClick} />
+            )}
+          />
+          <Route path="/users/" component={UsersList} />
+        </Switch>
+      </div>
     );
   }
 }

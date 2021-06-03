@@ -1,7 +1,7 @@
 import AddressForm from "../AddressForm";
 import PropTypes from "prop-types";
 import Button from "../Button";
-import { Form } from "../Form";
+import { Form, FormGroupInline } from "../Form";
 // import { Button, Col, Form } from "react-bootstrap";
 import { useForm } from "../../hooks/environmentUtils";
 import TimezonePicker from "react-timezone";
@@ -40,7 +40,94 @@ export default function UserForm({ onFormSubmit, user }) {
     onFormSubmit(inputs, "user");
   }
 
-  return <Form noValidate onSubmit={(e) => this.handleSubmit(e)}></Form>;
+  return (
+    <Form noValidate onSubmit={(e) => this.handleSubmit(e)} width="75%">
+      <FormGroupInline>
+        <label>First Name</label>
+        <input
+          name="first_name"
+          onChange={handleChange}
+          placeholder="First Name"
+          required
+          type="text"
+          value={inputs.first_name}
+        />
+      </FormGroupInline>
+      <FormGroupInline>
+        <label>Middle Name</label>
+        <input
+          name="middle_name"
+          onChange={handleChange}
+          placeholder="Middle Name"
+          type="text"
+          value={inputs.middle_name}
+        />
+      </FormGroupInline>
+      <FormGroupInline>
+        <label>Preferred Name</label>
+        <input
+          name="preferred_name"
+          onChange={handleChange}
+          placeholder="Preferred Name"
+          type="text"
+          value={inputs.preferred_name}
+        />
+      </FormGroupInline>
+      <FormGroupInline>
+        <label>Last Name</label>
+        <input
+          name="last_name"
+          onChange={handleChange}
+          placeholder="Last Name"
+          required
+          type="text"
+          value={inputs.last_name}
+        />
+      </FormGroupInline>
+      <FormGroupInline>
+        <label>How do you want to be listed in a program?</label>
+        <input
+          name="program_name"
+          onChange={handleChange}
+          placeholder="Program Name"
+          required
+          type="text"
+          value={inputs.program_name}
+        />
+      </FormGroupInline>
+      <FormGroupInline>
+        <label>Email</label>
+        <input
+          name="email"
+          onChange={handleChange}
+          placeholder="email"
+          required
+          type="email"
+          value={inputs.email}
+        />
+      </FormGroupInline>
+      <FormGroupInline>
+        <label>Password</label>
+        <input
+          name="password"
+          onChange={handleChange}
+          placeholder="password"
+          type="password"
+          value={inputs.password}
+        />
+      </FormGroupInline>
+      <FormGroupInline>
+        <label>Confirm Password</label>
+        <input
+          name="password_confirmation"
+          onChange={handleChange}
+          placeholder="confirm password"
+          type="password"
+          value={inputs.password_confirmation}
+        />
+      </FormGroupInline>
+    </Form>
+  );
 }
 
 // handleTimezoneChange = (timezone) => {
@@ -51,121 +138,10 @@ export default function UserForm({ onFormSubmit, user }) {
 
 //
 
-//     <Form.Group controlId="first_name">
-//       <Form.Label>
-//         First Name
-//       </Form.Label>
-//       <Form.Control
-//           name="first_name"
-//           onChange={this.handleChange}
-//           placeholder="First Name"
-//           required
-//           type="text"
-//           value={this.state.first_name}
-//         />
-//         <Form.Control.Feedback type="invalid">
-//           First Name is required
-//         </Form.Control.Feedback>
-//     </Form.Group>
-//     <Form.Group controlId="middle_name">
-//       <Form.Label>
-//         Middle Name
-//       </Form.Label>
-//       <Form.Control
-//           name="middle_name"
-//           onChange={this.handleChange}
-//           placeholder="Middle Name"
-//           type="text"
-//           value={this.state.middle_name}
-//         />
-//     </Form.Group>
-//     <Form.Group controlId="preferred_name">
-//       <Form.Label>
-//         Preferred Name
-//       </Form.Label>
-//       <Form.Control
-//           name="preferred_name"
-//           onChange={this.handleChange}
-//           placeholder="Preferred Name"
-//           type="text"
-//           value={this.state.preferred_name}
-//         />
-//     </Form.Group>
-//     <Form.Group controlId="last_name">
-//       <Form.Label>
-//         Last Name
-//       </Form.Label>
-//       <Form.Control
-//           name="last_name"
-//           onChange={this.handleChange}
-//           placeholder="Last Name"
-//           required
-//           type="text"
-//           value={this.state.last_name}
-//         />
-//         <Form.Control.Feedback type="invalid">
-//           Last Name is required
-//         </Form.Control.Feedback>
+//
+
 //         </Form.Group>
-//         <Form.Group controlId="program_name">
-//           <Form.Label>
-//             How do you want to be listed in a program?
-//           </Form.Label>
-//           <Form.Control
-//               name="program_name"
-//               onChange={this.handleChange}
-//               placeholder="Program Name"
-//               required
-//               type="text"
-//               value={this.state.program_name}
-//             />
-//             <Form.Control.Feedback type="invalid">
-//               This field is required
-//             </Form.Control.Feedback>
-//     </Form.Group>
-//         <Form.Group controlId="email">
-//           <Form.Label>
-//             Email
-//           </Form.Label>
-//           <Form.Control
-//               name="email"
-//               onChange={this.handleChange}
-//               placeholder="email"
-//               required
-//               type="email"
-//               value={this.state.email}
-//             />
-//             <Form.Control.Feedback type="invalid">
-//               Email is required
-//             </Form.Control.Feedback>
-//         </Form.Group>
-//         <Form.Group controlId="password">
-//           <Form.Label>
-//             Password
-//           </Form.Label>
-//             <Form.Control
-//               name="password"
-//               onChange={this.handleChange}
-//               placeholder="password"
-//               type="password"
-//               value={this.state.password}
-//             />
-//         </Form.Group>
-//         <Form.Group controlId="password_confirmation">
-//           <Form.Label>
-//             Confirm Password
-//           </Form.Label>
-//             <Form.Control
-//               name="password_confirmation"
-//               onChange={this.handleChange}
-//               placeholder="confirm password"
-//               type="password"
-//               value={this.state.password_confirmation}
-//             />
-//             <Form.Control.Feedback type="invalid">
-//               Passwords must match and are required
-//             </Form.Control.Feedback>
-//         </Form.Group>
+
 //         <Form.Group controlId="website">
 //           <Form.Label>
 //             Website
