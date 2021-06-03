@@ -1,7 +1,5 @@
 import { Nav, Navbar } from "react-bootstrap";
 
-import SignUpInOut from "./SignUpInOut";
-
 // The Header creates links that can be used to navigate
 // between routes.
 export default function Navigation() {
@@ -35,9 +33,6 @@ export default function Navigation() {
           </Nav.Item>
           <Nav.Item>
             <Nav.Link href="/jobs">Jobs</Nav.Link>
-          </Nav.Item>
-          <Nav.Item className="pull-right">
-            <SignUpInOut />
           </Nav.Item>
         </Nav>
       </Navbar>

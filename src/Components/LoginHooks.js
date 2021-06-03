@@ -1,56 +1,49 @@
-import React from "react";
+import { useHistory } from "react-router-dom";
 import { useGoogleLogin } from "react-google-login";
-import AuthService from "../services/auth.service";
-// refresh token
-import axios from "axios";
 import { refreshTokenSetup } from "../utils/refreshToken";
 
 const clientId =
-  "247444257677-eeu6fplpufskarhr4k7n9e1sooqe9c66.apps.googleusercontent.com";
+  "247444257677-eeu6fplpufskarhr4k7n9e1sooqe9c66.apps.googleusercontent.com"; // make this in an env or something
 function onSignIn(googleUser) {
-  var id_token = googleUser.getAuthResponse().id_token;
-  console.log(id_token);
+  var accessToken = googleUser.getAuthResponse().access_token;
+  let email = googleUser.profileObj.email;
+  let userId = "";
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "http://localhost:3001/api/auth/google_oauth2/callback");
+  xhr.open("POST", "http://localhost:3001/oauth/token");
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xhr.setRequestHeader("Authorization", `Bearer ${accessToken}`);
   xhr.onload = function () {
-    console.log("Signed in as: " + xhr.responseText);
+    var data = xhr.responseText;
+    var jsonResponse = JSON.parse(data);
+    userId = jsonResponse["userId"];
+    localStorage.setItem("userId", userId);
   };
-  xhr.send("idtoken=" + id_token);
+  xhr.send(`grant_type=password&email=${email}`);
 }
-function LoginHooks() {
+export default function LoginHooks() {
+  const history = useHistory();
   const onSuccess = (res) => {
     onSignIn(res);
-    console.log("Login Success: currentUser:", res.profileObj);
-    // let user = {
-    //   email: res.profileObj.email,
-    // };
-    let api = axios.create({
-      baseURL: "http://localhost:3001/api",
-      headers: {
-        // Authorization: `${window.localStorage.getItem("token")}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
-    console.log(res.token);
-    api
-      .post("/auth/google_oauth2/callback", { res })
-      .then((response) => console.log(response));
-    // jQuery.ajax({
-    //   type: "POST",
-    //   url: "/auth/google_oauth2/callback",
-    //   data: response,
-    //   success: function (data) {
-    //     console.log(data);
-    //   },
-    // });
     refreshTokenSetup(res);
+    console.log(localStorage.getItem("userId"));
+    if (localStorage.getItem("userId") != "null") {
+      //tk get user info from api, save to localStorage for use by "meProvider"
+    } else {
+      let email = res.profileObj.email;
+      let firstName = res.profileObj.givenName;
+      let lastName = res.profileObj.familyName;
+      history.push({
+        pathname: "/users/new",
+        search: `?email=${email}&first_name=${firstName}&last_name=${lastName}&register_new=true`,
+      });
+      console.log("make user");
+    }
+    // tktktk if user exists, use id returned from API to get user info and save in localStorage
+    // tktktk if user does not exist, (userid = null), redir to new user form, prefill with name & email & picture from google.
   };
 
   const onFailure = (res) => {
     console.log("Login failed: res:", res);
-    alert(`Failed to login`);
   };
 
   const { signIn } = useGoogleLogin({
@@ -59,8 +52,6 @@ function LoginHooks() {
     clientId,
     isSignedIn: true,
     accessType: "offline",
-    // responseType: 'code',
-    // prompt: 'consent',
   });
 
   return (
@@ -69,5 +60,3 @@ function LoginHooks() {
     </button>
   );
 }
-
-export default LoginHooks;

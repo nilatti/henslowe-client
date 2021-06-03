@@ -6,11 +6,14 @@ import Navigation from "./Navigation";
 import LoginHooks from "./LoginHooks";
 import LogoutHooks from "./LogoutHooks";
 
+import { useMeState } from "../lib/meState";
+
 export default function MainApp() {
+  const { me } = useMeState();
   return (
     <>
-      <LoginHooks />
-      <LogoutHooks />
+      {me ? <LogoutHooks /> : <LoginHooks />}
+
       <Navigation />
       <Main />
       <Footer />
