@@ -1,11 +1,15 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { Col, Form, Button } from "react-bootstrap";
-import Datetime from "react-datetime"; //updated!
-
+import { Button } from "../Button";
+import { Form, FormGroup } from "../Form";
+import {
+  FancyCheckBox,
+  FancyCheckBoxLabel,
+  FancyRadio,
+  FancyRadioLabelBox,
+} from "../Styled";
 import { useConflicts } from "../../lib/conflictState";
 import { useForm } from "../../hooks/environmentUtils";
-import { isAfterDate, getMinTime } from "../../utils/dateTimeUtils";
 import { StartEndDatePair, StartEndTimePair } from "../../utils/formUtils";
 import { DAYS_OF_WEEK } from "../../utils/hardcodedConstants";
 import { firstLetterUpcase } from "../../utils/stringUtils";
@@ -44,24 +48,30 @@ export default function ConflictPatternCreatorForm({ cancel, onFormSubmit }) {
     });
   }
 
+  let weekDays = DAYS_OF_WEEK.map((day) => {
+    return (
+      <div key={day}>
+        <FancyCheckBox htmlFor={day}>
+          <FancyRadio
+            type="checkbox"
+            id={`${day}`}
+            onChange={handleChange}
+            name="days_of_week"
+            value={day}
+          />
+          <FancyCheckBoxLabel>{firstLetterUpcase(day)}</FancyCheckBoxLabel>
+        </FancyCheckBox>
+      </div>
+    );
+  });
+
   const { parentType, parentId, conflictReasonsArray } = useConflicts();
   return (
     <Form noValidate onSubmit={(e) => handleSubmit(e)}>
-      <Form.Group>
-        <Form.Label>I have a conflict every</Form.Label>
-        {DAYS_OF_WEEK.map((day) => (
-          <Form.Check
-            id={day}
-            key={day}
-            label={firstLetterUpcase(day)}
-            value={firstLetterUpcase(day)}
-            name="days_of_week"
-            type="checkbox"
-            onChange={handleChange}
-            type="checkbox"
-          />
-        ))}
-      </Form.Group>
+      <FormGroup>
+        <label>I have a conflict every</label>
+        {weekDays}
+      </FormGroup>
       <StartEndTimePair
         endTime={inputs.end_time}
         handleChange={handleChange}
@@ -72,23 +82,27 @@ export default function ConflictPatternCreatorForm({ cancel, onFormSubmit }) {
         handleChange={handleChange}
         startDate={inputs.start_date}
       />
-      <Form.Group as={Form.Row}>
-        <Form.Label as="legend">Category</Form.Label>
-        <Col sm={10} className="form-radio">
-          {conflictReasonsArray.map((reason) => (
-            <Form.Check
-              key={reason}
-              checked={inputs.category === reason}
-              id={`recurring_${reason}`}
-              label={firstLetterUpcase(reason)}
-              name="category"
-              onChange={handleChange}
-              type="radio"
-              value={reason}
-            />
-          ))}
-        </Col>
-      </Form.Group>
+      <FormGroup as={Form.Row}>
+        <label as="legend">Category</label>
+        {conflictReasonsArray.map((reason) => (
+          <div className="category" key={reason}>
+            <label>
+              <FancyRadio
+                checked={inputs.category === reason}
+                id={reason}
+                label={reason}
+                name="category"
+                onChange={handleChange}
+                type="radio"
+                value={reason}
+              />
+              <FancyRadioLabelBox>
+                <span>{firstLetterUpcase(reason)}</span>
+              </FancyRadioLabelBox>
+            </label>
+          </div>
+        ))}
+      </FormGroup>
       <Button type="submit" variant="primary" block>
         Submit
       </Button>

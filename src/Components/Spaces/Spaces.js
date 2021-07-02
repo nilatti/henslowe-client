@@ -1,83 +1,96 @@
-import React, {
-  Component
-} from 'react'
-import {
-  Col,
-  Row
-} from 'react-bootstrap'
-import {
-  Link,
-  Route,
-  Switch
-} from 'react-router-dom'
+import { useEffect, useState } from "react";
+import { Link, Route, Switch, useHistory } from "react-router-dom";
+import { createItem, deleteItem, updateServerItem } from "../../api/crud";
 
-import {
-  createSpace,
-  deleteSpace
-} from '../../api/spaces'
+import { getSpaceNames } from "../../api/spaces";
+import SpacesList from "./SpacesList";
+import EditableSpace from "./EditableSpace";
+import NewSpace from "./NewSpace";
+import ErrorMessages from "../ErrorMessages";
 
-import SpacesList from './SpacesList'
-import EditableSpace from './EditableSpace'
-import NewSpace from './NewSpace'
+export default function Spaces() {
+  const history = useHistory();
+  const [spaces, setSpaces] = useState([]);
+  const [errors, setErrors] = useState([]);
 
-class Spaces extends Component {
-
-  async createSpace(space) {
-    const response = await createSpace(space)
+  useEffect(async () => {
+    const response = await getSpaceNames();
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error creating Space'
-      })
+      setErrors((errors) => [...errors, "Error fetching spaces"]);
     } else {
-      this.props.history.push(`/spaces/${response.data.id}`)
-      window.location.reload();
+      setSpaces(response.data);
+    }
+  }, []);
+
+  async function handleCreateFormSubmit(newSpace) {
+    const response = await createItem(newSpace, "space");
+    if (response.status >= 400) {
+      setErrors((errors) => [...errors, "Error fetching spaces"]);
+    } else {
+      let newSpaces = (spaces) => [...spaces, newSpace];
+      setSpaces(newSpaces);
+      history.push(`/spaces/${response.data.id}`);
     }
   }
 
-  async deleteSpace(spaceId) {
-    const response = await deleteSpace(spaceId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error deleting Space'
-      })
+  async function handleDeleteClick(spaceId) {
+    const response = await deleteItem(spaceId, "space");
+    if (response.status >= 404) {
+      setErrors((errors) => [...errors, "Error fetching spaces"]);
     } else {
-      this.props.history.push('/spaces')
-      window.location.reload();
+      let newSpaces = spaces.filter((space) => space.id != spaceId);
+      setSpaces(newSpaces);
+      history.push("/spaces");
     }
   }
 
-  handleCreateFormSubmit = (space) => {
-    this.createSpace(space)
-  }
-  handleDeleteClick = (spaceId) => {
-    this.deleteSpace(spaceId)
+  async function handleEditFormSubmit(newSpace) {
+    const response = await updateServerItem(newSpace, "space");
+    if (response.status >= 400) {
+      setErrors((errors) => [...errors, "Error updating space"]);
+    } else {
+      let newSpaces = spaces.map((space) => {
+        if (space.id != newSpace.id) {
+          return space;
+        } else {
+          return response.data;
+        }
+      });
+      setSpaces(newSpaces);
+      history.push(`/spaces/${response.data.id}`);
+      history.go();
+    }
   }
 
-  render() {
-    return (
-      <Row>
-        <Col md={12} >
-          <div id="spaces">
-            <h2><Link to='/spaces'>Spaces</Link></h2>
-            <hr />
-              <Switch>
-              <Route path='/spaces/new' render={(props) => <NewSpace {...props} onFormSubmit={this.handleCreateFormSubmit}/> } />
-              <Route
-                path={`/spaces/:spaceId`}
-                render={(props) => (
-                  <EditableSpace
-                    {...props}
-                    onDeleteClick={this.handleDeleteClick}
-                  />
-                )}
-              />
-              <Route path='/spaces/' component={SpacesList} />
-              </Switch>
-          </div>
-        </Col>
-      </Row>
-    )
-  }
+  return (
+    <div id="spaces">
+      <h2>
+        <Link to="/spaces">Spaces</Link>
+      </h2>
+      <ErrorMessages errors={errors} />
+      <hr />
+      <Switch>
+        <Route
+          path="/spaces/new"
+          render={(props) => (
+            <NewSpace {...props} onFormSubmit={handleCreateFormSubmit} />
+          )}
+        />
+        <Route
+          path={`/spaces/:spaceId`}
+          render={(props) => (
+            <EditableSpace
+              {...props}
+              onDeleteClick={handleDeleteClick}
+              onFormSubmit={handleEditFormSubmit}
+            />
+          )}
+        />
+        <Route
+          path={"/spaces/"}
+          render={(props) => <SpacesList {...props} spaces={spaces} />}
+        />
+      </Switch>
+    </div>
+  );
 }
-
-export default Spaces

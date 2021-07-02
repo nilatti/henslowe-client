@@ -1,82 +1,95 @@
-import React, {
-  Component
-} from 'react'
-import {
-  Col,
-  Row
-} from 'react-bootstrap'
-import {
-  Link,
-  Route,
-  Switch
-} from 'react-router-dom'
+import { useEffect, useState } from "react";
+import { Link, Route, Switch, useHistory } from "react-router-dom";
+import { createItem, deleteItem, updateServerItem } from "../../api/crud";
+import { getTheaterNames } from "../../api/theaters";
+import TheatersList from "./TheatersList";
+import EditableTheater from "./EditableTheater";
+import NewTheater from "./NewTheater";
+import ErrorMessages from "../ErrorMessages";
 
-import {
-  createTheater,
-  deleteTheater
-} from '../../api/theaters'
-import TheatersList from './TheatersList'
-import EditableTheater from './EditableTheater'
-import NewTheater from './NewTheater'
+export default function Theaters() {
+  const history = useHistory();
+  const [theaters, setTheaters] = useState([]);
+  const [errors, setErrors] = useState([]);
 
-class Theaters extends Component {
-
-  async createTheater(theater) {
-    const response = await createTheater(theater)
+  useEffect(async () => {
+    const response = await getTheaterNames();
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error creating Theater'
-      })
+      setErrors((errors) => [...errors, "Error fetching theaters"]);
     } else {
-      this.props.history.push(`/theaters/${response.data.id}`)
-      window.location.reload();
+      setTheaters(response.data);
+    }
+  }, []);
+
+  async function handleCreateFormSubmit(newTheater) {
+    const response = await createItem(newTheater, "theater");
+    if (response.status >= 400) {
+      setErrors((errors) => [...errors, "Error fetching theaters"]);
+    } else {
+      let newTheaters = (theaters) => [...theaters, newTheater];
+      setTheaters(newTheaters);
+      history.push(`/theaters/${response.data.id}`);
     }
   }
 
-  async deleteTheater(theaterId) {
-    const response = await deleteTheater(theaterId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error deleting Theater'
-      })
+  async function handleDeleteClick(theaterId) {
+    const response = await deleteItem(theaterId, "theater");
+    if (response.status >= 404) {
+      setErrors((errors) => [...errors, "Error fetching theaters"]);
     } else {
-      this.props.history.push('/theaters')
-      window.location.reload();
+      let newTheaters = theaters.filter((theater) => theater.id != theaterId);
+      setTheaters(newTheaters);
+      history.push("/theaters");
     }
   }
 
-  handleCreateFormSubmit = (theater) => {
-    this.createTheater(theater)
-  }
-  handleDeleteClick = (theaterId) => {
-    this.deleteTheater(theaterId)
+  async function handleEditFormSubmit(newTheater) {
+    const response = await updateServerItem(newTheater, "theater");
+    if (response.status >= 400) {
+      setErrors((errors) => [...errors, "Error updating theater"]);
+    } else {
+      let newTheaters = theaters.map((theater) => {
+        if (theater.id != newTheater.id) {
+          return theater;
+        } else {
+          return response.data;
+        }
+      });
+      setTheaters(newTheaters);
+      history.push(`/theaters/${response.data.id}`);
+      history.go();
+    }
   }
 
-  render() {
-    return (
-      <Row>
-        <Col md={12} >
-          <div id="theaters">
-            <h2><Link to='/theaters'>Theaters</Link></h2>
-            <hr />
-              <Switch>
-              <Route path='/theaters/new' render={(props) => <NewTheater {...props} onFormSubmit={this.handleCreateFormSubmit}/> } />
-              <Route
-                path={`/theaters/:theaterId`}
-                render={(props) => (
-                  <EditableTheater
-                    {...props}
-                    onDeleteClick={this.handleDeleteClick}
-                  />
-                )}
-              />
-              <Route path='/theaters/' component={TheatersList} />
-              </Switch>
-          </div>
-        </Col>
-      </Row>
-    )
-  }
+  return (
+    <div id="theaters">
+      <h2>
+        <Link to="/theaters">Theaters</Link>
+      </h2>
+      <ErrorMessages errors={errors} />
+      <hr />
+      <Switch>
+        <Route
+          path="/theaters/new"
+          render={(props) => (
+            <NewTheater {...props} onFormSubmit={handleCreateFormSubmit} />
+          )}
+        />
+        <Route
+          path={`/theaters/:theaterId`}
+          render={(props) => (
+            <EditableTheater
+              {...props}
+              onDeleteClick={handleDeleteClick}
+              onFormSubmit={handleEditFormSubmit}
+            />
+          )}
+        />
+        <Route
+          path={"/theaters/"}
+          render={(props) => <TheatersList {...props} theaters={theaters} />}
+        />
+      </Switch>
+    </div>
+  );
 }
-
-export default Theaters

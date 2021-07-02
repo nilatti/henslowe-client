@@ -8,7 +8,7 @@ export default function NewUser({ onFormClose, onFormSubmit }) {
   let email = query.get("email");
   let first_name = query.get("first_name");
   let last_name = query.get("last_name");
-  let registerNewUser = query.get("register_new");
+  let registerNewUser = query.get("register_new") === "true";
   return (
     <>
       <h1>Add New User</h1>
@@ -16,7 +16,7 @@ export default function NewUser({ onFormClose, onFormSubmit }) {
         user={{ email, first_name, last_name }}
         onFormSubmit={onFormSubmit}
         onFormClose={onFormClose}
-        registerNew={registerNewUser}
+        registerNewUser={registerNewUser}
       />
     </>
   );

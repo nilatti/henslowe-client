@@ -7,6 +7,7 @@ async function buildUserConflictPattern(userId, conflictSchedulePattern) {
 }
 
 async function createUser(user) {
+  console.log("api call", user);
   return API.post("users", {
     user,
   });

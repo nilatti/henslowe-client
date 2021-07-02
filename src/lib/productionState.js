@@ -26,7 +26,7 @@ function ProductionProvider({ children }) {
   const [actors, setActors] = useState([]);
   const [notActors, setNotActors] = useState([]);
   const [production, setProduction] = useState({});
-  const [productionId, setProductionId] = useState(id);
+  const [productionId] = useState(id);
   const [rehearsals, setRehearsals] = useState([]);
   const [isLoadingComplete, setLoadingComplete] = useState(false);
 

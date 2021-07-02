@@ -1,84 +1,100 @@
-import React, { Component } from "react";
-import { Col, Row } from "react-bootstrap";
-import { Link, Route, Switch } from "react-router-dom";
-
-import { createUser, deleteUser } from "../../api/users";
+import { useEffect, useState } from "react";
+import { Link, Route, Switch, useHistory } from "react-router-dom";
+import { createItem, deleteItem, updateServerItem } from "../../api/crud";
+import { getItems } from "../../api/crud";
 import UsersList from "./UsersList";
 import EditableUser from "./EditableUser";
 import NewUser from "./NewUser";
+import ErrorMessages from "../ErrorMessages";
 
-class Users extends Component {
-  async createUser(user) {
-    const response = await (createUser(user),
-    {
-      timeout: 1000,
-    });
-    if (!response) {
-      return;
-    }
+export default function Users() {
+  const history = useHistory();
+  const [users, setUsers] = useState([]);
+  const [errors, setErrors] = useState([]);
+
+  useEffect(async () => {
+    const response = await getItems("user");
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: "Error creating User",
-      });
+      setErrors((errors) => [...errors, "Error fetching users"]);
     } else {
-      this.props.history.push(`/users/`);
-      window.location.reload();
+      setUsers(response.data.filter((user) => !user.fake));
     }
-  }
+  }, []);
 
-  async deleteUser(userId) {
-    const response = await deleteUser(userId);
+  async function handleCreateFormSubmit(user) {
+    const response = await createItem(user, "user");
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: "Error deleting User",
-      });
+      console.log("error fetching user");
     } else {
-      this.props.history.push("/users");
-      window.location.reload();
+      if (registerNewUser) {
+        let userId = new String(response.data.id);
+        localStorage.setItem("userId", userId);
+        setMe(JSON.stringify(response.data));
+        localStorage.setItem("user", JSON.stringify(response.data));
+        history.push(`/dashboard/`);
+      } else {
+        history.push(`/users/`);
+      }
+    }
+  }
+  async function handleDeleteClick(userId) {
+    const response = await deleteItem(userId, "user");
+    if (response.status >= 404) {
+      setErrors((errors) => [...errors, "Error fetching users"]);
+    } else {
+      let newUsers = users.filter((user) => user.id != userId);
+      setUsers(newUsers);
+      history.push("/users");
     }
   }
 
-  handleCreateFormClose = () => {
-    this.props.history.push("/users");
-    window.location.reload();
-  };
-
-  handleCreateFormSubmit = (user) => {
-    this.createUser(user);
-  };
-  handleDeleteClick = (userId) => {
-    this.deleteUser(userId);
-  };
-
-  render() {
-    return (
-      <div id="users">
-        <h2>
-          <Link to="/users">Users</Link>
-        </h2>
-        <hr />
-        <Switch>
-          <Route
-            path="/users/new"
-            render={(props) => (
-              <NewUser
-                {...props}
-                onFormSubmit={this.handleCreateFormSubmit}
-                onFormClose={this.handleCreateFormClose}
-              />
-            )}
-          />
-          <Route
-            path={`/users/:userId`}
-            render={(props) => (
-              <EditableUser {...props} onDeleteClick={this.handleDeleteClick} />
-            )}
-          />
-          <Route path="/users/" component={UsersList} />
-        </Switch>
-      </div>
-    );
+  async function handleEditFormSubmit(newUser) {
+    const response = await updateServerItem(newUser, "user");
+    if (response.status >= 400) {
+      setErrors((errors) => [...errors, "Error updating user"]);
+    } else {
+      let newUsers = users.map((user) => {
+        if (user.id != newUser.id) {
+          return user;
+        } else {
+          return response.data;
+        }
+      });
+      setUsers(newUsers);
+      history.push(`/users/${response.data.id}`);
+      history.go();
+    }
   }
+
+  return (
+    <div id="users">
+      <h2>
+        <Link to="/users">Users</Link>
+      </h2>
+      <ErrorMessages errors={errors} />
+      <hr />
+      <Switch>
+        <Route
+          path="/users/new"
+          render={(props) => (
+            <NewUser {...props} onFormSubmit={handleCreateFormSubmit} />
+          )}
+        />
+        <Route
+          path={`/users/:userId`}
+          render={(props) => (
+            <EditableUser
+              {...props}
+              onDeleteClick={handleDeleteClick}
+              onFormSubmit={handleEditFormSubmit}
+            />
+          )}
+        />
+        <Route
+          path={"/users/"}
+          render={(props) => <UsersList {...props} users={users} />}
+        />
+      </Switch>
+    </div>
+  );
 }
-
-export default Users;

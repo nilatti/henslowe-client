@@ -1,7 +1,10 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { Button, Col, Form } from "react-bootstrap";
-import Datetime from "react-datetime"; //updated!
+// import { Button, Col, Form } from "react-bootstrap";
+import Datetime from "react-datetime";
+import { Button } from "../Button";
+import { Form, FormGroup } from "../Form";
+import { FancyRadio, FancyRadioLabelBox } from "../Styled";
 
 import { useConflicts } from "../../lib/conflictState";
 import { useForm } from "../../hooks/environmentUtils";
@@ -27,14 +30,9 @@ export default function ConflictForm({ conflict, onFormClose, onFormSubmit }) {
   );
 
   function handleSubmit(event) {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    } else {
-      processSubmit();
-      onFormClose();
-    }
+    event.preventDefault();
+
+    processSubmit();
   }
 
   function processSubmit() {
@@ -53,50 +51,47 @@ export default function ConflictForm({ conflict, onFormClose, onFormSubmit }) {
       },
       "conflict"
     );
+    onFormClose();
   }
   // const { validated } = this.state;
   const { parentType, parentId, conflictReasonsArray } = useConflicts();
   return (
-    <Col
-      md={{
-        span: 8,
-        offset: 2,
-      }}
-    >
-      <Form noValidate onSubmit={(e) => handleSubmit(e)}>
-        <StartEndDateTimePair
-          endTime={inputs.end_time}
-          startTime={inputs.start_time}
-          handleChange={handleChange}
-        />
-        <fieldset>
-          <Form.Group as={Form.Row}>
-            <Form.Label as="legend">Category</Form.Label>
-            <Col sm={10} className="form-radio">
-              {conflictReasonsArray.map((reason) => (
-                <Form.Check
-                  key={reason}
+    <Form noValidate onSubmit={(e) => handleSubmit(e)}>
+      <StartEndDateTimePair
+        endTime={inputs.end_time}
+        startTime={inputs.start_time}
+        handleChange={handleChange}
+      />
+      <fieldset>
+        <FormGroup as={Form.Row}>
+          <label as="legend">Category</label>
+          {conflictReasonsArray.map((reason) => (
+            <div className="category" key={reason}>
+              <label>
+                <FancyRadio
                   checked={inputs.category === reason}
                   id={reason}
-                  label={firstLetterUpcase(reason)}
+                  label={reason}
                   name="category"
                   onChange={handleChange}
                   type="radio"
                   value={reason}
                 />
-              ))}
-            </Col>
-          </Form.Group>
-        </fieldset>
-        <Button type="submit" variant="primary" block>
-          Submit
-        </Button>
-        <Button type="button" onClick={onFormClose} block>
-          Cancel
-        </Button>
-      </Form>
-      <hr />
-    </Col>
+                <FancyRadioLabelBox>
+                  <span>{firstLetterUpcase(reason)}</span>
+                </FancyRadioLabelBox>
+              </label>
+            </div>
+          ))}
+        </FormGroup>
+      </fieldset>
+      <Button type="submit" variant="primary" block>
+        Submit
+      </Button>
+      <Button type="button" onClick={onFormClose} block>
+        Cancel
+      </Button>
+    </Form>
   );
 }
 

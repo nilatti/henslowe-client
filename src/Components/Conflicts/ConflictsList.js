@@ -1,7 +1,6 @@
 import _ from "lodash";
 import PropTypes from "prop-types";
-import { Col, Row } from "react-bootstrap";
-import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { buildConflictPattern } from "../../api/conflicts.js";
 
 import {
@@ -14,6 +13,7 @@ import ConflictFormToggle from "./ConflictFormToggle";
 import ConflictPatternCreatorToggle from "./ConflictPatternCreatorToggle";
 import EditableConflict from "./EditableConflict";
 import ConflictPatternShow from "./ConflictPatternShow";
+import { overlap } from "../../utils/arrayUtils";
 import { useConflicts } from "../../lib/conflictState";
 
 export default function ConflictsList() {
@@ -22,17 +22,45 @@ export default function ConflictsList() {
     conflictPatterns,
     parentType,
     parentId,
+    roles,
     setConflictPatterns,
     updateConflicts,
   } = useConflicts();
 
-  async function createConflict(parentId, parentType, conflict) {
+  let localRole = "";
+  // spaces are administered by theater admins and space admins
+  if (
+    parentType === "space" &&
+    overlap(roles, ["theater_admin", "space_admin"])
+  ) {
+    localRole = "admin";
+  } else if (
+    //for users, CURRENT production and theater admins can see and modify conflict details. User can modify own details.
+    parentType === "user" &&
+    overlap(roles, ["current_theater_admin", "current_production_admin"])
+  ) {
+    localRole = "admin";
+  } else if (
+    //current theater peers can see some details but not all details.
+    parentType === "user" &&
+    overlap(roles, ["current_theater_peer", "current_production_peer"])
+  ) {
+    localRole = "peer";
+  } else if (parentType === "user" && roles && roles.includes("self")) {
+    localRole = "self";
+  } else if (roles && roles.includes("superadmin")) {
+    localRole = "admin";
+  }
+  const history = useHistory();
+
+  async function createConflict(conflict, parentId, parentType) {
     const response = await createItemWithParent(
       parentType,
       parentId,
       "conflict",
       conflict
     );
+
     if (response.status >= 400) {
       this.setState({
         errorStatus: "Error creating conflict",
@@ -114,7 +142,8 @@ export default function ConflictsList() {
   }
 
   function handleConflictCreate(conflict) {
-    createConflict(parentId, parentType, conflict);
+    createConflict(conflict, parentId, parentType);
+    history.push(`/${parentType}s/${parentId}`);
   }
 
   function handleConflictDelete(conflictId) {
@@ -150,36 +179,38 @@ export default function ConflictsList() {
           handleSubmit={handleConflictEdit}
           key={conflict.id}
           parentId={parentId}
+          role={localRole}
         />
       ));
-    let showConflictPatterns = conflictPatterns.map((conflictPattern) => (
+    let showConflictPatterns = conflictPatterns?.map((conflictPattern) => (
       <ConflictPatternShow
         conflictPattern={conflictPattern}
         handleDeleteClick={handleConflictPatternDelete}
         key={conflictPattern.id}
+        role={localRole}
       />
     ));
     return (
-      <Col>
-        <Row>
-          <h2>One-Off Conflicts</h2>
-        </Row>
-        <Row>{showConflicts}</Row>
-        <ConflictFormToggle
-          isOpen={false}
-          onFormSubmit={handleConflictCreate}
-        />
-        <Row>
-          <h2>Regular Conflicts</h2>
-        </Row>
-        <Row>{showConflictPatterns}</Row>
-        <Row>
+      <>
+        <h4>One-Off Conflicts</h4>
+        <ul>{showConflicts}</ul>
+        {localRole && (localRole === "admin" || localRole === "self") && (
+          <div>
+            <ConflictFormToggle
+              isOpen={false}
+              onFormSubmit={handleConflictCreate}
+            />
+          </div>
+        )}
+        <h4>Regular Conflicts</h4>
+        <ul>{showConflictPatterns}</ul>
+        {localRole && (localRole === "admin" || localRole === "self") && (
           <ConflictPatternCreatorToggle
             open={false}
             onFormSubmit={handleConflictPatternCreate}
           />
-        </Row>
-      </Col>
+        )}
+      </>
     );
   } else {
     return <div></div>;

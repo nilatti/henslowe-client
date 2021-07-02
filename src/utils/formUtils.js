@@ -1,11 +1,18 @@
 import { useState } from "react";
 import { Form } from "react-bootstrap";
 import Datetime from "react-datetime"; //updated!
+import moment from "moment";
+
 import PropTypes from "prop-types";
 
 import { isAfterDate, isAfterTime } from "../utils/dateTimeUtils";
 
+let valid = function (current, startTime) {
+  return current.isSame(startTime, "day") || current.isAfter(startTime);
+};
+
 function handleDateTimeChange(time, name, handleChange) {
+  console.log(time);
   let event = {
     target: {
       value: time,
@@ -84,18 +91,21 @@ export function StartEndTimePair({ endTime, handleChange, startTime }) {
 }
 
 export function StartEndDateTimePair({ endTime, handleChange, startTime }) {
-  function handleStartDateChange(date, handleChange) {
-    //this is a hacky workaround that keeps the end time after the start time.
-    setTempStartDate(date);
-    handleDateTimeChange(date, "start_date", handleChange);
-  }
+  // const [tempStartDate, setTempStartDate] = useState(startTime);
+  // function handleStartDateChange(date, handleChange) {
+  //   //this is a hacky workaround that keeps the end time after the start time.
+  //   setTempStartDate(date);
+  //   handleDateTimeChange(date, "start_date", handleChange);
+  // }
   return (
     <>
       <Form.Group controlId="start_time">
         <Form.Label>Start Time</Form.Label>
         <Datetime
           type="datetime"
-          onChange={(date) => handleStartDateChange(date, handleChange)}
+          onChange={(time) =>
+            handleDateTimeChange(time, "start_time", handleChange)
+          }
           name="start_time"
           value={startTime}
         />
@@ -109,6 +119,7 @@ export function StartEndDateTimePair({ endTime, handleChange, startTime }) {
           }
           type="datetime"
           value={endTime}
+          isValidDate={(current) => valid(current, startTime)}
         />
         <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
       </Form.Group>
