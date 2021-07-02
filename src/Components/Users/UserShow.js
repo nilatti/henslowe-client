@@ -1,193 +1,214 @@
 import Moment from "react-moment";
 import PropTypes from "prop-types";
-import { Col, Row } from "react-bootstrap";
-import React, { createContext, useContext, useState } from "react";
+import React, { useState } from "react";
+
+import { useMeState } from "../../lib/meState";
+import { useUserAuthState } from "../Contexts";
 
 import UserJobsList from "../Jobs/UserJobsList";
 import ConflictsList from "../Conflicts/ConflictsList";
 
-import { UserAuthContext } from "../Contexts";
-
 import { buildUserName } from "../../utils/actorUtils";
+import { overlap } from "../../utils/arrayUtils";
 import { ConflictStateProvider } from "../../lib/conflictState";
 import { USER_CONFLICT_REASONS } from "../../utils/hardcodedConstants";
 
 export default function UserShow({ onDeleteClick, onEditClick, user }) {
+  const { me } = useMeState();
+  const { roles } = useUserAuthState();
+
   function handleDeleteClick() {
     onDeleteClick(user.id);
   }
 
-  function handleSelect(key) {
-    this.setState({
-      key,
-    });
-  }
-
   return (
-    <Col md={12}>
-      <Row>
-        <Col md={12} className="user-profile">
-          <h2>{buildUserName(user)}</h2>
+    <div>
+      <h2>{buildUserName(user)}</h2>
+      {user.email &&
+        overlap(roles, [
+          "current_theater_peer",
+          "current_production_peer",
+          "current_theater_admin",
+          "current_production_admin",
+          "past_theater_peer",
+          "past_production_peer",
+          "past_theater_admin",
+          "past_production_admin",
+          "self",
+          "superadmin",
+        ]) && (
           <p>
-            <UserAuthContext.Consumer>
-              {(value) => {
-                if (
-                  value === "theater_admin" ||
-                  value === "theater_peer" ||
-                  value === "superadmin" ||
-                  value === "self"
-                ) {
-                  return <a href={`mailto:${user.email}`}>{user.email}</a>;
-                }
-              }}
-            </UserAuthContext.Consumer>
-            <br />
-            <a href={user.website}>{user.website}</a>
+            <a href={`mailto:${user.email}`}>{user.email}</a>
           </p>
-          <UserAuthContext.Consumer>
-            {(value) => {
-              if (
-                value === "theater_admin" ||
-                value === "theater_peer" ||
-                value === "superadmin" ||
-                value === "self"
-              ) {
-                return (
-                  <p>
-                    {user.phone_number}
-                    <br />
-                    {user.street_address}
-                    <br />
-                    {user.city}, {user.state} {user.zip}
-                    <br />
-                    <strong>Emergency Contact:</strong>{" "}
-                    {user.emergency_contact_name},{" "}
-                    {user.emergency_contact_number}
-                  </p>
-                );
-              }
-            }}
-          </UserAuthContext.Consumer>
-          <UserAuthContext.Consumer>
-            {(value) => {
-              if (
-                value === "theater_admin" ||
-                value === "superadmin" ||
-                value === "self"
-              ) {
-                return (
-                  <div>
-                    <p>
-                      <strong>First name:</strong> {user.first_name}
-                      <br />
-                      <strong>Middle name:</strong> {user.middle_name}
-                      <br />
-                      <strong>Preferred name:</strong> {user.preferred_name}
-                      <br />
-                      <strong>Last name:</strong> {user.last_name}
-                      <br />
-                      <strong>Name for programs:</strong> {user.program_name}
-                      <br />
-                    </p>
-                    <p>
-                      <strong>Date of Birth:</strong>{" "}
-                      <Moment format="MMMM Do, YYYY">{user.birthdate}</Moment>
-                      <br />
-                      <strong>Gender:</strong> {user.gender}
-                      <br />
-                      <strong>Description:</strong> {user.description}
-                      <br />
-                      <strong>Bio:</strong> {user.bio}
-                      <br />
-                    </p>
-                    <p>
-                      <strong>Timezone:</strong> {user.timezone}
-                    </p>
+        )}
+      {user.website && (
+        <p>
+          <a href={user.website}>{user.website}</a>
+        </p>
+      )}
 
-                    <span
-                      className="right floated edit icon"
-                      onClick={onEditClick}
-                    >
-                      <i className="fas fa-pencil-alt"></i>
-                    </span>
-                    <span
-                      className="right floated trash icon"
-                      onClick={onDeleteClick}
-                    >
-                      <i className="fas fa-trash-alt"></i>
-                    </span>
-                  </div>
-                );
-              } else if (value === "theater_peer") {
-                return (
-                  <div>
-                    <p>
-                      <strong>Preferred name:</strong>{" "}
-                      {user.preferred_name || user.first_name}
-                      <br />
-                      <strong>Last name:</strong> {user.last_name}
-                      <br />
-                      <strong>Name for programs:</strong> {user.program_name}
-                      <br />
-                    </p>
-                    <p>
-                      <strong>Gender:</strong> {user.gender}
-                      <br />
-                      <strong>Bio:</strong> {user.bio}
-                      <br />
-                    </p>
-                    <p>
-                      <strong>Emergency Contact:</strong>{" "}
-                      {user.emergency_contact_name},{" "}
-                      {user.emergency_contact_number}
-                    </p>
-                  </div>
-                );
-              } else {
-                return (
-                  <p>
-                    <strong>Name for programs:</strong> {user.program_name}
-                    <br />
-                    <strong>Gender:</strong> {user.gender}
-                    <br />
-                    <strong>Bio:</strong> {user.bio}
-                    <br />
-                  </p>
-                );
-              }
-            }}
-          </UserAuthContext.Consumer>
-        </Col>
-      </Row>
-      <hr />
-      <UserAuthContext.Consumer>
-        {(value) => {
-          if (
-            value === "theater_admin" ||
-            value === "superadmin" ||
-            value === "self"
-          ) {
-            return (
-              <Row>
-                <ConflictStateProvider
-                  parentId={user.id}
-                  parentType="user"
-                  propsConflicts={user.conflicts}
-                  propsConflictPatterns={user.conflict_patterns}
-                  conflictReasonsArray={USER_CONFLICT_REASONS}
-                >
-                  <ConflictsList />
-                </ConflictStateProvider>
-                <hr />
-              </Row>
-            );
-          }
-        }}
-      </UserAuthContext.Consumer>
-      <Row>
-        <UserJobsList user={user} />
-      </Row>
-    </Col>
+      {user.phone_number &&
+        overlap(roles, [
+          "current_theater_peer",
+          "current_production_peer",
+          "current_theater_admin",
+          "current_production_admin",
+          "self",
+          "superadmin",
+        ]) && <div>{user.phone_number}</div>}
+      {user.street_address &&
+        overlap(roles, [
+          "current_theater_admin",
+          "current_production_admin",
+          "past_theater_admin",
+          "past_production_admin",
+          "self",
+          "superadmin",
+        ]) && <div>{user.street_address}</div>}
+      {user.city ||
+        (user.state && (
+          <div>
+            {user.city}, {user.state} {user.zip}
+          </div>
+        ))}
+      {user.emergency_contact_name &&
+        overlap(roles, [
+          "current_theater_admin",
+          "current_production_admin",
+          "past_theater_admin",
+          "past_production_admin",
+          "self",
+          "superadmin",
+        ]) && (
+          <div>
+            <strong>Emergency Contact:</strong> {user.emergency_contact_name},
+            {user.emergency_contact_number}
+          </div>
+        )}
+      {user.first_name &&
+        overlap(roles, [
+          "current_theater_admin",
+          "current_production_admin",
+          "past_theater_admin",
+          "past_production_admin",
+          "self",
+          "superadmin",
+        ]) && (
+          <div>
+            <strong>First name:</strong> {user.first_name}
+          </div>
+        )}
+      {user.middle_name &&
+        overlap(roles, [
+          "current_theater_admin",
+          "current_production_admin",
+          "past_theater_admin",
+          "past_production_admin",
+          "self",
+          "superadmin",
+        ]) && (
+          <div>
+            <strong>Middle name:</strong> {user.middle_name}
+          </div>
+        )}
+      {user.preferred_name &&
+        overlap(roles, [
+          "current_theater_admin",
+          "current_production_admin",
+          "past_theater_admin",
+          "past_production_admin",
+          "self",
+          "superadmin",
+        ]) && (
+          <div>
+            <strong>Preferred name:</strong> {user.preferred_name}
+          </div>
+        )}
+      {user.last_name &&
+        overlap(roles, [
+          "current_theater_admin",
+          "current_production_admin",
+          "past_theater_admin",
+          "past_production_admin",
+          "self",
+          "superadmin",
+        ]) && (
+          <div>
+            <strong>Last name:</strong> {user.last_name}
+          </div>
+        )}
+      {user.program_name && (
+        <div>
+          <strong>Name for programs:</strong> {user.program_name}
+        </div>
+      )}
+      {user.birthdate &&
+        overlap(roles, [
+          "current_theater_admin",
+          "current_production_admin",
+          "past_theater_admin",
+          "past_production_admin",
+          "self",
+          "superadmin",
+        ]) && (
+          <div>
+            <strong>Date of Birth:</strong>{" "}
+            <Moment format="MMMM Do, YYYY">{user.birthdate}</Moment>
+          </div>
+        )}
+      {user.gender && (
+        <div>
+          <strong>Gender:</strong> {user.gender}
+        </div>
+      )}
+      {user.description && (
+        <div>
+          <strong>Description:</strong> {user.description}
+        </div>
+      )}
+      {user.bio && (
+        <div>
+          <strong>Bio:</strong> {user.bio}
+        </div>
+      )}
+      {user.timezone && (
+        <div>
+          <strong>Timezone:</strong> {user.timezone}
+        </div>
+      )}
+      {roles.includes("self") && (
+        <div>
+          <span className="right floated edit icon" onClick={onEditClick}>
+            <i className="fas fa-pencil-alt"></i>
+          </span>
+          <span className="right floated trash icon" onClick={onDeleteClick}>
+            <i className="fas fa-trash-alt"></i>
+          </span>
+        </div>
+      )}
+      {overlap(roles, [
+        "current_theater_peer",
+        "current_production_peer",
+        "current_theater_admin",
+        "current_production_admin",
+        "self",
+        "superadmin",
+      ]) && (
+        <ConflictStateProvider
+          conflictReasonsArray={USER_CONFLICT_REASONS}
+          parentId={user.id}
+          parentType="user"
+          propsConflicts={user.conflicts}
+          propsConflictPatterns={user.conflict_patterns}
+          roles={roles}
+        >
+          <h3>Conflicts</h3>
+          <ConflictsList />
+        </ConflictStateProvider>
+      )}
+      <h3>Jobs</h3>
+      <UserJobsList user={user} roles={roles} />
+    </div>
   );
 }
 

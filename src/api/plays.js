@@ -39,7 +39,7 @@ async function getCharacters(playId) {
 }
 
 async function getFrenchSceneScript(frenchSceneId) {
-  return API.request(`french_scenes/french_scene_script`, {
+  return API.request(`french_scenes/${frenchSceneId}/french_scene_script`, {
     params: {
       french_scene: frenchSceneId,
     },
@@ -114,7 +114,7 @@ async function getProductionCopyComplete(playId) {
 }
 
 async function getSceneScript(sceneId) {
-  return API.request(`scenes/scene_script`, {
+  return API.request(`scenes/${sceneId}/scene_script`, {
     params: {
       scene: sceneId,
     },

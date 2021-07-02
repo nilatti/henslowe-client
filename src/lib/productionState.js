@@ -8,9 +8,6 @@ import {
 } from "../utils/hardcodedConstants";
 import { buildRehearsalSchedule } from "../api/productions.js";
 
-const ProductionStateContext = createContext();
-const ProductionStateProvider = ProductionStateContext.Provider;
-
 import {
   createItemWithParent,
   deleteItem,
@@ -20,13 +17,16 @@ import {
 } from "../api/crud";
 import { getJobs } from "../api/jobs";
 
+const ProductionStateContext = createContext();
+const ProductionStateProvider = ProductionStateContext.Provider;
+
 function ProductionProvider({ children }) {
   const { id } = useParams();
   const [hiredUsers, setHiredUsers] = useState([]);
   const [actors, setActors] = useState([]);
   const [notActors, setNotActors] = useState([]);
   const [production, setProduction] = useState({});
-  const [productionId, setProductionId] = useState(id);
+  const [productionId] = useState(id);
   const [rehearsals, setRehearsals] = useState([]);
   const [isLoadingComplete, setLoadingComplete] = useState(false);
 

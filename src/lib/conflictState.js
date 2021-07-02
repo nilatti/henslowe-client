@@ -11,6 +11,7 @@ function ConflictStateProvider({
   propsConflictPatterns,
   parentId,
   parentType,
+  roles,
 }) {
   const [conflicts, setConflicts] = useState(sortConflicts(propsConflicts));
   const [conflictPatterns, setConflictPatterns] = useState(
@@ -35,6 +36,7 @@ function ConflictStateProvider({
         conflicts,
         conflictPatterns,
         conflictReasonsArray,
+        roles,
         setConflictPatterns,
         updateConflicts,
       }}

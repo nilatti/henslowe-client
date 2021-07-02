@@ -1,23 +1,8 @@
-import React, { useContext } from "react";
-import { Col, Container } from "react-bootstrap";
+import PrivatePage from "./PrivatePage";
+import PublicPage from "./PublicPage";
+import { useMeState } from "../lib/meState";
 
-import Footer from "./Footer";
-import Main from "./Main";
-import Navigation from "./Navigation";
-import { getSuperAdminRole } from "../utils/authorizationUtils";
-import { AppAuthContext } from "./Contexts";
-
-const user = JSON.parse(window.localStorage.getItem("user"));
-const userRole = getSuperAdminRole(user);
-
-export function MainApp() {
-  return (
-    <AppAuthContext.Provider value={userRole}>
-      <Col xs={12}>
-        <Navigation />
-        <Main />
-        <Footer />
-      </Col>
-    </AppAuthContext.Provider>
-  );
+export default function MainApp() {
+  const { me } = useMeState();
+  return <>{me ? <PrivatePage /> : <PublicPage />}</>;
 }

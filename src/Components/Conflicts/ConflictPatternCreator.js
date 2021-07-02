@@ -1,5 +1,4 @@
 import React from "react";
-import { Col } from "react-bootstrap";
 
 import { USER_CONFLICT_REASONS } from "../../utils/hardcodedConstants";
 
@@ -7,12 +6,7 @@ import ConflictPatternCreatorForm from "./ConflictPatternCreatorForm";
 
 export default function ConflictPatternCreator({ onFormSubmit, cancel }) {
   return (
-    <Col
-      md={{
-        span: 8,
-        offset: 2,
-      }}
-    >
+    <>
       <p>
         Conflict patterns are just patterns that feed into our conflict
         generator. If you have multiple conflict patterns, you will need to run
@@ -36,6 +30,6 @@ export default function ConflictPatternCreator({ onFormSubmit, cancel }) {
         onFormSubmit={onFormSubmit}
       />
       <hr />
-    </Col>
+    </>
   );
 }

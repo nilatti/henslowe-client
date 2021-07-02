@@ -1,135 +1,72 @@
 import PropTypes from "prop-types";
-import React, { Component } from "react";
-
-import { getSpace, updateServerSpace } from "../../api/spaces";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getItem } from "../../api/crud";
 
 import SpaceForm from "./SpaceForm";
 import SpaceShow from "./SpaceShow";
+import ErrorMessages from "../ErrorMessages";
 
-import { getUserRoleForSpace } from "../../utils/authorizationUtils";
-import { SpaceAuthContext } from "../Contexts";
+import { SpaceAuthProvider } from "../Contexts";
+import Modal from "../Modal";
+import { Spinner } from "../Loaders";
 
-class EditableSpace extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      editFormOpen: false,
-      space: null,
-    };
-  }
-
-  closeForm = () => {
-    this.setState({
-      editFormOpen: false,
-    });
-  };
-
-  componentDidMount = () => {
-    this.loadSpaceFromServer(this.props.match.params.spaceId);
-  };
-
-  componentDidUpdate(prevProps) {
-    if (
-      this.state.space === null ||
-      prevProps.match.params.spaceId !== this.props.match.params.spaceId
-    ) {
-      this.loadSpaceFromServer(this.props.match.params.spaceId);
-    }
-  }
-
-  handleEditClick = () => {
-    this.openForm();
-  };
-  handleFormClose = () => {
-    this.closeForm();
-  };
-
-  handleSubmit = (space) => {
-    this.updateSpaceOnServer(space);
-    this.closeForm();
-  };
-
-  async loadSpaceFromServer(spaceId) {
-    const response = await getSpace(spaceId);
+export default function EditableSpace({ onDeleteClick, onFormSubmit }) {
+  const [errors, setErrors] = useState([]);
+  const [formOpen, setFormOpen] = useState(false);
+  const [space, setSpace] = useState({});
+  const [loading, setLoading] = useState(false);
+  //user role? generate here or pull in from auth context provider?
+  let { spaceId } = useParams();
+  useEffect(async () => {
+    setLoading(true);
+    let response = await getItem(spaceId, "space");
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: "Error fetching space",
-      });
+      console.log("error!");
+      setErrors((errors) => [...errors, "Error fetching space"]);
     } else {
-      let user = JSON.parse(window.localStorage.getItem("user"));
-      if (user) {
-        this.setState({ userRole: getUserRoleForSpace(user, response.data) });
-      }
-      this.setState({
-        space: response.data,
-      });
+      setSpace(response.data);
     }
+    setLoading(false);
+  }, []);
+  function handleEditClick() {
+    setFormOpen(true);
+  }
+  function handleFormClose() {
+    setFormOpen(false);
+  }
+  function handleSubmit(space) {
+    onFormSubmit(space);
   }
 
-  async updateSpaceOnServer(space) {
-    const response = await updateServerSpace(space);
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: "Error updating space",
-      });
-    } else {
-      this.setState({
-        space: response.data,
-      });
-    }
+  if (loading) {
+    return (
+      <Modal>
+        <h1>Loading!</h1>
+        <Spinner />
+      </Modal>
+    );
   }
 
-  static getDerivedStateFromProps(props, state) {
-    // Store prevId in state so we can compare when props change.
-    // Clear out previously-loaded data (so we don't render stale stuff).
-    if (props.id !== state.prevId) {
-      return {
-        Space: null,
-        prevId: props.id,
-      };
-    }
-    // No state update necessary
-    return null;
+  if (formOpen) {
+    return (
+      <SpaceForm
+        space={space}
+        onFormSubmit={handleSubmit}
+        onFormClose={handleFormClose}
+        isOpen={true}
+      />
+    );
   }
 
-  openForm = () => {
-    this.setState({
-      editFormOpen: true,
-    });
-  };
-
-  render() {
-    console.log(this.state.userRole);
-    if (this.state.space === null) {
-      return <div>Loading!</div>;
-    }
-    if (this.state.editFormOpen) {
-      return (
-        <SpaceForm
-          space={this.state.space}
-          onFormSubmit={this.handleSubmit}
-          onFormClose={this.handleFormClose}
-          isOpen={true}
-        />
-      );
-    } else {
-      return (
-        <SpaceAuthContext.Provider value={this.state.userRole}>
-          <SpaceShow
-            space={this.state.space}
-            onEditClick={this.handleEditClick}
-            onDeleteClick={this.props.onDeleteClick}
-            onFormSubmit={this.handleSubmit}
-          />
-        </SpaceAuthContext.Provider>
-      );
-    }
-  }
+  return (
+    <SpaceAuthProvider space={space}>
+      <SpaceShow
+        space={space}
+        onEditClick={handleEditClick}
+        onDeleteClick={onDeleteClick}
+        onFormSubmit={handleSubmit}
+      />
+    </SpaceAuthProvider>
+  );
 }
-
-EditableSpace.propTypes = {
-  match: PropTypes.object.isRequired,
-  onDeleteClick: PropTypes.func.isRequired,
-};
-
-export default EditableSpace;

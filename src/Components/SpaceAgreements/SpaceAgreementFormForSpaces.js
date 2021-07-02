@@ -1,126 +1,101 @@
-import PropTypes from 'prop-types';
-import React, {
-  Component
-} from 'react'
-import {
-  Button,
-  Col,
-  Form
-} from 'react-bootstrap'
-import {
-  Typeahead
-} from 'react-bootstrap-typeahead';
-import 'react-select/dist/react-select.css';
+import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import { Typeahead } from "react-bootstrap-typeahead";
+import "react-select/dist/react-select.css";
 
-import {
-  getTheaters
-} from '../../api/theaters'
+import { Button } from "../Button";
+import { Form } from "../Form";
+import Modal from "../Modal";
+import { Spinner } from "../Loaders";
+import { getItems } from "../../api/crud";
 
-class SpaceAgreementFormForSpaces extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      selected_theaters: this.props.space.theaters,
-      available_theaters: []
-    }
-  }
+export default function SpaceAgreementFormForSpaces({
+  onFormClose,
+  onFormSubmit,
+  space,
+}) {
+  const [availableTheaters, setAvailableTheaters] = useState([]);
+  const [errors, setErrors] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedTheaters, setSelectedTheaters] = useState(space.theaters);
 
-  componentDidMount = () => {
-    this.loadTheatersFromServer()
-  }
-
-  handleChange = (selected) => {
-    this.setState({
-      selected_theaters: selected
-    })
-  }
-
-  handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    } else {
-      this.processSubmit()
-    }
-  }
-
-  processSubmit = () => {
-    this.props.onFormSubmit({
-      id: this.props.space.id,
-      theater_ids: this.state.selected_theaters.map((theater) => theater.id)
-    })
-  }
-
-  async loadTheatersFromServer() {
-    const response = await getTheaters()
+  useEffect(async () => {
+    setLoading(true);
+    let response = await getItems("theater");
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error fetching spaces'
-      })
+      console.log("error!");
+      setErrors((errors) => [...errors, "Error fetching theaters"]);
     } else {
-      this.setState({
-        available_theaters: response.data
-      })
+      setAvailableTheaters(response.data);
     }
+    setLoading(false);
+  }, []);
+
+  function handleChange(selected) {
+    setSelectedTheaters(selected);
   }
 
-  render() {
-    if (!this.state.available_theaters) {
-      return <div>Loading theaters</div>
-    }
+  function handleSubmit(event) {
+    event.preventDefault();
+    processSubmit();
+  }
 
-    var available_theaters = this.state.available_theaters.map((theater) => ({
-      id: theater.id,
-      label: String(theater.name)
-    }))
-
-    var selected_theaters = this.state.selected_theaters.map((theater) => ({
-      id: theater.id,
-      label: String(theater.name)
-    }))
-
+  function processSubmit() {
+    onFormSubmit({
+      id: space.id,
+      theater_ids: selectedTheaters.map((theater) => theater.id),
+    });
+  }
+  if (loading) {
     return (
-      <Col md={{ span: 8, offset: 2 }}>
-        <Form
-          onSubmit={e => this.handleSubmit(e)}
-        >
-
-        <Typeahead
-          defaultSelected={selected_theaters}
-          id="theaters"
-          multiple={true}
-          options={available_theaters}
-          onChange={(selected) => {
-            this.handleChange(selected)
-          }}
-          placeholder="Choose the theaters you work with..."
-        />
-
-						<Button
-							type="submit"
-							variant="primary"
-						>
-							Submit
-						</Button>
-						<Button
-							type="button"
-              variant="outline-primary"
-							onClick={this.props.onFormClose}
-						>
-							Cancel
-						</Button>
-					</Form>
-					<hr />
-				</Col>
-    )
+      <Modal>
+        <h1>Loading theaters!</h1>
+        <Spinner />
+      </Modal>
+    );
   }
+  var availableTheatersAutocomplete = availableTheaters.map((theater) => ({
+    id: theater.id,
+    label: String(theater.name),
+  }));
+
+  var selectedTheatersAutocomplete = selectedTheaters.map((theater) => ({
+    id: theater.id,
+    label: String(theater.name),
+  }));
+  return (
+    <Form onSubmit={(e) => handleSubmit(e)} width="85%">
+      <Typeahead
+        defaultSelected={selectedTheatersAutocomplete}
+        id="theaters"
+        multiple={true}
+        options={availableTheatersAutocomplete}
+        onChange={(selected) => {
+          handleChange(selected);
+        }}
+        placeholder="Choose the theaters you work with..."
+      />
+      <Button type="submit">Submit</Button>
+      <Button type="button" onClick={onFormClose}>
+        Cancel
+      </Button>
+    </Form>
+  );
 }
 
-SpaceAgreementFormForSpaces.propTypes = {
-  onFormClose: PropTypes.func.isRequired,
-  onFormSubmit: PropTypes.func.isRequired,
-  space: PropTypes.object.isRequired,
-}
+//     return (
+//       <Col md={{ span: 8, offset: 2 }}>
+//
+//         <hr />
+//       </Col>
+//     );
+//   }
+// }
 
-export default SpaceAgreementFormForSpaces
+// SpaceAgreementFormForSpaces.propTypes = {
+//   onFormClose: PropTypes.func.isRequired,
+//   onFormSubmit: PropTypes.func.isRequired,
+//   space: PropTypes.object.isRequired,
+// };
+
+// export default SpaceAgreementFormForSpaces;

@@ -1,47 +1,30 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
+import { useHistory } from "react-router-dom";
 
-import React, {
-  Component
-} from 'react'
+import TheaterForm from "./TheaterForm";
 
-import {
-  Col,
-  Row
-} from 'react-bootstrap'
+export default function NewTheater({ onFormSubmit }) {
+  const history = useHistory();
 
-import TheaterForm from './TheaterForm'
-
-class NewTheater extends Component {
-
-  handleFormClose = () => {
-    this.setState({
-      isOpen: false
-    })
-  }
-  handleFormSubmit = (theater) => {
-    this.handleFormClose()
-    this.props.onFormSubmit(theater)
+  function handleFormClose() {
+    console.log("");
+    history.push("/theaters");
   }
 
-  render() {
-    return (
-      <Row>
-        <Col md={12} >
-          <div id="new-theater-form">
-            <TheaterForm
-            onFormSubmit={this.handleFormSubmit}
-            onFormClose={this.handleFormClose}
-             />
-          </div>
-        </Col>
-      </Row>
-    )
+  function handleFormSubmit(theater) {
+    onFormSubmit(theater);
   }
+
+  return (
+    <div id="new-theater-form">
+      <TheaterForm
+        onFormSubmit={handleFormSubmit}
+        onFormClose={handleFormClose}
+      />
+    </div>
+  );
 }
 
 NewTheater.propTypes = {
   onFormSubmit: PropTypes.func.isRequired,
-}
-
-
-export default NewTheater
+};

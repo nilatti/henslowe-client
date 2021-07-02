@@ -1,62 +1,51 @@
 import PropTypes from "prop-types";
-import React, { Component } from "react";
-
+import { useState } from "react";
+import styled from "styled-components";
 import ConflictForm from "./ConflictForm";
 import ConflictShow from "./ConflictShow";
 
-class EditableConflict extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      editFormOpen: false,
-      conflict: null,
-    };
+const ConflictStyles = styled.li``;
+export default function EditableConflict({
+  conflict,
+  handleDeleteClick,
+  handleSubmit,
+  role,
+}) {
+  const [formOpen, setFormOpen] = useState(false);
+  function handleEditClick() {
+    setFormOpen(!formOpen);
   }
-
-  handleEditClick = () => {
-    this.toggleForm();
-  };
-  handleSubmit = (conflict) => {
-    this.props.handleSubmit(conflict);
-    this.toggleForm();
-  };
-
-  toggleForm = () => {
-    this.setState({
-      editFormOpen: !this.state.editFormOpen,
-    });
-  };
-
-  render() {
-    if (this.props.conflict === null) {
-      return <div>Loading!</div>;
-    }
-    if (this.state.editFormOpen) {
-      return (
+  function handleEditSubmit(conflict) {
+    handleSubmit(conflict);
+    setFormOpen(false);
+  }
+  function toggleForm() {
+    setFormOpen(!formOpen);
+  }
+  if (conflict === null) {
+    return <div>Loading!</div>;
+  }
+  if (formOpen) {
+    return (
+      <ConflictStyles>
         <ConflictForm
-          conflict={this.props.conflict}
+          conflict={conflict}
           isOpen={true}
-          onFormSubmit={this.handleSubmit}
-          onFormClose={this.toggleForm}
+          onFormSubmit={handleEditSubmit}
+          onFormClose={toggleForm}
         />
-      );
-    } else {
-      return (
+      </ConflictStyles>
+    );
+  } else {
+    return (
+      <ConflictStyles>
         <ConflictShow
-          conflict={this.props.conflict}
-          handleEditClick={this.handleEditClick}
-          handleDeleteClick={this.props.handleDeleteClick}
-          onFormSubmit={this.handleSubmit}
+          conflict={conflict}
+          handleEditClick={handleEditClick}
+          handleDeleteClick={handleDeleteClick}
+          role={role}
         />
-      );
-    }
+      </ConflictStyles>
+    );
   }
 }
-
-EditableConflict.propTypes = {
-  conflict: PropTypes.object.isRequired,
-  handleDeleteClick: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-};
-
-export default EditableConflict;
