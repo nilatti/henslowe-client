@@ -8,9 +8,10 @@ import Modal from "../Modal";
 
 import SelectPlay from "./SelectPlay";
 import EditScript from "../PlayScripts/EditScript";
+import { updateLiteralTypeNode } from "typescript";
 
 export default function CutPlays() {
-  const { loading, play, playSkeleton, setPlay } = usePlayState();
+  const { loading, play, playSkeleton, setPlay, updateLine } = usePlayState();
   const [selectedText, setSelectedText] = useState();
   const [linesPerMinute, setLinesPerMinute] = useState("");
   function clearPlay() {
@@ -39,6 +40,11 @@ export default function CutPlays() {
   function handleChange(e) {
     setLinesPerMinute(e.target.value);
   }
+
+  function handleLineSubmit(line, type) {
+    updateLine(line, type);
+  }
+
   if (!play?.id) {
     return <SelectPlay />;
   }
@@ -68,6 +74,7 @@ export default function CutPlays() {
       </Form>
       <EditScript
         getSelectedText={getSelectedText}
+        handleLineSubmit={handleLineSubmit}
         linesPerMinute={linesPerMinute}
         playSkeleton={playSkeleton}
         selectedText={selectedText}

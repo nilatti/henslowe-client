@@ -55,6 +55,22 @@ export default function PlayScripts() {
       setSelectedText(responseDataWithTextUnit);
     }
   }
+  async function handleLineSubmit(line, type) {
+    line.character_id = line.character_id || line.character?.id;
+
+    delete line.diffed_content;
+    delete line.created_at;
+    delete line.updated_at;
+    delete line.count;
+    delete line.words;
+    let response;
+
+    response = await updateServerItem(line, type);
+    if (response.status >= 400) {
+      setError(`Error updating ${type}`);
+    } else {
+    }
+  }
   if (loading) {
     return (
       <Modal>
@@ -63,10 +79,11 @@ export default function PlayScripts() {
       </Modal>
     );
   }
-  console.log(playSkeleton);
   return (
     <EditScript
+      characters={playSkeleton.characters}
       getSelectedText={getSelectedText}
+      handleLineSubmit={handleLineSubmit}
       linesPerMinute={playSkeleton.production?.lines_per_minute}
       playSkeleton={playSkeleton}
       selectedText={selectedText}

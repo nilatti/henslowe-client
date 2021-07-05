@@ -59,11 +59,11 @@ ul {
 }
 
 .draggable-reason-for-recommendation {
-  font-size: 0.75em
+  font-size: 0.75em;
 }
 
 .draggable-further-info {
-  font-size: 0.75em
+  font-size: 0.75em;
 }
 
 .doubling-problem {
@@ -87,24 +87,23 @@ ul {
   text-align: left;
 }
 
-
 .modal {
   position: fixed;
   top: 0;
   left: 0;
-  width:100%;
+  width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.8);
 }
 
 .modal-main {
-  position:fixed;
+  position: fixed;
   background: white;
   width: 80%;
   height: auto;
-  top:50%;
-  left:50%;
-  transform: translate(-50%,-50%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .nonspeaking-onstage {
@@ -116,11 +115,17 @@ ul {
 }
 
 .script-cut-interface-row:nth-child(odd) {
-  background-color: #DCDCDC;
+  background-color: #dcdcdc;
 }
 
 .script-cut-interface-row:nth-child(even) {
-  background-color: #FFFF;
+  background-color: #ffff;
+}
+
+.no-character {
+  font-size: 0.75em;
+  font-style: italic;
+  font-weight: normal;
 }
 
 .stage-direction {
@@ -153,8 +158,12 @@ ul {
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 footer {

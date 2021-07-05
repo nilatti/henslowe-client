@@ -1,3 +1,4 @@
+import { useBeforeunload } from "react-beforeunload";
 import styled from "styled-components";
 import { Switch, Route } from "react-router-dom";
 
@@ -10,6 +11,7 @@ const MainStyle = styled.div`
 `;
 
 export default function Main() {
+  useBeforeunload(() => "You’ll lose your data!");
   return (
     <PlayProvider>
       <MainStyle>

@@ -2,6 +2,7 @@ import styled from "styled-components";
 import TreeViewMenu from "react-simple-tree-menu";
 
 const TextSelectStyles = styled.div`
+  flex: 1 0 15%;
   padding-right: 15px;
   .rstm-tree-item {
     display: flex;

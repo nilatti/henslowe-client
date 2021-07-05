@@ -1,46 +1,33 @@
-import React, {
-  Component
-} from 'react'
-import PropTypes from 'prop-types';
+import { useState } from "react";
+import { Form } from "../Form";
 
-import {
-  Form,
-} from 'react-bootstrap'
-
-class LineEditForm extends Component {
-  state = {
-      line: this.props.line,
-  }
-
-  onChange (e) {
-    if (e.key == 'Enter') {
-      this.submitForm()
+export default function LineEditForm({ onSubmit, line }) {
+  const [newContent, setNewContent] = useState(line.new_content);
+  function onChange(e) {
+    if (e.key == "Enter") {
+      submitForm();
     }
-    this.setState({
-      line: {
-        ...this.state.line,
-        id: this.state.line.id,
-        new_content: e.target.value,
-      }
-    })
+    setNewContent(e.target.value);
   }
 
-  submitForm = () => {
-    this.props.onSubmit(this.state.line)
+  function submitForm() {
+    let newLine = { ...line, new_content: newContent };
+    onSubmit(newLine);
   }
-
-  render() {
-    return (
-      <Form controlid="lineEditForm" onSubmit={e => { e.preventDefault(); }} >
-        <Form.Control value={this.state.line.new_content || this.state.line.original_content || ''} onKeyDown={(evt) => this.onChange(evt)} onChange={(evt) => this.onChange(evt)} onBlur={this.submitForm}/>
-      </Form>
-    )
-  }
+  return (
+    <Form
+      controlid="lineEditForm"
+      onSubmit={(e) => {
+        e.preventDefault();
+      }}
+      width="100%"
+    >
+      <input
+        value={newContent || line.original_content || ""}
+        onKeyDown={(evt) => onChange(evt)}
+        onChange={(evt) => onChange(evt)}
+        onBlur={submitForm}
+      />
+    </Form>
+  );
 }
-
-LineEditForm.propTypes = {
-  line: PropTypes.object.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-}
-
-export default LineEditForm

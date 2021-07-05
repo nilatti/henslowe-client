@@ -25,7 +25,6 @@ export default function RehearsalPeopleForm({
   useEffect(() => {
     let calledForScenes = markCalledForScenes(productionArtists);
     let unavailableUsers = markUnavailable(calledForScenes);
-    console.log(unavailableUsers);
     setProductionArtists(unavailableUsers);
   }, []);
 
