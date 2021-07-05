@@ -26,6 +26,9 @@ export const Form = styled.form`
       font-style: italic;
     }
   }
+  input[type="number"] {
+    flex: 0 1 50px;
+  }
   select {
     height: calc(1.5em + 0.75rem + 2px);
     padding: 0.375rem 0.75rem;
@@ -76,7 +79,7 @@ export const FormGroupInline = styled.div`
 
   margin: 10px 0;
   width: 100%;
-  justify-content: space-around;
+  justify-content: ${(props) => props.justifyContent || "space-between"};
   @media screen and (min-width: 480px) {
     flex-flow: row wrap;
   }

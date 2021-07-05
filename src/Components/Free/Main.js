@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Switch, Route } from "react-router-dom";
 
 import CutPlays from "./CutPlays";
+import Double from "./Double";
 import Welcome from "./Welcome";
 import { PlayProvider } from "../../lib/freePlayState";
 
@@ -11,13 +12,14 @@ const MainStyle = styled.div`
 `;
 
 export default function Main() {
-  useBeforeunload(() => "You’ll lose your data!");
+  // useBeforeunload(() => "You’ll lose your data!");
   return (
     <PlayProvider>
       <MainStyle>
         <Switch>
           <Route exact path="/" component={Welcome} />
           <Route exact path="/cut" component={CutPlays} />
+          <Route exact path="/doubling" component={Double} />
         </Switch>
       </MainStyle>
     </PlayProvider>

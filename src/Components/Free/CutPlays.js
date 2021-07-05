@@ -8,7 +8,6 @@ import Modal from "../Modal";
 
 import SelectPlay from "./SelectPlay";
 import EditScript from "../PlayScripts/EditScript";
-import { updateLiteralTypeNode } from "typescript";
 
 export default function CutPlays() {
   const { loading, play, playSkeleton, setPlay, updateLine } = usePlayState();

@@ -56,6 +56,9 @@ export const GlobalStyles = createGlobalStyle`
     hr {
       color: var(--color-light);
     }
+    li {
+      list-style: none;
+    }
   }
   
   .dropdown-item.active, .dropdown-item:active {

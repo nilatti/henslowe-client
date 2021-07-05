@@ -16,7 +16,7 @@ export default function Navigation() {
             <Nav.Link href="/">Make play wordclouds</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="/">Make a doubling chart</Nav.Link>
+            <Nav.Link href="/doubling">Make a doubling chart</Nav.Link>
           </Nav.Item>
           <Nav.Item>
             <Nav.Link href="/">Generate part scripts</Nav.Link>
