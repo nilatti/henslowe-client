@@ -9,7 +9,6 @@ import PasswordResetRequest from "./PasswordResetRequest";
 import Plays from "./Plays/Plays";
 import PlayScripts from "./PlayScripts/PlayScripts";
 import Productions from "./Productions/Productions";
-import ProductionRehearsalSchedule from "./Productions/RehearsalSchedule/ProductionRehearsalSchedule";
 import Spaces from "./Spaces/Spaces";
 import Specializations from "./Specializations/Specializations";
 import Theaters from "./Theaters/Theaters";
@@ -39,9 +38,9 @@ export default function Main() {
           path={`/productions/:id/doubling_charts/`}
           component={DoublingCharts}
         />
-        <Route path={`/productions/:id/rehearsal_schedule`}>
+        {/* <Route path={`/productions/:id/rehearsal_schedule`}>
           <ProductionRehearsalSchedule />
-        </Route>
+        </Route> */}
         <Route path={`/productions`} component={Productions} />
         <Route path="/theaters" component={Theaters} />
         <Route path="/spaces" component={Spaces} />

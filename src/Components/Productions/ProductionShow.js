@@ -29,7 +29,7 @@ import { ProductionAuthContext } from "../Contexts";
 export default function ProductionShow({
   production,
   onEditClick,
-  onDeleteClick
+  onDeleteClick,
 }) {
   let [productionCopyComplete, setProductionCopyComplete] = useState(
     production.play.production_copy_complete
@@ -162,6 +162,7 @@ export default function ProductionShow({
           }
         }}
       </ProductionAuthContext.Consumer>
+
       {productionCopyComplete && (
         <Row>
           <CastList production={production} />

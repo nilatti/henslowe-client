@@ -5,6 +5,8 @@ import { Link, Route, Switch } from "react-router-dom";
 import { createProduction, deleteProduction } from "../../api/productions";
 import ProductionsList from "./ProductionsList";
 import EditableProduction from "./EditableProduction";
+import ProductionRehearsalSchedule from "./RehearsalSchedule/ProductionRehearsalSchedule";
+
 import NewProduction from "./NewProduction";
 
 class Productions extends Component {
@@ -58,6 +60,9 @@ class Productions extends Component {
                   />
                 )}
               />
+              <Route path={`/productions/:productionId/rehearsal_schedule`}>
+                <ProductionRehearsalSchedule />
+              </Route>
               <Route
                 path={`/productions/:productionId`}
                 render={(props) => (

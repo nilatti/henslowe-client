@@ -27,10 +27,12 @@ const TableStyle = styled.table`
     background-color: var(--color-light);
   }
   td {
-    word-wrap: break-word;
-    word-break: break-all;
+    border: 1px solid var(--color-dark);
     overflow: hidden;
+    padding: 5px;
     text-overflow: ellipsis;
+    word-break: break-all;
+    word-wrap: break-word;
   }
   th {
   }

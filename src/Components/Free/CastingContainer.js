@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Typeahead } from "react-bootstrap-typeahead";
 import CastingForm from "../Jobs/CastingForm";
 import CastingShow from "../Jobs/CastingShow";
 import { usePlayState } from "../../lib/freePlayState";
