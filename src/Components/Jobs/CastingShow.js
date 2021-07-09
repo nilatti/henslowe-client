@@ -1,3 +1,4 @@
+import { buildUserName } from "../../utils/actorUtils";
 export default function CastingShow({
   casting,
   handleEditClick,

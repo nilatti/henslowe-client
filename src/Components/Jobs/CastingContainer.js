@@ -22,7 +22,7 @@ class CastingShow extends Component {
       selectedUser = [
         {
           id: this.props.casting.user.id,
-          label: buildUserName(this.props.casting.user),
+          name: buildUserName(this.props.casting.user),
         },
       ];
     } else {
