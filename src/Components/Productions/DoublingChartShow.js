@@ -2,6 +2,8 @@ import _ from "lodash";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import uuid from "react-uuid";
+import Modal from "../Modal";
+import { Spinner } from "../Loaders";
 import {
   filterEmptyContent,
   getFrenchScenesFromPlay,
@@ -13,7 +15,7 @@ import { buildUserName } from "../../utils/actorUtils";
 
 const TableStyle = styled.table`
   width: 100%;
-  width: ${(props) => (props.level === "french_scene" ? "1200%" : "150%")};
+  width: ${(props) => (props.level === "french_scene" ? "1400%" : "250%")};
   table-layout: fixed;
 
   tr:nth-child(odd) {
@@ -26,15 +28,14 @@ const TableStyle = styled.table`
   tr:hover {
     background-color: var(--color-light);
   }
-  td {
+  td,
+  th {
     border: 1px solid var(--color-dark);
     overflow: hidden;
     padding: 5px;
     text-overflow: ellipsis;
     word-break: break-all;
     word-wrap: break-word;
-  }
-  th {
   }
 `;
 export default function DoublingChartShow({
@@ -48,16 +49,25 @@ export default function DoublingChartShow({
   const [uncast, setUncast] = useState([]);
 
   useEffect(() => {
-    let newHeadRow = generateColumns();
-    setHeadRow(newHeadRow);
-  }, []);
+    if (production.play?.acts?.length) {
+      let newHeadRow = generateColumns();
+      setHeadRow(newHeadRow);
+    }
+  }, [JSON.stringify(production)]);
 
   useEffect(() => {
-    let newRows = actors.map((actor) => generateRow(actor));
-    let newUncast = generateUncastRow(castings);
-    setRows(newRows);
-    setUncast(newUncast);
-  }, [JSON.stringify(castings), JSON.stringify(actors)]);
+    if (production.play?.acts?.length) {
+      console.log(61);
+      let newRows = actors.map((actor) => generateRow(actor));
+      let newUncast = generateUncastRow(castings);
+      setRows(newRows);
+      setUncast(newUncast);
+    }
+  }, [
+    JSON.stringify(castings),
+    JSON.stringify(actors),
+    JSON.stringify(production),
+  ]);
 
   function getOnStages() {
     let onStages = [];
@@ -101,6 +111,7 @@ export default function DoublingChartShow({
   }
 
   function generateRow(actor) {
+    console.log(actor);
     let blocks = getOnStages();
     let actorJobs = actor.jobs;
     let actorCharacterIds = actorJobs.map((job) => job.character_id);
@@ -169,6 +180,15 @@ export default function DoublingChartShow({
       </tr>
     );
     return row;
+  }
+
+  if (!production.play?.acts || !actors.length || !castings.length) {
+    return (
+      <Modal>
+        <h1>Loading!</h1>
+        <Spinner />
+      </Modal>
+    );
   }
 
   return (

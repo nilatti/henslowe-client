@@ -2,14 +2,7 @@ import PropTypes from "prop-types";
 import { Button, Col, Row, Tab, Tabs } from "react-bootstrap";
 import React, { useState } from "react";
 
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-  useRouteMatch,
-} from "react-router-dom";
+import { BrowserRouter as Router, Link, useRouteMatch } from "react-router-dom";
 import {
   calculateLineCount,
   calculateRunTime,

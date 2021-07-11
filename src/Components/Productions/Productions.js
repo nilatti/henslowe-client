@@ -4,6 +4,7 @@ import { Link, Route, Switch } from "react-router-dom";
 
 import { createProduction, deleteProduction } from "../../api/productions";
 import ProductionsList from "./ProductionsList";
+import DoublingCharts from "./DoublingCharts";
 import EditableProduction from "./EditableProduction";
 import ProductionRehearsalSchedule from "./RehearsalSchedule/ProductionRehearsalSchedule";
 
@@ -59,6 +60,10 @@ class Productions extends Component {
                     onFormSubmit={this.handleCreateFormSubmit}
                   />
                 )}
+              />
+              <Route
+                path={`/productions/:productionId/doubling_charts/`}
+                component={DoublingCharts}
               />
               <Route path={`/productions/:productionId/rehearsal_schedule`}>
                 <ProductionRehearsalSchedule />

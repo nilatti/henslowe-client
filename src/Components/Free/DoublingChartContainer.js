@@ -6,7 +6,6 @@ import DoublingChartShow from "../Productions/DoublingChartShow";
 
 export default function DoublingChartContainer({}) {
   const { castings, fakeActorsArray, play } = usePlayState();
-  const [level, setLevel] = useState();
 
   let production = { jobs: castings, play: play };
   return (

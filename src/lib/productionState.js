@@ -19,27 +19,30 @@ import { getJobs } from "../api/jobs";
 
 const ProductionStateContext = createContext();
 const ProductionStateProvider = ProductionStateContext.Provider;
+///tktktk add switch so that it only loads what it needs. eg. only loads all the rehearsals when it's mounted in that context, only loads whole play when mounted in doubling chart context etc.
 
 function ProductionProvider({ children }) {
   const { productionId } = useParams();
-  const [hiredUsers, setHiredUsers] = useState([]);
   const [actors, setActors] = useState([]);
   const [auditioners, setAuditioners] = useState([]);
   const [actorsAndAuditioners, setActorsAndAuditioners] = useState([]);
   const [castings, setCastings] = useState([]);
+  const [hiredUsers, setHiredUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [notActors, setNotActors] = useState([]);
   const [production, setProduction] = useState({});
   const [rehearsals, setRehearsals] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   //get production
   useEffect(async () => {
+    setLoading(true);
     const response = await getItem(productionId, "production");
     if (response.status >= 400) {
       console.log("error getting jobs");
     } else {
       setProduction(response.data);
     }
+    setLoading(false);
   }, []);
   //get users who are hired to work on this production
   useEffect(async () => {
@@ -80,9 +83,25 @@ function ProductionProvider({ children }) {
       );
     }
     setLoading(false);
-  }, []);
+  }, []); //maybe get it to run on production load?
 
-  //get rehearsals for production
+  useEffect(async () => {
+    setLoading(true);
+    console.log("get play hook called");
+    if (production.play?.id) {
+      const response = await getItem(production.play?.id, "play");
+      if (response.status >= 400) {
+        console.log("error getting rehearsals");
+      } else {
+        let newProd = { ...production };
+        newProd.play = response.data;
+        setProduction(newProd);
+        setLoading(false);
+      }
+    }
+  }, [production.id]);
+
+  //get rehearsals for production //maybe get it to run on production load?
   useEffect(async () => {
     const response = await getItemsWithParent(
       "production",
@@ -182,7 +201,6 @@ function ProductionProvider({ children }) {
         user: tempUser,
       };
       let newCastings = castings.concat(tempCasting);
-      console.log(newCastings);
       setCastings(newCastings);
     }
   }

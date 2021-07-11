@@ -34,13 +34,7 @@ export default function Main() {
         />
         <Route path="/plays/:id/playscripts/" component={PlayScripts} />
         <Route path="/plays" component={Plays} />
-        <Route
-          path={`/productions/:id/doubling_charts/`}
-          component={DoublingCharts}
-        />
-        {/* <Route path={`/productions/:id/rehearsal_schedule`}>
-          <ProductionRehearsalSchedule />
-        </Route> */}
+
         <Route path={`/productions`} component={Productions} />
         <Route path="/theaters" component={Theaters} />
         <Route path="/spaces" component={Spaces} />
