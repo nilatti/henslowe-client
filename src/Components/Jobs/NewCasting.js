@@ -1,142 +1,79 @@
-import PropTypes from 'prop-types';
-import React, {
-  Component
-} from 'react'
-import {
-  Button,
-  Col,
-  Form,
-} from 'react-bootstrap'
-import {
-  Typeahead
-} from 'react-bootstrap-typeahead';
+import { useState } from "react";
+import { Typeahead } from "react-bootstrap-typeahead";
+import { Button } from "../Button";
+import { Form, FormGroupInline } from "../Form";
+import { ACTOR_SPECIALIZATION_ID } from "../../utils/hardcodedConstants";
+import { buildUserName } from "../../utils/actorUtils";
+import { useProductionState } from "../../lib/productionState";
 
-class NewCasting extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      characters: this.props.production.play.characters,
-      end_date: this.props.production.end_date || '',
-      production: this.props.production,
-      specialization: 2,
-      theater: this.props.production.theater,
-      selectedCharacter: [],
-      selectedUser: [],
-      start_date: this.props.production.start_date || '',
-      validated: false,
-    }
-  }
+export default function NewCasting({ production, users }) {
+  const { createCasting } = useProductionState();
+  const [formOpen, setFormOpen] = useState(false);
+  const [selectedCharacterName, setSelectedCharacterName] = useState([]);
+  const [selectedUser, setSelectedUser] = useState([]);
 
-  handleChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value
-    })
-  }
-
-  handleChangeCharacter = (e) => {
+  function handleChangeUser(e) {
+    console.log(e[0]);
     if (e.length > 0) {
-      this.setState({
-        selectedCharacter: [e[0]]
-      })
+      setSelectedUser([e[0]]);
     }
   }
-
-  handleChangeUser = (e) => {
-    if (e.length > 0) {
-      this.setState({
-        selectedUser: [e[0]]
-      })
-    }
+  function handleSubmit(e) {
+    e.preventDefault();
+    let casting = {
+      end_date: production.end_date,
+      production_id: production.id,
+      start_date: production.start_date,
+      specialization_id: ACTOR_SPECIALIZATION_ID,
+      theater_id: production.theater_id,
+      user_id: selectedUser[0].id,
+    };
+    setFormOpen(false);
+    createCasting(selectedCharacterName, casting);
   }
 
-  handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    } else {
-      this.processSubmit()
-    }
-    this.setState({
-      validated: true
-    })
+  let userOptions = users.map((user) => {
+    return { id: user.id, name: buildUserName(user) };
+  });
+  if (!formOpen) {
+    return <Button onClick={() => setFormOpen(true)}>Add New Casting</Button>;
   }
-
-  processSubmit = () => {
-    this.props.onFormSubmit({
-      character_id: this.state.selectedCharacter[0].id,
-      end_date: this.state.end_date,
-      production_id: this.state.production.id,
-      start_date: this.state.start_date,
-      specialization_id: this.state.specialization,
-      theater_id: this.state.theater.id,
-      user_id: this.state.selectedUser[0].id,
-    }, "job")
-  }
-
-  render() {
-    var characters = this.state.characters.map((character) => ({
-      id: character.id,
-      label: character.name
-    }))
-    const {
-      validated
-    } = this.state
-    return (<Col md = {{span: 8, offset: 2}}>
-      <Form
-        noValidate
-        onSubmit={e => this.handleSubmit(e)}
-        validated={validated}
-      >
-      <Form.Group>
-        <Form.Label>
-          Actor
-        </Form.Label>
+  return (
+    <Form onSubmit={(e) => handleSubmit(e)} width="100%">
+      <FormGroupInline>
+        <label>Actor</label>
         <Typeahead
           id="user"
+          labelKey="name"
           required
-          options={this.props.users}
+          options={userOptions}
           onChange={(selected) => {
-            this.handleChangeUser(selected)
+            handleChangeUser(selected);
           }}
-          selected={this.state.selectedUser}
+          selected={selectedUser}
           placeholder="Choose the user"
         />
-        <Form.Control.Feedback type="invalid">
-            Actor is required
-        </Form.Control.Feedback>
-      </Form.Group>
-      <Form.Group>
-        <Form.Label>
-          Character/Role
-        </Form.Label>
+      </FormGroupInline>
+      <FormGroupInline>
+        <label>Character/Role</label>
         <Typeahead
           allowNew
           id="character"
+          labelKey="name"
           required
-          options={characters}
-          onChange={(selected) => {
-            this.handleChangeCharacter(selected)
+          options={[]}
+          onInputChange={(e) => setSelectedCharacterName(e)}
+          onChange={(e) => {
+            setSelectedCharacterName(e);
           }}
-          selected={this.state.selectedCharacter}
+          selected={[]}
           placeholder="Choose character or role"
         />
-        <Form.Control.Feedback type="invalid">
-            Character/Role is required
-        </Form.Control.Feedback>
-      </Form.Group>
-      <Button type="submit" variant="primary" block>Submit</Button>
-      <Button type="button" onClick={this.props.onFormClose} block>Cancel</Button>
-    </Form> <hr />
-    </Col>)
-  }
+      </FormGroupInline>
+      <Button type="submit">Submit</Button>
+      <Button type="button" onClick={() => setFormOpen(false)} block>
+        Cancel
+      </Button>
+    </Form>
+  );
 }
-
-NewCasting.propTypes = {
-  onFormClose: PropTypes.func.isRequired,
-  onFormSubmit: PropTypes.func.isRequired,
-  production: PropTypes.object.isRequired,
-  users: PropTypes.array.isRequired,
-}
-
-export default NewCasting

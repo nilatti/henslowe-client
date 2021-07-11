@@ -31,7 +31,7 @@ const RehearsalScheduleListStyles = styled.div`
 
 export default function RehearsalScheduleList() {
   let query = useQuery();
-  const { isLoadingComplete, rehearsals, production } = useProductionState();
+  const { loading, rehearsals, production } = useProductionState();
   const [thisWeekRehearsals, setThisWeekRehearsals] = useState([]);
   const [nextWeekRehearsals, setNextWeekRehearsals] = useState(false);
   const [lastWeekRehearsals, setLastWeekRehearsals] = useState(false);
@@ -139,7 +139,7 @@ export default function RehearsalScheduleList() {
     );
   });
 
-  if (!isLoadingComplete) {
+  if (loading) {
     return (
       <Modal>
         <h1>Loading!</h1>

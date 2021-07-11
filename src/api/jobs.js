@@ -49,6 +49,7 @@ async function getJobs({
   theater_id = "",
   user_id = "",
 }) {
+  console.log("inside api", production_id);
   return API.request(`jobs`, {
     params: {
       production: production_id,

@@ -1,88 +1,93 @@
-import PropTypes from 'prop-types';
-import React, {
-  Component
-} from 'react'
+import PropTypes from "prop-types";
+import React, { Component } from "react";
 
-import {
-  getProduction,
-  updateServerProduction
-} from '../../api/productions'
+import { getProduction, updateServerProduction } from "../../api/productions";
 
-import EditProductionForm from './EditProductionForm'
-import ProductionShow from './ProductionShow'
-import {getUserRoleForProduction} from '../../utils/authorizationUtils'
-import {ProductionAuthContext} from '../Contexts'
-
+import EditProductionForm from "./EditProductionForm";
+import ProductionShow from "./ProductionShow";
+import { getUserRoleForProduction } from "../../utils/authorizationUtils";
+import { ProductionAuthContext } from "../Contexts";
+import { ProductionProvider } from "../../lib/productionState";
 
 class EditableProduction extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       editFormOpen: false,
       production: null,
       userRole: null,
-    }
+    };
   }
 
   closeForm = () => {
     this.setState({
       editFormOpen: false,
-    })
-  }
+    });
+  };
 
   componentDidMount = () => {
-    this.loadProductionFromServer(this.props.match.params.productionId)
-  }
+    this.loadProductionFromServer(this.props.match.params.productionId);
+  };
 
   componentDidUpdate(prevProps) {
-    if (this.state.production === null || prevProps.match.params.productionId !== this.props.match.params.productionId) {
+    if (
+      this.state.production === null ||
+      prevProps.match.params.productionId !==
+        this.props.match.params.productionId
+    ) {
       this.loadProductionFromServer(this.props.match.params.productionId);
     }
   }
 
   handleEditClick = () => {
-    this.openForm()
-  }
+    this.openForm();
+  };
   handleFormClose = () => {
-    this.closeForm()
-  }
+    this.closeForm();
+  };
 
   handleSubmit = (production) => {
-    this.updateProductionOnServer(production)
-    this.closeForm()
-  }
+    this.updateProductionOnServer(production);
+    this.closeForm();
+  };
 
-  setUserAuth (user, production) {
+  setUserAuth(user, production) {
     if (user) {
-      this.setState({userRole: getUserRoleForProduction(user, production)})
+      this.setState({ userRole: getUserRoleForProduction(user, production) });
     }
   }
 
   async loadProductionFromServer(productionId) {
-    const response = await getProduction(productionId)
+    const response = await getProduction(productionId);
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error fetching production'
-      })
+        errorStatus: "Error fetching production",
+      });
     } else {
-      this.setState({
-        production: response.data
-      }, function() {
-        this.setUserAuth(JSON.parse(window.localStorage.getItem('user')), this.state.production)
-      })
+      this.setState(
+        {
+          production: response.data,
+        },
+        function () {
+          this.setUserAuth(
+            JSON.parse(window.localStorage.getItem("user")),
+            this.state.production
+          );
+        }
+      );
     }
   }
 
   async updateProductionOnServer(production) {
-    const response = await updateServerProduction(production)
+    const response = await updateServerProduction(production);
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error updating production'
-      })
+        errorStatus: "Error updating production",
+      });
     } else {
       this.setState({
-        production: response.data
-      })
+        production: response.data,
+      });
     }
   }
 
@@ -101,15 +106,13 @@ class EditableProduction extends Component {
 
   openForm = () => {
     this.setState({
-      editFormOpen: true
-    })
-  }
+      editFormOpen: true,
+    });
+  };
 
   render() {
     if (this.state.production === null) {
-      return (
-        <div>Loading!</div>
-      )
+      return <div>Loading!</div>;
     }
     if (this.state.editFormOpen) {
       return (
@@ -119,20 +122,20 @@ class EditableProduction extends Component {
           onFormClose={this.handleFormClose}
           isOpen={true}
         />
-      )
+      );
     } else {
       return (
-        <ProductionAuthContext.Provider
-          value={this.state.userRole}
-        >
-          <ProductionShow
-          production={this.state.production}
-          onEditClick={this.handleEditClick}
-          onDeleteClick={this.props.onDeleteClick}
-          onFormSubmit={this.handleSubmit}
-          />
+        <ProductionAuthContext.Provider value={this.state.userRole}>
+          <ProductionProvider>
+            <ProductionShow
+              production={this.state.production}
+              onEditClick={this.handleEditClick}
+              onDeleteClick={this.props.onDeleteClick}
+              onFormSubmit={this.handleSubmit}
+            />
+          </ProductionProvider>
         </ProductionAuthContext.Provider>
-      )
+      );
     }
   }
 }
@@ -140,6 +143,6 @@ class EditableProduction extends Component {
 EditableProduction.propTypes = {
   match: PropTypes.object.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
-}
+};
 
-export default EditableProduction
+export default EditableProduction;

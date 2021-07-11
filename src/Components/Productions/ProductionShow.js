@@ -2,14 +2,7 @@ import PropTypes from "prop-types";
 import { Button, Col, Row, Tab, Tabs } from "react-bootstrap";
 import React, { useState } from "react";
 
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-  useRouteMatch,
-} from "react-router-dom";
+import { BrowserRouter as Router, Link, useRouteMatch } from "react-router-dom";
 import {
   calculateLineCount,
   calculateRunTime,
@@ -29,7 +22,7 @@ import { ProductionAuthContext } from "../Contexts";
 export default function ProductionShow({
   production,
   onEditClick,
-  onDeleteClick
+  onDeleteClick,
 }) {
   let [productionCopyComplete, setProductionCopyComplete] = useState(
     production.play.production_copy_complete
@@ -162,6 +155,7 @@ export default function ProductionShow({
           }
         }}
       </ProductionAuthContext.Consumer>
+
       {productionCopyComplete && (
         <Row>
           <CastList production={production} />

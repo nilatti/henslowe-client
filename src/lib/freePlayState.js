@@ -7,6 +7,20 @@ const PlayStateContext = createContext();
 const PlayStateProvider = PlayStateContext.Provider;
 
 function PlayProvider({ children }) {
+  const [castings, setCastings] = useState(
+    JSON.parse(sessionStorage.getItem("castings")) || []
+  );
+  const [fakeActors, setFakeActors] = useState(
+    JSON.parse(sessionStorage.getItem("fake_actors")) || {
+      female: 0,
+      male: 0,
+      nonbinary: 0,
+    }
+  );
+  const [fakeActorsArray, setFakeActorsArray] = useState(
+    JSON.parse(sessionStorage.getItem("actors_array")) || []
+  );
+  console.log(fakeActorsArray);
   const [play, setPlay] = useState(
     JSON.parse(sessionStorage.getItem("play")) || {}
   );
@@ -15,6 +29,81 @@ function PlayProvider({ children }) {
   );
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    console.log("use effect 33");
+    sessionStorage.setItem("fake_actors", JSON.stringify(fakeActors));
+    let actorsList = { female: [], male: [], nonbinary: [] };
+    let id = 0;
+    if (!fakeActorsArray.length) {
+      for (let i = 0; i < fakeActors.female; i++) {
+        id++;
+        actorsList.female.push({
+          id: id,
+          first_name: `Female`,
+          jobs: [],
+          last_name: `${i + 1}`,
+        });
+      }
+      for (let i = 0; i < fakeActors.male; i++) {
+        id++;
+        actorsList.male.push({
+          id: id,
+          first_name: `Male`,
+          jobs: [],
+          last_name: `${i + 1}`,
+        });
+      }
+      for (let i = 0; i < fakeActors.nonbinary; i++) {
+        id++;
+        actorsList.nonbinary.push({
+          id: id,
+          first_name: `Nonbinary`,
+          jobs: [],
+          last_name: `${i + 1}`,
+        });
+      }
+      let actorsArray = actorsList.female
+        .concat(actorsList.male)
+        .concat(actorsList.nonbinary);
+      sessionStorage.setItem("actors_array", JSON.stringify(actorsArray));
+      setFakeActorsArray(actorsArray);
+    }
+  }, [fakeActors]);
+
+  function buildCastings(characters) {
+    return characters.map((character) => {
+      return { character_id: character.id, character: character };
+    });
+  }
+
+  function updateActorJobs(actor, job) {
+    console.log("called update actor jobs");
+    let newActor = actor;
+    newActor.jobs = actor.jobs.concat(job);
+    let newFakeActorsArray = [...fakeActorsArray];
+    newFakeActorsArray = newFakeActorsArray.map((oldActor) => {
+      if (oldActor.id == actor.id) {
+        return newActor;
+      } else {
+        return oldActor;
+      }
+    });
+    console.log(newFakeActorsArray);
+    sessionStorage.setItem("actors_array", JSON.stringify(newFakeActorsArray));
+    setFakeActorsArray(newFakeActorsArray);
+  }
+  function updateCastings(casting, actor) {
+    let oldCastings = [...castings];
+    let updatedCastings = oldCastings.map((oldCasting) => {
+      if (oldCasting.character.id != casting.character.id) {
+        return oldCasting;
+      } else {
+        return { ...oldCasting, user: actor };
+      }
+    });
+    setCastings(updatedCastings);
+    sessionStorage.setItem("castings", JSON.stringify(updatedCastings));
+  }
   function updateLine(line, type) {
     let indicators = line.number.match(/(\d+)\.(\d+)/);
     let actNumber = indicators[1];
@@ -90,6 +179,10 @@ function PlayProvider({ children }) {
         );
         setPlaySkeleton(skeletonResponse.data);
       }
+      let casting = buildCastings(response.data.characters);
+      setCastings(casting);
+      sessionStorage.setItem("castings", JSON.stringify(casting));
+
       setLoading(false);
     }
   }
@@ -97,11 +190,17 @@ function PlayProvider({ children }) {
   return (
     <PlayStateProvider
       value={{
+        castings,
+        fakeActors,
+        fakeActorsArray,
         getPlay,
         loading,
         play,
         playSkeleton,
+        setFakeActors,
         setPlay,
+        updateActorJobs,
+        updateCastings,
         updateLine,
       }}
     >

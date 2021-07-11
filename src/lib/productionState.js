@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   ACTOR_SPECIALIZATION_ID,
-  AUDITION_SPECIALIZATION_ID,
+  AUDITIONER_SPECIALIZATION_ID,
 } from "../utils/hardcodedConstants";
 import { buildRehearsalSchedule } from "../api/productions.js";
 
@@ -19,36 +19,40 @@ import { getJobs } from "../api/jobs";
 
 const ProductionStateContext = createContext();
 const ProductionStateProvider = ProductionStateContext.Provider;
+///tktktk add switch so that it only loads what it needs. eg. only loads all the rehearsals when it's mounted in that context, only loads whole play when mounted in doubling chart context etc.
 
 function ProductionProvider({ children }) {
-  const { id } = useParams();
-  const [hiredUsers, setHiredUsers] = useState([]);
+  const { productionId } = useParams();
   const [actors, setActors] = useState([]);
+  const [auditioners, setAuditioners] = useState([]);
+  const [actorsAndAuditioners, setActorsAndAuditioners] = useState([]);
+  const [castings, setCastings] = useState([]);
+  const [hiredUsers, setHiredUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [notActors, setNotActors] = useState([]);
   const [production, setProduction] = useState({});
-  const [productionId] = useState(id);
   const [rehearsals, setRehearsals] = useState([]);
-  const [isLoadingComplete, setLoadingComplete] = useState(false);
 
   //get production
   useEffect(async () => {
+    setLoading(true);
     const response = await getItem(productionId, "production");
     if (response.status >= 400) {
       console.log("error getting jobs");
     } else {
       setProduction(response.data);
     }
+    setLoading(false);
   }, []);
   //get users who are hired to work on this production
   useEffect(async () => {
-    const response = await getJobs({
-      production_id: productionId,
-    });
+    setLoading(true);
+    const response = await getJobs({ production_id: productionId });
     if (response.status >= 400) {
       console.log("error getting jobs");
     } else {
       const hiredJobs = _.filter(response.data, function (o) {
-        return o.specialization_id !== AUDITION_SPECIALIZATION_ID;
+        return o.specialization_id !== AUDITIONER_SPECIALIZATION_ID;
       });
       const hiredJobUsers = hiredJobs.map((job) => job.user);
       let compactHiredUsers = _.compact(hiredJobUsers);
@@ -62,10 +66,42 @@ function ProductionProvider({ children }) {
         return { ...user, jobs: userJobs };
       });
       setHiredUsers(uniqueHiredUsersWithJobs);
+      const auditionedUsers = _.filter(response.data, function (o) {
+        return o.specialization_id == AUDITIONER_SPECIALIZATION_ID;
+      });
+      const auditionedJobUsers = auditionedUsers.map((job) => job.user);
+      let compactAuditioners = _.compact(auditionedJobUsers);
+      let uniqueAuditioners = _.uniqBy(compactAuditioners, function (o) {
+        return o.id;
+      });
+      setAuditioners(uniqueAuditioners);
+      setCastings(
+        _.filter(response.data, function (j) {
+          return (j.specialization_id =
+            ACTOR_SPECIALIZATION_ID && j.character_id != null);
+        })
+      );
     }
-  }, []);
+    setLoading(false);
+  }, []); //maybe get it to run on production load?
 
-  //get rehearsals for production
+  useEffect(async () => {
+    setLoading(true);
+    console.log("get play hook called");
+    if (production.play?.id) {
+      const response = await getItem(production.play?.id, "play");
+      if (response.status >= 400) {
+        console.log("error getting rehearsals");
+      } else {
+        let newProd = { ...production };
+        newProd.play = response.data;
+        setProduction(newProd);
+        setLoading(false);
+      }
+    }
+  }, [production.id]);
+
+  //get rehearsals for production //maybe get it to run on production load?
   useEffect(async () => {
     const response = await getItemsWithParent(
       "production",
@@ -73,7 +109,7 @@ function ProductionProvider({ children }) {
       "rehearsal"
     );
     if (response) {
-      setLoadingComplete(true);
+      setLoading(false);
     }
     if (response.status >= 400) {
       console.log("error getting rehearsals");
@@ -108,6 +144,66 @@ function ProductionProvider({ children }) {
       })
     );
   }, [hiredUsers]);
+
+  useEffect(() => {
+    let uniqActorsAndAuditioners = _.uniqBy(
+      actors.concat(auditioners),
+      function (o) {
+        return o.id;
+      }
+    );
+    setActorsAndAuditioners(uniqActorsAndAuditioners);
+  }, [actors, auditioners]);
+
+  async function createCharacter(characterName) {
+    let character = {
+      name: characterName,
+      play_id: production.play.id,
+    };
+    const response = await createItemWithParent(
+      "play",
+      production.play.id,
+      "character",
+      character
+    );
+    if (response.status >= 400) {
+      console.log("error creating character");
+    } else {
+      production.play.characters.push(response.data);
+      return response.data;
+    }
+  }
+
+  async function createCasting(characterName, casting) {
+    let character = await createCharacter(characterName);
+    let castingWithCharacter = { ...casting, character_id: character.id };
+    console.log(castingWithCharacter);
+    const response = await createItemWithParent(
+      "production",
+      productionId,
+      "job",
+      castingWithCharacter
+    );
+    if (response.status >= 400) {
+      console.log("error creating casting");
+    } else {
+      let tempCharacter = { id: character.id, name: characterName };
+      let tempUser = actorsAndAuditioners.find(
+        (actor) => actor.id == casting.user_id
+      );
+      let tempCasting = {
+        id: response.data.id,
+        production_id: production.id,
+        specialization_id: ACTOR_SPECIALIZATION_ID,
+        character_id: tempCharacter.id,
+        character: tempCharacter,
+        user_id: casting.user_id,
+        user: tempUser,
+      };
+      let newCastings = castings.concat(tempCasting);
+      setCastings(newCastings);
+    }
+  }
 
   async function createRehearsal(rehearsal) {
     const response = await createItemWithParent(
@@ -209,16 +305,21 @@ function ProductionProvider({ children }) {
     <ProductionStateProvider
       value={{
         actors,
+        actorsAndAuditioners,
+        auditioners,
+        castings,
+        createCasting,
         createRehearsal,
         createRehearsalSchedulePattern,
         deleteRehearsal,
-        isLoadingComplete,
+        loading,
         hiredUsers,
-        setHiredUsers,
         notActors,
         production,
         productionId,
         rehearsals,
+        setHiredUsers,
+        setCastings,
         updateRehearsal,
       }}
     >

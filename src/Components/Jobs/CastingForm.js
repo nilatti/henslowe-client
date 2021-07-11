@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
 import { Form, FormGroupInline } from "../Form";
+import { buildUserName } from "../../utils/actorUtils";
 
 export default function CastingForm({
   availableActors,
@@ -8,7 +10,13 @@ export default function CastingForm({
   selectedUser,
   toggleForm,
 }) {
-  console.log(availableActors);
+  const [actorObjects, setActorObjects] = useState([]);
+  useEffect(() => {
+    let labeledActors = availableActors.map((actor) => {
+      return { ...actor, name: buildUserName(actor) };
+    });
+    setActorObjects(labeledActors);
+  }, []);
   return (
     <Form width="100%">
       <FormGroupInline justifyContent="flex-start">
@@ -16,7 +24,7 @@ export default function CastingForm({
         <Typeahead
           id="user"
           labelKey="name"
-          options={availableActors}
+          options={actorObjects}
           onBlur={() => {
             toggleForm();
           }}

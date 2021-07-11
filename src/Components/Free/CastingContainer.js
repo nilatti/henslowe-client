@@ -1,21 +1,17 @@
 import { useState } from "react";
-import { Typeahead } from "react-bootstrap-typeahead";
 import CastingForm from "../Jobs/CastingForm";
 import CastingShow from "../Jobs/CastingShow";
 import { usePlayState } from "../../lib/freePlayState";
-export default function CastingContainer({
-  availableActors,
-  casting,
-  onDeleteClick,
-}) {
-  const { castings, updateCastings } = usePlayState();
+import { buildUserName } from "../../utils/actorUtils";
+export default function CastingContainer({ casting, onDeleteClick }) {
+  const { fakeActorsArray, updateActorJobs, updateCastings } = usePlayState();
   const [editFormOpen, setEditFormOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(
     casting.user
       ? [
           {
             id: casting.user?.id,
-            label: casting.user?.name,
+            name: buildUserName(casting.user),
           },
         ]
       : []
@@ -26,6 +22,7 @@ export default function CastingContainer({
   function handleChangeUser(e) {
     if (e.length > 0) {
       toggleForm();
+      updateActorJobs(e[0], casting);
       updateCastings(casting, e[0]);
       setSelectedUser([e[0]]);
     }
@@ -39,7 +36,7 @@ export default function CastingContainer({
     <div key={casting.character.id}>
       {editFormOpen ? (
         <CastingForm
-          availableActors={availableActors}
+          availableActors={fakeActorsArray}
           casting={casting}
           handleChangeUser={handleChangeUser}
           selectedUser={selectedUser}
