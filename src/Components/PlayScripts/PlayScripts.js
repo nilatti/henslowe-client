@@ -74,7 +74,7 @@ export default function PlayScripts() {
   if (loading) {
     return (
       <Modal>
-        <h1>Loading!</h1>
+        <h1>Loading Play script!</h1>
         <Spinner />
       </Modal>
     );

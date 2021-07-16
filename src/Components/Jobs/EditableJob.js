@@ -1,77 +1,75 @@
-import PropTypes from 'prop-types';
-import React, {
-  Component
-} from 'react'
+import PropTypes from "prop-types";
+import React, { Component } from "react";
 
-import {
-  getJob,
-  updateServerJob
-} from '../../api/jobs'
+import { getJob, updateServerJob } from "../../api/jobs";
 
-import JobForm from './JobForm'
-import JobShow from './JobShow'
+import JobForm from "./JobForm";
+import JobShow from "./JobShow";
 
 class EditableJob extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       editFormOpen: false,
       job: null,
-    }
+    };
   }
 
   closeForm = () => {
     this.setState({
       editFormOpen: false,
-    })
-  }
+    });
+  };
 
   componentDidMount = () => {
-    this.loadJobFromServer(this.props.match.params.jobId)
-  }
+    this.loadJobFromServer(this.props.match.params.jobId);
+  };
 
   componentDidUpdate(prevProps) {
-    if (this.state.job === null || prevProps.match.params.jobId !== this.props.match.params.jobId) {
+    if (
+      this.state.job === null ||
+      prevProps.match.params.jobId !== this.props.match.params.jobId
+    ) {
       this.loadJobFromServer(this.props.match.params.jobId);
     }
   }
 
   handleEditClick = () => {
-    this.openForm()
-  }
+    this.openForm();
+  };
 
   handleFormClose = () => {
-    this.closeForm()
-  }
+    this.closeForm();
+  };
 
   handleSubmit = (job) => {
-    this.updateJobOnServer(job)
-    this.closeForm()
-  }
+    this.updateJobOnServer(job);
+    this.closeForm();
+  };
 
   async loadJobFromServer(jobId) {
-    const response = await getJob(jobId)
+    const response = await getJob(jobId);
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error fetching job'
-      })
+        errorStatus: "Error fetching job",
+      });
     } else {
       this.setState({
-        job: response.data
-      })
+        job: response.data,
+      });
     }
   }
 
   async updateJobOnServer(job) {
-    const response = await updateServerJob(job)
+    const response = await updateServerJob(job);
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error updating job'
-      })
+        errorStatus: "Error updating job",
+      });
     } else {
       this.setState({
-        job: response.data
-      })
+        job: response.data,
+      });
     }
   }
 
@@ -90,15 +88,13 @@ class EditableJob extends Component {
 
   openForm = () => {
     this.setState({
-      editFormOpen: true
-    })
-  }
+      editFormOpen: true,
+    });
+  };
 
   render() {
     if (this.state.job === null) {
-      return (
-        <div>Loading!</div>
-      )
+      return <div>Loading jobs!</div>;
     }
     if (this.state.editFormOpen) {
       return (
@@ -108,16 +104,16 @@ class EditableJob extends Component {
           onFormClose={this.handleFormClose}
           isOpen={true}
         />
-      )
+      );
     } else {
       return (
         <JobShow
-        job={this.state.job}
-        onEditClick={this.handleEditClick}
-        onDeleteClick={this.props.onDeleteClick}
-        onFormSubmit={this.handleSubmit}
+          job={this.state.job}
+          onEditClick={this.handleEditClick}
+          onDeleteClick={this.props.onDeleteClick}
+          onFormSubmit={this.handleSubmit}
         />
-      )
+      );
     }
   }
 }
@@ -125,6 +121,6 @@ class EditableJob extends Component {
 EditableJob.propTypes = {
   match: PropTypes.object.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
-}
+};
 
-export default EditableJob
+export default EditableJob;

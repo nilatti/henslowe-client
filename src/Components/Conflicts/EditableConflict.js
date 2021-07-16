@@ -23,7 +23,7 @@ export default function EditableConflict({
     setFormOpen(!formOpen);
   }
   if (conflict === null) {
-    return <div>Loading!</div>;
+    return <div>Loading conflicts!</div>;
   }
   if (formOpen) {
     return (

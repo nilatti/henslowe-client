@@ -1,76 +1,74 @@
-import PropTypes from 'prop-types';
-import React, {
-  Component
-} from 'react'
+import PropTypes from "prop-types";
+import React, { Component } from "react";
 
-import {
-  getAuthor,
-  updateServerAuthor
-} from '../../api/authors'
+import { getAuthor, updateServerAuthor } from "../../api/authors";
 
-import AuthorForm from './AuthorForm'
-import AuthorShow from './AuthorShow'
+import AuthorForm from "./AuthorForm";
+import AuthorShow from "./AuthorShow";
 
 class EditableAuthor extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       editFormOpen: false,
       test: true,
       author: null,
-    }
+    };
   }
 
   closeForm = () => {
     this.setState({
       editFormOpen: false,
-    })
-  }
+    });
+  };
 
   componentDidMount = () => {
-    this.loadAuthorFromServer(this.props.match.params.authorId)
-  }
+    this.loadAuthorFromServer(this.props.match.params.authorId);
+  };
   componentDidUpdate(prevProps) {
-    if (this.state.author === null || prevProps.match.params.authorId !== this.props.match.params.authorId) {
+    if (
+      this.state.author === null ||
+      prevProps.match.params.authorId !== this.props.match.params.authorId
+    ) {
       this.loadAuthorFromServer(this.props.match.params.authorId);
     }
   }
 
   handleEditClick = () => {
-    this.openForm()
-  }
+    this.openForm();
+  };
   handleFormClose = () => {
-    this.closeForm()
-  }
+    this.closeForm();
+  };
 
   handleSubmit = (author) => {
-    this.updateAuthorOnServer(author)
-    this.closeForm()
-  }
+    this.updateAuthorOnServer(author);
+    this.closeForm();
+  };
 
   async loadAuthorFromServer(authorId) {
-    const response = await getAuthor(authorId)
+    const response = await getAuthor(authorId);
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error fetching author'
-      })
+        errorStatus: "Error fetching author",
+      });
     } else {
       this.setState({
-        author: response.data
-      })
+        author: response.data,
+      });
     }
   }
 
   async updateAuthorOnServer(author) {
-    const response = await updateServerAuthor(author)
+    const response = await updateServerAuthor(author);
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error updating author'
-      })
+        errorStatus: "Error updating author",
+      });
     } else {
       this.setState({
-        author: response.data
-      })
+        author: response.data,
+      });
     }
   }
 
@@ -89,15 +87,13 @@ class EditableAuthor extends Component {
 
   openForm = () => {
     this.setState({
-      editFormOpen: true
-    })
-  }
+      editFormOpen: true,
+    });
+  };
 
   render() {
     if (this.state.author === null) {
-      return (
-        <div>Loading!</div>
-      )
+      return <div>Loading Author!</div>;
     }
     if (this.state.editFormOpen) {
       return (
@@ -107,16 +103,16 @@ class EditableAuthor extends Component {
           onFormClose={this.handleFormClose}
           isOpen={true}
         />
-      )
+      );
     } else {
       return (
         <AuthorShow
-        author={this.state.author}
-        key={this.state.author.id}
-        onEditClick={this.handleEditClick}
-        onDeleteClick={this.props.onDeleteClick}
+          author={this.state.author}
+          key={this.state.author.id}
+          onEditClick={this.handleEditClick}
+          onDeleteClick={this.props.onDeleteClick}
         />
-      )
+      );
     }
   }
 }
@@ -124,6 +120,6 @@ class EditableAuthor extends Component {
 EditableAuthor.propTypes = {
   match: PropTypes.object.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
-}
+};
 
-export default EditableAuthor
+export default EditableAuthor;
