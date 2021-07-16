@@ -4,6 +4,7 @@ import { Switch, Route } from "react-router-dom";
 
 import CutPlays from "./CutPlays";
 import Double from "./Double";
+import PartScripts from "./PartScripts";
 import Welcome from "./Welcome";
 import WordCloud from "./WordCloud";
 import { PlayProvider } from "../../lib/freePlayState";
@@ -21,6 +22,7 @@ export default function Main() {
           <Route exact path="/" component={Welcome} />
           <Route exact path="/cut" component={CutPlays} />
           <Route exact path="/doubling" component={Double} />
+          <Route exact path="/part-scripts" component={PartScripts} />
           <Route exact path="/wordcloud" component={WordCloud} />
         </Switch>
       </MainStyle>

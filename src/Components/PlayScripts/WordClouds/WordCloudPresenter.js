@@ -57,7 +57,7 @@ export default function WordCloudPresenter({ context, play }) {
     cloudRef.current.scrollIntoView({ behavior: "smooth" });
   }
   let linkArray = contextArray.map((context) => (
-    <li key={context.item.name}>
+    <li key={uuid()}>
       <a href={`#${context.item.label || context.item.name}`}>
         {context.item.label || context.item.name}
       </a>

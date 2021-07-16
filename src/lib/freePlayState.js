@@ -75,7 +75,6 @@ function PlayProvider({ children }) {
   }
 
   function updateActorJobs(actor, job) {
-    console.log("called update actor jobs");
     let newActor = actor;
     newActor.jobs = actor.jobs.concat(job);
     let newFakeActorsArray = [...fakeActorsArray];
@@ -102,7 +101,6 @@ function PlayProvider({ children }) {
     sessionStorage.setItem("castings", JSON.stringify(updatedCastings));
   }
   function updateLine(line, type) {
-    console.log(line);
     let newLine = { ...line };
     delete newLine.diffed_content;
     console.log(newLine);
@@ -160,6 +158,7 @@ function PlayProvider({ children }) {
   }
   //get play
   async function getPlay(playId) {
+    sessionStorage.clear();
     if (playId) {
       setLoading(true);
       const response = await getPlayScript(playId);

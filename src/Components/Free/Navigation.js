@@ -19,7 +19,7 @@ export default function Navigation() {
             <Nav.Link href="/doubling">Make a doubling chart</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="/">Generate part scripts</Nav.Link>
+            <Nav.Link href="/part-scripts">Generate part scripts</Nav.Link>
           </Nav.Item>
           <LoginHooks />
         </Nav>

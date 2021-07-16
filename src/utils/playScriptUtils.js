@@ -106,7 +106,6 @@ function getScenesFromPlay(play) {
 }
 
 function getLinesForCharacter(text, characterId) {
-  console.log(text);
   //text is an array of lines
   return text.filter((line) => line.character_id == characterId);
 }
