@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { getItem } from "../api/crud";
 import { getPlaySkeleton, getPlayScript } from "../api/plays";
 import { mergeTextFromFrenchScenes } from "../utils/playScriptUtils";
 import _ from "lodash";
+import { inspect } from "util";
 const PlayStateContext = createContext();
 const PlayStateProvider = PlayStateContext.Provider;
 
@@ -20,7 +20,6 @@ function PlayProvider({ children }) {
   const [fakeActorsArray, setFakeActorsArray] = useState(
     JSON.parse(sessionStorage.getItem("actors_array")) || []
   );
-  console.log(fakeActorsArray);
   const [play, setPlay] = useState(
     JSON.parse(sessionStorage.getItem("play")) || {}
   );
@@ -30,7 +29,6 @@ function PlayProvider({ children }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log("use effect 33");
     sessionStorage.setItem("fake_actors", JSON.stringify(fakeActors));
     let actorsList = { female: [], male: [], nonbinary: [] };
     let id = 0;
@@ -88,7 +86,6 @@ function PlayProvider({ children }) {
         return oldActor;
       }
     });
-    console.log(newFakeActorsArray);
     sessionStorage.setItem("actors_array", JSON.stringify(newFakeActorsArray));
     setFakeActorsArray(newFakeActorsArray);
   }
@@ -105,10 +102,13 @@ function PlayProvider({ children }) {
     sessionStorage.setItem("castings", JSON.stringify(updatedCastings));
   }
   function updateLine(line, type) {
-    let indicators = line.number.match(/(\d+)\.(\d+)/);
+    console.log(line);
+    let newLine = { ...line };
+    delete newLine.diffed_content;
+    console.log(newLine);
+    let indicators = newLine.number.match(/(\d+)\.(\d+)/);
     let actNumber = indicators[1];
     let sceneNumber = indicators[2];
-
     let act = _.find(play.acts, function (a) {
       return a.number == actNumber;
     });
@@ -117,7 +117,7 @@ function PlayProvider({ children }) {
     });
     let lines = mergeTextFromFrenchScenes(scene.french_scenes);
     let oldLine = _.find(lines[`${type}s`], function (l) {
-      return l.id === line.id;
+      return l.id === newLine.id;
     });
     let frenchScene = _.find(scene.french_scenes, function (fs) {
       return fs.id == oldLine.french_scene_id;
@@ -126,9 +126,10 @@ function PlayProvider({ children }) {
       if (oldLine.id != line.id) {
         return oldLine;
       } else {
-        return line;
+        return newLine;
       }
     });
+    newFrenchSceneLines.map((item) => delete item.diffed_content);
     let newFrenchScene = { ...frenchScene, [`${type}s`]: newFrenchSceneLines };
     let newSceneFrenchScenes = scene.french_scenes.map((oldFrenchScene) => {
       if (oldFrenchScene.id != frenchScene.id) {
@@ -138,7 +139,6 @@ function PlayProvider({ children }) {
       }
     });
     let newScene = { ...scene, french_scenes: newSceneFrenchScenes };
-
     let newActScenes = act.scenes.map((oldScene) => {
       if (oldScene.id != scene.id) {
         return oldScene;
@@ -155,6 +155,7 @@ function PlayProvider({ children }) {
       }
     });
     let newPlay = { ...play, acts: newActs };
+    sessionStorage.setItem("play", JSON.stringify(newPlay));
     setPlay(newPlay);
   }
   //get play
@@ -165,6 +166,7 @@ function PlayProvider({ children }) {
       if (response.status >= 400) {
         console.log("error getting play");
       } else {
+        console.log("got play");
         sessionStorage.setItem("play", JSON.stringify(response.data));
         setPlay(response.data);
       }
@@ -182,9 +184,8 @@ function PlayProvider({ children }) {
       let casting = buildCastings(response.data.characters);
       setCastings(casting);
       sessionStorage.setItem("castings", JSON.stringify(casting));
-
-      setLoading(false);
     }
+    setLoading(false);
   }
 
   return (

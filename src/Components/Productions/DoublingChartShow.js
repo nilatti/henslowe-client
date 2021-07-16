@@ -57,7 +57,6 @@ export default function DoublingChartShow({
 
   useEffect(() => {
     if (production.play?.acts?.length) {
-      console.log(61);
       let newRows = actors.map((actor) => generateRow(actor));
       let newUncast = generateUncastRow(castings);
       setRows(newRows);
@@ -182,10 +181,10 @@ export default function DoublingChartShow({
     return row;
   }
 
-  if (!production.play?.acts || !actors.length || !castings.length) {
+  if (!production.play?.acts || !castings.length) {
     return (
       <Modal>
-        <h1>Loading!</h1>
+        <h1>Loading the doubling chart to show you!</h1>
         <Spinner />
       </Modal>
     );

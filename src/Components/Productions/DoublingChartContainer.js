@@ -16,7 +16,7 @@ export default function DoublingChartContainer() {
   if (loading && playLoading) {
     return (
       <Modal>
-        <h1>Loading!</h1>
+        <h1>Loading doubling chart!</h1>
         <Spinner />
       </Modal>
     );

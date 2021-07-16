@@ -13,7 +13,7 @@ export default function Navigation() {
             <Nav.Link href="/cut">Cut a play</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link href="/">Make play wordclouds</Nav.Link>
+            <Nav.Link href="/wordcloud">Make play wordclouds</Nav.Link>
           </Nav.Item>
           <Nav.Item>
             <Nav.Link href="/doubling">Make a doubling chart</Nav.Link>

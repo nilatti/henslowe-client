@@ -50,7 +50,7 @@ export default function CastList({ production }) {
   if (loading) {
     return (
       <Modal>
-        <h1>Loading!</h1>
+        <h1>Loading Cast List!</h1>
         <Spinner />
       </Modal>
     );

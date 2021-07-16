@@ -66,6 +66,7 @@ export default function LineShow({
       ...line,
       new_content: " ",
     };
+    console.log("cut line");
     handleLineSubmit(newLine);
   }
 

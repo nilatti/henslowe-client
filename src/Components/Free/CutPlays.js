@@ -51,7 +51,7 @@ export default function CutPlays() {
   if (loading) {
     return (
       <Modal>
-        <h1>Loading!</h1>
+        <h1>Loading play to cut!</h1>
         <Spinner />
       </Modal>
     );

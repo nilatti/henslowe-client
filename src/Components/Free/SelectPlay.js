@@ -8,7 +8,7 @@ import { getPlayTitles } from "../../api/plays";
 import { usePlayState } from "../../lib/freePlayState";
 
 export default function SelectPlay() {
-  const { getPlay, play, loading } = usePlayState();
+  const { getPlay, loading } = usePlayState();
   const [plays, setPlays] = useState([]);
   const [selectedPlay, setSelectedPlay] = useState([]); // Typeahead returns an array even if it is set to return only one item
   useEffect(async () => {
@@ -31,7 +31,7 @@ export default function SelectPlay() {
   if (loading) {
     return (
       <Modal>
-        <h1>Loading!</h1>
+        <h1>Loading play!</h1>
         <Spinner />
       </Modal>
     );

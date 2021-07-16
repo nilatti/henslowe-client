@@ -28,6 +28,25 @@ function calculateChange(a, b) {
   return a / b;
 }
 
+function countWords(words) {
+  //words is an array of words, lowercase
+  let countObj = {};
+  words.forEach((word) => {
+    if (word in countObj) {
+      countObj[word]++;
+    } else {
+      countObj[word] = 1;
+    }
+  });
+
+  let countArray = [];
+  for (const [key, value] of Object.entries(countObj)) {
+    countArray.push({ text: key, value: value, include: true });
+  }
+  countArray = _.orderBy(countArray, ["value"], ["desc"]);
+  return countArray;
+}
+
 function filterEmptyActs(acts) {
   return _.filter(acts, function (act) {
     if (act.original_line_count > 0 && act.new_line_count > 0) {
@@ -84,6 +103,12 @@ function getScenesFromPlay(play) {
   play.acts.map((act) => scenes.push(act.scenes));
   let flattened = _.flattenDeep(scenes);
   return _.compact(flattened);
+}
+
+function getLinesForCharacter(text, characterId) {
+  console.log(text);
+  //text is an array of lines
+  return text.filter((line) => line.character_id == characterId);
 }
 
 function getLinesFromCharacters(characters) {
@@ -150,6 +175,14 @@ function letterValue(str) {
   return str.split("").map(letterValue);
 }
 
+function lineToWords(line) {
+  //receives line, returns array of words, downcased, no punctuation
+  return line
+    .replace(/[^\w\s]|_/g, "")
+    .replace(/\s+/g, " ")
+    .toLowerCase()
+    .split(" ");
+}
 function mergeTextFromFrenchScenes(frenchScenes) {
   let allText = {
     lines: [],
@@ -172,6 +205,35 @@ function mergeTextFromFrenchScenes(frenchScenes) {
   });
 
   return allText;
+}
+
+function returnWordsFromLines(lines) {
+  ///lines is an array of lines
+  let newContentWords = [];
+  let originalContentWords = [];
+  lines.map((line) => {
+    if (line.new_content) {
+      if (!line.new_content.match(/^\s+$/)) {
+        newContentWords.push(lineToWords(line.new_content));
+      }
+    } else {
+      newContentWords.push(lineToWords(line.original_content));
+    }
+  });
+
+  lines.map((line) => {
+    originalContentWords.push(lineToWords(line.original_content));
+  });
+
+  originalContentWords = _.flatten(originalContentWords);
+  newContentWords = _.flatten(newContentWords);
+
+  let originalContentWordCount = countWords(originalContentWords);
+  let newContentWordCount = countWords(newContentWords);
+  return {
+    originalContent: originalContentWordCount,
+    newContent: newContentWordCount,
+  };
 }
 
 function sortLines(arrayOfLines) {
@@ -223,10 +285,12 @@ export {
   filterEmptyContent,
   getFrenchScenesFromAct,
   getFrenchScenesFromPlay,
+  getLinesForCharacter,
   getLinesFromCharacters,
   getOnStagesFromAct,
   getOnStagesFromScene,
   getScenesFromPlay,
   mergeTextFromFrenchScenes,
+  returnWordsFromLines,
   sortLines,
 };
