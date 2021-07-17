@@ -34,12 +34,8 @@ export default function Double() {
   }
   return (
     <>
-      <div>Are you ready to double {play.title}?</div>
+      <h2>Are you ready to double {play.title}?</h2>
       <Button onClick={clearPlay}>Select a different play</Button>
-      <FakeActors actors={fakeActors} onSubmit={setFakeActors} />
-      {!!fakeActorsArray.length && (
-        <Casting availableActors={fakeActorsArray} />
-      )}
       <DoublingChartContainer />
     </>
   );

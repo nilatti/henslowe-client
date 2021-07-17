@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button } from "../../Button";
+
 import {
   getFrenchScenesFromPlay,
   mergeTextFromFrenchScenes,
@@ -31,25 +31,11 @@ export default function ActorParts({ actor, play }) {
   }
 
   return (
-    <div>
-      <h3>Part Script for {buildUserName(actor)}</h3>
-      <div>
-        <Button
-          colorProp="var(--color-text-light)"
-          backgroundColor="var(--color-med)"
-          borderColor="var(--color-dark)"
-          onClick={() => setShowCut(!showCut)}
-        >
-          {showCut ? <span>Hide</span> : <span>Show</span>} Text Cuts
-        </Button>
-      </div>
-      <div>
-        <PartScriptTextContainer
-          characterIds={characterIds}
-          showCut={showCut}
-          text={text}
-        />
-      </div>
-    </div>
+    <PartScriptTextContainer
+      characterIds={characterIds}
+      name={buildUserName(actor)}
+      showCut={showCut}
+      text={text}
+    />
   );
 }

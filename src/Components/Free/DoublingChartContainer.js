@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Col, Row, Tab, Tabs } from "react-bootstrap";
+import { Tab, Tabs } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 import { usePlayState } from "../../lib/freePlayState";
 import DoublingChartShow from "../Productions/DoublingChartShow";
@@ -8,6 +8,17 @@ export default function DoublingChartContainer({}) {
   const { castings, fakeActorsArray, play } = usePlayState();
 
   let production = { jobs: castings, play: play };
+  let castingsWithActors = castings.filter((casting) => casting.user_id);
+  if (!castingsWithActors.length) {
+    return (
+      <div>
+        You don't have any actors cast.
+        <Link to="/casting">Go to cast some people</Link> and then come back
+        here.
+      </div>
+    );
+  }
+
   return (
     <>
       <Tabs>

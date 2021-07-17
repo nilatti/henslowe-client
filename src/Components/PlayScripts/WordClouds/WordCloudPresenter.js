@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import uuid from "react-uuid";
+import { Button } from "../../Button";
 import ComparisonContainer from "./ComparisonContainer";
 
 import {
@@ -52,22 +53,29 @@ export default function WordCloudPresenter({ context, play }) {
   if (!contextArray.length) {
     return <div>Loading</div>;
   }
-  const cloudRef = useRef();
-  function scrollToCloud() {
-    cloudRef.current.scrollIntoView({ behavior: "smooth" });
-  }
-  let linkArray = contextArray.map((context) => (
+  let elementArray = [];
+  let linkArray = contextArray.map((context, index) => (
     <li key={uuid()}>
-      <a href={`#${context.item.label || context.item.name}`}>
+      <Button
+        onClick={() => {
+          const containerToScrollTo = elementArray[index];
+          containerToScrollTo.scrollIntoView({ behavior: "smooth" });
+        }}
+      >
         {context.item.label || context.item.name}
-      </a>
+      </Button>
     </li>
   ));
   return (
     <div>
       <ul>{linkArray}</ul>
       {contextArray.map((context) => (
-        <ComparisonContainer context={context} key={uuid()} ref={cloudRef} />
+        <div
+          key={uuid()}
+          ref={(containerElement) => elementArray.push(containerElement)}
+        >
+          <ComparisonContainer context={context} />
+        </div>
       ))}
     </div>
   );

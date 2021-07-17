@@ -91,6 +91,7 @@ export default function PartScriptSelector({
     );
   });
 
+  ///tktktktk might need to make this receive a prop to link to casting--this links to free casting.
   return (
     <>
       <h3>Select Characters (optional)</h3>

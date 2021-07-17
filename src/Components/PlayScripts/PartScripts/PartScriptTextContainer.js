@@ -1,10 +1,12 @@
 import _ from "lodash";
 
 import NonEditLineShow from "../NonEditLineShow";
+import { Button } from "../../Button";
 import { sortLines } from "../../../utils/playScriptUtils";
 
 export default function PartScriptTextContainer({
   characterIds,
+  name,
   showCut,
   text,
 }) {
@@ -66,6 +68,12 @@ export default function PartScriptTextContainer({
     return sortLines(bucket);
   }
 
+  function scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
   if (text.lines && text.lines.length > 0) {
     let lines = orderText(text);
     let characterLines = lines.map((line, index) => {
@@ -105,7 +113,23 @@ export default function PartScriptTextContainer({
         />
       );
     });
-    return <div>{lineItems}</div>;
+    return (
+      <>
+        <h3>Part Script for {name}</h3>
+        <Button onClick={scrollToTop}>Back to top</Button>
+        <div>
+          <Button
+            colorProp="var(--color-text-light)"
+            backgroundColor="var(--color-med)"
+            borderColor="var(--color-dark)"
+            onClick={() => setShowCut(!showCut)}
+          >
+            {showCut ? <span>Hide</span> : <span>Show</span>} Text Cuts
+          </Button>
+        </div>
+        <div>{lineItems}</div>
+      </>
+    );
   }
 
   return <div>No text selected</div>;

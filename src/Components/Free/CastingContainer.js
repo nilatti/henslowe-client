@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CastingForm from "../Jobs/CastingForm";
 import CastingShow from "../Jobs/CastingShow";
 import { usePlayState } from "../../lib/freePlayState";
@@ -19,12 +19,26 @@ export default function CastingContainer({ casting, onDeleteClick }) {
 
   let lineCount =
     casting.character.new_line_count || casting.character.old_line_count;
+  useEffect(() => {
+    setSelectedUser(
+      casting.user
+        ? [
+            {
+              id: casting.user?.id,
+              name: buildUserName(casting.user),
+            },
+          ]
+        : []
+    );
+  }, [JSON.stringify(casting.user)]);
   function handleChangeUser(e) {
     if (e.length > 0) {
       toggleForm();
       updateActorJobs(e[0], casting);
       updateCastings(casting, e[0]);
       setSelectedUser([e[0]]);
+    } else {
+      setSelectedUser([]);
     }
   }
 

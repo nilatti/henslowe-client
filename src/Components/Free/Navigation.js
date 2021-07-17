@@ -10,6 +10,9 @@ export default function Navigation() {
       <Navbar>
         <Nav>
           <Nav.Item>
+            <Nav.Link href="/casting">Cast your play</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
             <Nav.Link href="/cut">Cut a play</Nav.Link>
           </Nav.Item>
           <Nav.Item>

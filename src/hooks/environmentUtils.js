@@ -28,15 +28,11 @@ export function useForm(initial = {}) {
       checkbox.push(value);
       value = checkbox;
     }
-    console.log(name, value);
-    setInputs(
-      {
-        // copy the existing state
-        ...inputs,
-        [name]: value,
-      },
-      console.log(inputs)
-    );
+    setInputs({
+      // copy the existing state
+      ...inputs,
+      [name]: value,
+    });
   }
 
   function resetForm() {
