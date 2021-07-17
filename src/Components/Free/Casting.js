@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import CastingContainer from "./CastingContainer";
 import FakeActors from "../Productions/FakeActors";
 
@@ -45,6 +47,13 @@ export default function Casting({}) {
   return (
     <>
       <FakeActors actors={fakeActors} onSubmit={setFakeActors} />
+      <div>
+        <em>
+          Number beside character name indicates line count in your cut text (or
+          in the original text if you haven't{" "}
+          <Link to="/cut">done your cut</Link> yet).
+        </em>
+      </div>
       {!!fakeActorsArray.length && <ul>{castingsItems}</ul>}
     </>
   );

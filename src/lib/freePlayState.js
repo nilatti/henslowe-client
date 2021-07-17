@@ -3,6 +3,7 @@ import { getPlaySkeleton, getPlayScript } from "../api/plays";
 import { mergeTextFromFrenchScenes } from "../utils/playScriptUtils";
 import _ from "lodash";
 import { inspect } from "util";
+import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 const PlayStateContext = createContext();
 const PlayStateProvider = PlayStateContext.Provider;
 
@@ -52,7 +53,6 @@ function PlayProvider({ children }) {
     } else {
       let tempActorsList = { female: [], male: [], nonbinary: [] };
       fakeActorsArray.forEach((actor) => {
-        console.log(actor);
         //break down fakeActorsArray into an object again, with male, female, and nb
         tempActorsList[actor.first_name.toLowerCase()].push(actor);
       });
@@ -71,11 +71,9 @@ function PlayProvider({ children }) {
           //the new number of actors of that gender is greater than the old number.
           //remove last ones from each object until number is correct
           let diff = tempActorsList[gender].length - fakeActors[gender];
-          console.log(diff);
           let removedActors = tempActorsList[gender].slice(
             Math.max(tempActorsList[gender].length - diff, 0)
           );
-          console.log("removed", removedActors);
           tempActorsList[gender].length = fakeActors[gender];
           removedActors.forEach((actor) => {
             castings.map((c) => {
@@ -98,7 +96,6 @@ function PlayProvider({ children }) {
         "actors_array",
         JSON.stringify(tempFakeActorsArray)
       );
-      console.log(tempFakeActorsArray);
       setFakeActorsArray(tempFakeActorsArray);
     }
   }, [JSON.stringify(fakeActors)]);
@@ -146,8 +143,9 @@ function PlayProvider({ children }) {
   function updateLine(line, type) {
     let newLine = { ...line };
     delete newLine.diffed_content;
-    console.log(newLine);
-    let indicators = newLine.number.match(/(\d+)\.(\d+)/);
+    let indicators =
+      newLine.number?.match(/(\d+)\.(\d+)/) ||
+      newLine.line_number?.match(/(\d+)\.(\d+)/);
     let actNumber = indicators[1];
     let sceneNumber = indicators[2];
     let act = _.find(play.acts, function (a) {
@@ -208,7 +206,6 @@ function PlayProvider({ children }) {
       if (response.status >= 400) {
         console.log("error getting play");
       } else {
-        console.log("got play");
         sessionStorage.setItem("play", JSON.stringify(response.data));
         setPlay(response.data);
       }

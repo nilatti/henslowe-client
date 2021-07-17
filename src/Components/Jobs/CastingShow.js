@@ -14,7 +14,7 @@ export default function CastingShow({
           <span onClick={handleEditClick}>{selectedUser[0].name}</span>
         ) : (
           <span onClick={handleEditClick}>
-            <strong>Needs to be cast</strong>
+            <strong>Click to cast</strong>
           </span>
         )}
 

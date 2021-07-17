@@ -7,7 +7,6 @@ export default function NewTheater({ onFormSubmit }) {
   const history = useHistory();
 
   function handleFormClose() {
-    console.log("");
     history.push("/theaters");
   }
 

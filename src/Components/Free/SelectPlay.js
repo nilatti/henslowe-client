@@ -4,6 +4,7 @@ import { Typeahead } from "react-bootstrap-typeahead";
 import { Form, FormGroup } from "../Form.js";
 import Modal from "../Modal";
 import { Spinner } from "../Loaders";
+import { SHAKESPEARE_ID } from "../../utils/hardcodedConstants.js";
 import { getPlayTitles } from "../../api/plays";
 import { usePlayState } from "../../lib/freePlayState";
 
@@ -16,7 +17,10 @@ export default function SelectPlay() {
     if (response.status >= 400) {
       setErrorStatus("Error fetching plays");
     } else {
-      const plays = response.data.map((play) => ({
+      let shakespeare = response.data.filter(
+        (play) => play.author_id == SHAKESPEARE_ID
+      );
+      const plays = shakespeare.map((play) => ({
         id: play.id,
         label: String(play.title),
       }));

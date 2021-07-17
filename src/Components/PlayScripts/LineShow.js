@@ -10,6 +10,7 @@ var Diff = require("diff");
 const ButtonContainer = styled.div``;
 const CharacterName = styled.div`
   font-weight: bold;
+  overflow-wrap: break-word;
 `;
 
 const LineNumber = styled.div``;
@@ -66,7 +67,6 @@ export default function LineShow({
       ...line,
       new_content: " ",
     };
-    console.log("cut line");
     handleLineSubmit(newLine);
   }
 
@@ -121,9 +121,9 @@ export default function LineShow({
     );
   } else if (showCharacter) {
     characterComponent = (
-      <span onDoubleClick={() => setCharacterSelectOpen(!characterSelectOpen)}>
+      <div onDoubleClick={() => setCharacterSelectOpen(!characterSelectOpen)}>
         {line.character.name || line.character.xml_id}
-      </span>
+      </div>
     );
   } else {
     characterComponent = (

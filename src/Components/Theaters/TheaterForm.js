@@ -29,7 +29,6 @@ export default function TheaterForm({ onFormClose, onFormSubmit, theater }) {
     if (theater) {
       id = theater.id;
     }
-    console.log(inputs);
     onFormSubmit(inputs);
   }
 
