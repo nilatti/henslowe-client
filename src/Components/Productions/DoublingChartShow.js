@@ -110,7 +110,6 @@ export default function DoublingChartShow({
   }
 
   function generateRow(actor) {
-    console.log(actor);
     let blocks = getOnStages();
     let actorJobs = actor.jobs;
     let actorCharacterIds = actorJobs.map((job) => job.character_id);

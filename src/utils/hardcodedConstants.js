@@ -49,3 +49,5 @@ export const THEATER_MEMBER = ["Actor"];
 export const PRODUCTION_MEMBER = ["Actor"];
 export const SPACE_MEMBER = [];
 export const SUPERUSERS = ["alisha.huber@gmail.com"];
+
+export const SHAKESPEARE_ID = 3;

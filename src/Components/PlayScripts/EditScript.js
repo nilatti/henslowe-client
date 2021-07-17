@@ -7,6 +7,7 @@ import {
   getFrenchScenesFromPlay,
   mergeTextFromFrenchScenes,
 } from "../../utils/playScriptUtils";
+import { NavItem } from "react-bootstrap";
 
 const EditAreaStyles = styled.div`
   display: flex;
@@ -28,6 +29,7 @@ export default function EditScript({
   selectedText,
 }) {
   const [text, setText] = useState({});
+  const [textUnit, setTextUnit] = useState();
   useEffect(() => {
     let frenchScenes = [];
     let text = [];
@@ -43,7 +45,7 @@ export default function EditScript({
     }
     text = mergeTextFromFrenchScenes(frenchScenes);
     setText(text);
-  }, [selectedText, selectedText?.length]);
+  }, [JSON.stringify(selectedText), selectedText?.length]);
 
   function updateLine(line) {
     let type = "";
@@ -72,13 +74,15 @@ export default function EditScript({
   async function cutEntireText(lineArray) {
     const types = ["lines", "stage_directions", "sound_cues"];
     types.forEach(function (type) {
+      let singularType = type.slice(0, -1); // handleLineSubmit expects a singular type
       var allTheLines = lineArray[type];
       let updatedLines = allTheLines.map((line) => {
         var newLine = {
           ...line,
           new_content: " ",
         };
-        handleLineSubmit(newLine);
+        delete newLine.diffed_content;
+        handleLineSubmit(newLine, singularType);
         return newLine;
       });
       updateTextInState(type, updatedLines);
@@ -98,18 +102,21 @@ export default function EditScript({
     } else if (slashes === 2) {
       textUnit = "frenchScene";
     }
+    setTextUnit(textUnit);
     getSelectedText(textMenuKey, textUnit);
   }
   async function unCutEntireText(lineArray) {
     const types = ["lines", "stage_directions", "sound_cues"];
     types.forEach(function (type) {
       var allTheLines = lineArray[type];
-      let updatedLines = allTheLines.map((line) => {
+      let relevantLines = allTheLines.filter((line) => !line.new_content);
+      let singularType = type.slice(0, -1); // handleLineSubmit expects a singular type
+      let updatedLines = relevantLines.map((line) => {
         var newLine = {
           ...line,
-          new_content: "",
+          new_content: null,
         };
-        handleLineSubmit(newLine);
+        handleLineSubmit(newLine, singularType);
         return newLine;
       });
       updateTextInState(type, updatedLines);

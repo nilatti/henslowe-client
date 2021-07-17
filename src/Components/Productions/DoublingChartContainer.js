@@ -21,7 +21,6 @@ export default function DoublingChartContainer() {
       </Modal>
     );
   }
-  console.log(playLoading, production.play);
   return (
     <>
       {production.play && <h2>Doubling Charts for {production.play.title}</h2>}

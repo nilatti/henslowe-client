@@ -10,7 +10,8 @@ import SelectPlay from "./SelectPlay";
 import EditScript from "../PlayScripts/EditScript";
 
 export default function CutPlays() {
-  const { loading, play, playSkeleton, setPlay, updateLine } = usePlayState();
+  const { characters, loading, play, playSkeleton, setPlay, updateLine } =
+    usePlayState();
   const [selectedText, setSelectedText] = useState();
   const [linesPerMinute, setLinesPerMinute] = useState("");
   function clearPlay() {
@@ -72,6 +73,7 @@ export default function CutPlays() {
         </FormGroupInline>
       </Form>
       <EditScript
+        characters={play.characters}
         getSelectedText={getSelectedText}
         handleLineSubmit={handleLineSubmit}
         linesPerMinute={linesPerMinute}

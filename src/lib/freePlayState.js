@@ -3,6 +3,7 @@ import { getPlaySkeleton, getPlayScript } from "../api/plays";
 import { mergeTextFromFrenchScenes } from "../utils/playScriptUtils";
 import _ from "lodash";
 import { inspect } from "util";
+import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 const PlayStateContext = createContext();
 const PlayStateProvider = PlayStateContext.Provider;
 
@@ -30,43 +31,74 @@ function PlayProvider({ children }) {
 
   useEffect(() => {
     sessionStorage.setItem("fake_actors", JSON.stringify(fakeActors));
-    let actorsList = { female: [], male: [], nonbinary: [] };
+    let genders = ["female", "male", "nonbinary"];
+    let actorsList = {};
+    genders.forEach((gender) => {
+      actorsList[gender] = [];
+    });
     let id = 0;
     if (!fakeActorsArray.length) {
-      for (let i = 0; i < fakeActors.female; i++) {
-        id++;
-        actorsList.female.push({
-          id: id,
-          first_name: `Female`,
-          jobs: [],
-          last_name: `${i + 1}`,
-        });
-      }
-      for (let i = 0; i < fakeActors.male; i++) {
-        id++;
-        actorsList.male.push({
-          id: id,
-          first_name: `Male`,
-          jobs: [],
-          last_name: `${i + 1}`,
-        });
-      }
-      for (let i = 0; i < fakeActors.nonbinary; i++) {
-        id++;
-        actorsList.nonbinary.push({
-          id: id,
-          first_name: `Nonbinary`,
-          jobs: [],
-          last_name: `${i + 1}`,
-        });
-      }
+      genders.forEach((gender) => {
+        for (let i = 0; i < fakeActors[gender]; i++) {
+          id++;
+          actorsList[gender].push(buildFakeActor(id, gender, i));
+        }
+      });
+
       let actorsArray = actorsList.female
         .concat(actorsList.male)
         .concat(actorsList.nonbinary);
       sessionStorage.setItem("actors_array", JSON.stringify(actorsArray));
       setFakeActorsArray(actorsArray);
+    } else {
+      let tempActorsList = { female: [], male: [], nonbinary: [] };
+      fakeActorsArray.forEach((actor) => {
+        //break down fakeActorsArray into an object again, with male, female, and nb
+        tempActorsList[actor.first_name.toLowerCase()].push(actor);
+      });
+      //find where this object differs from fakeActors
+      genders.forEach((gender) => {
+        if (tempActorsList[gender].length < fakeActors[gender]) {
+          //the new number of actors of that gender is less than the old number.
+          let id = fakeActorsArray[fakeActorsArray.length - 1].id++;
+          let i =
+            parseInt(
+              tempActorsList[gender][tempActorsList[gender].length - 1]
+                ?.last_name
+            ) || 1;
+          tempActorsList[gender].push(buildFakeActor(id, gender, i));
+        } else if (tempActorsList[gender].length > fakeActors[gender]) {
+          //the new number of actors of that gender is greater than the old number.
+          //remove last ones from each object until number is correct
+          let diff = tempActorsList[gender].length - fakeActors[gender];
+          let removedActors = tempActorsList[gender].slice(
+            Math.max(tempActorsList[gender].length - diff, 0)
+          );
+          tempActorsList[gender].length = fakeActors[gender];
+          removedActors.forEach((actor) => {
+            castings.map((c) => {
+              if (c.user) {
+                if (c.user.id == actor.id) {
+                  delete c.user;
+                }
+              }
+            });
+          });
+          sessionStorage.setItem("castings", JSON.stringify(castings));
+          setCastings(castings);
+        }
+      });
+      //rebuild fakeActorsArray
+      let tempFakeActorsArray = tempActorsList.female
+        .concat(tempActorsList.male)
+        .concat(tempActorsList.nonbinary);
+      sessionStorage.setItem(
+        "actors_array",
+        JSON.stringify(tempFakeActorsArray)
+      );
+      setFakeActorsArray(tempFakeActorsArray);
     }
-  }, [fakeActors]);
+  }, [JSON.stringify(fakeActors)]);
 
   function buildCastings(characters) {
     return characters.map((character) => {
@@ -74,8 +106,15 @@ function PlayProvider({ children }) {
     });
   }
 
+  function buildFakeActor(id, gender, i) {
+    return {
+      id: id,
+      first_name: gender.toUpperCase(),
+      jobs: [],
+      last_name: `${i + 1}`,
+    };
+  }
   function updateActorJobs(actor, job) {
-    console.log("called update actor jobs");
     let newActor = actor;
     newActor.jobs = actor.jobs.concat(job);
     let newFakeActorsArray = [...fakeActorsArray];
@@ -102,11 +141,11 @@ function PlayProvider({ children }) {
     sessionStorage.setItem("castings", JSON.stringify(updatedCastings));
   }
   function updateLine(line, type) {
-    console.log(line);
     let newLine = { ...line };
     delete newLine.diffed_content;
-    console.log(newLine);
-    let indicators = newLine.number.match(/(\d+)\.(\d+)/);
+    let indicators =
+      newLine.number?.match(/(\d+)\.(\d+)/) ||
+      newLine.line_number?.match(/(\d+)\.(\d+)/);
     let actNumber = indicators[1];
     let sceneNumber = indicators[2];
     let act = _.find(play.acts, function (a) {
@@ -160,13 +199,13 @@ function PlayProvider({ children }) {
   }
   //get play
   async function getPlay(playId) {
+    sessionStorage.clear();
     if (playId) {
       setLoading(true);
       const response = await getPlayScript(playId);
       if (response.status >= 400) {
         console.log("error getting play");
       } else {
-        console.log("got play");
         sessionStorage.setItem("play", JSON.stringify(response.data));
         setPlay(response.data);
       }

@@ -47,7 +47,7 @@ export default function TextEdit({
           {showCut ? <span>Hide</span> : <span>Show</span>} Text Cuts
         </Button>
       </div>
-      <Button onClick={() => cutEntireText(text)}>Cut all of this</Button>
+      {/* <Button onClick={() => cutEntireText(text)}>Cut all of this</Button>
       <Button
         colorProp="var(--color-dark)"
         backgroundColor="var(--color-text-light)"
@@ -55,7 +55,7 @@ export default function TextEdit({
         onClick={() => unCutEntireText(text)}
       >
         Uncut all of this
-      </Button>
+      </Button> */}
       <ScriptContainer
         characters={characters}
         handleLineSubmit={handleLineSubmit}

@@ -54,6 +54,7 @@ export const FancyRadioLabelBox = styled.div`
 `;
 
 export const FancyCheckBox = styled.label`
+  background-color: ${(props) => props.backgroundColor || "var(--color-light)"};
   .not-recommended {
     background-color: var(--color-light-disabled);
     font-style: italic;
@@ -66,7 +67,7 @@ export const FancyCheckBox = styled.label`
 
 export const FancyCheckBoxLabel = styled.div`
   align-items: center;
-  background-color: var(--color-light);
+  background-color: ${(props) => props.backgroundColor || "var(--color-light)"};
   color: var(--color-text-dark);
   cursor: pointer;
   display: flex;

@@ -16,7 +16,6 @@ function MeProvider({ children }) {
 
   useEffect(() => {
     if (me) {
-      console.log(me);
       setMeName(buildUserName(me));
       localStorage.setItem("userId", me.id);
     } else {

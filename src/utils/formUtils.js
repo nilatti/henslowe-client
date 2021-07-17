@@ -12,7 +12,6 @@ let valid = function (current, startTime) {
 };
 
 function handleDateTimeChange(time, name, handleChange) {
-  console.log(time);
   let event = {
     target: {
       value: time,

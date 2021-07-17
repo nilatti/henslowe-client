@@ -15,8 +15,10 @@ const SelectGroup = styled.div`
 const SelectItem = styled.div`
   margin: 5px;
 `;
-export default function WordCloudSelector({ context, play, onFormSubmit }) {
-  ///tktktk use context to set "isSelected" on items from play in case this remounts (maybe this is not necessary?)
+
+const SelectorStyles = styled.div``;
+
+export default function WordCloudSelector({ play, onFormSubmit }) {
   const [selectedCharacters, setSelectedCharacters] = useState(play.characters);
 
   const [selectedPlayContent, setSelectedPlayContent] = useState([]);
@@ -94,6 +96,11 @@ export default function WordCloudSelector({ context, play, onFormSubmit }) {
     );
   }
 
+  let playUnitColors = {
+    act: "var(--color-dark)",
+    scene: "var(--color-med)",
+    french_scene: "var(--color-light-disabled)",
+  };
   let characters = selectedCharacters?.map((item) => {
     return (
       <SelectItem key={item.id}>
@@ -115,13 +122,14 @@ export default function WordCloudSelector({ context, play, onFormSubmit }) {
   let playContentSelector = selectedPlayContent?.map((item) => {
     return (
       <SelectItem key={`${item.type}-${item.id}`}>
-        <FancyCheckBox>
+        <FancyCheckBox backgroundColor={playUnitColors[item.type]}>
           <FancyRadio
-            type="checkbox"
-            id={`${item.type}-${item.id}`}
-            data-checked={item.isSelected}
+            backgroundColor={playUnitColors[item.type]}
             checked={item.isSelected || ""}
+            data-checked={item.isSelected}
+            id={`${item.type}-${item.id}`}
             onChange={updateCheckedPlayContent}
+            type="checkbox"
             value={item.id}
           />
           <FancyCheckBoxLabel>{item.label}</FancyCheckBoxLabel>
@@ -130,13 +138,21 @@ export default function WordCloudSelector({ context, play, onFormSubmit }) {
     );
   });
 
+  let readyToSubmit =
+    selectedCharacters.filter((item) => item.isSelected).length > 0 ||
+    selectedPlayContent.filter((item) => item.isSelected).length > 0;
+
   return (
-    <>
+    <SelectorStyles>
       <h3>Select Characters (optional)</h3>
       <SelectGroup>{characters}</SelectGroup>
       <h3>Select Content (optional)</h3>
       <SelectGroup>{playContentSelector}</SelectGroup>
-      <Button onClick={submitSelection}>Generate Word Clouds</Button>
-    </>
+      <Button disabled={!readyToSubmit} onClick={submitSelection}>
+        {readyToSubmit
+          ? "Generate Word Clouds"
+          : "Please select at least one character or one piece of the play."}
+      </Button>
+    </SelectorStyles>
   );
 }

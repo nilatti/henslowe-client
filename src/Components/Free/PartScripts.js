@@ -1,17 +1,14 @@
-//this is the container for doubling for UNPAID customers. It talks to the play state provider
-import Casting from "./Casting";
+//this is the container for part scripts for UNPAID customers. It talks to the play state provider
 import SelectPlay from "./SelectPlay";
-import { Button } from "../Button";
+
 import { Spinner } from "../Loaders";
 import Modal from "../Modal";
-import DoublingChartContainer from "./DoublingChartContainer";
-import FakeActors from "../Productions/FakeActors";
-
+import { Button } from "../Button";
+import PartScriptContainer from "../PlayScripts/PartScripts/PartScriptContainer";
 import { usePlayState } from "../../lib/freePlayState";
 
-export default function Double() {
-  const { loading, fakeActors, fakeActorsArray, setFakeActors, play, setPlay } =
-    usePlayState();
+export default function PartScripts() {
+  const { fakeActorsArray, loading, play, setPlay } = usePlayState();
   function clearPlay() {
     setPlay(null);
   }
@@ -34,9 +31,9 @@ export default function Double() {
   }
   return (
     <>
-      <h2>Are you ready to double {play.title}?</h2>
+      <div>Get part scripts for {play.title}</div>
       <Button onClick={clearPlay}>Select a different play</Button>
-      <DoublingChartContainer />
+      <PartScriptContainer actors={fakeActorsArray} play={play} />
     </>
   );
 }
