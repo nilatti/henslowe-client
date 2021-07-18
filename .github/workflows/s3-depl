@@ -1,6 +1,7 @@
 name: s3-depl
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
