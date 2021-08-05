@@ -1,4 +1,4 @@
-import API from "./api";
+import API from "./api_url";
 
 async function createJob(job) {
   console.log("posting job", job);

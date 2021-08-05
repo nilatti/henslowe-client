@@ -1,4 +1,4 @@
-import API from "./api";
+import API from "./api_url";
 
 async function getTheaterNames() {
   return API.request(`theaters/theater_names`);

@@ -1,4 +1,4 @@
-import API from "./api";
+import API from "./api_url";
 
 async function createItem(item, itemType) {
   return API.post(`${itemType}s`, {

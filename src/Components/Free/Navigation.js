@@ -1,4 +1,4 @@
-import LoginHooks from "../LoginHooks";
+// import LoginHooks from "../LoginHooks";
 
 import { Nav, Navbar } from "react-bootstrap";
 
@@ -24,7 +24,7 @@ export default function Navigation() {
           <Nav.Item>
             <Nav.Link href="/part-scripts">Generate part scripts</Nav.Link>
           </Nav.Item>
-          <LoginHooks />
+          {/* <LoginHooks /> */}
         </Nav>
       </Navbar>
     </header>
