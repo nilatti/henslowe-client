@@ -1,35 +1,31 @@
-import API from './api'
+import API from "./api_url";
 
 async function createAuthor(author) {
-  return API.post(
-    'authors', {
-      author
-    }
-  )
+  return API.post("authors", {
+    author,
+  });
 }
 
 async function deleteAuthor(authorId) {
-  return API.delete(`authors/${authorId}`)
+  return API.delete(`authors/${authorId}`);
 }
 
 async function getAuthor(authorId) {
-  return API.request(`authors/${authorId}`)
+  return API.request(`authors/${authorId}`);
 }
 async function getAuthorNames() {
-  return API.request(`authors/author_names`)
+  return API.request(`authors/author_names`);
 }
 
 async function getAuthors() {
-  return API.request(`authors`)
+  return API.request(`authors`);
 }
-
 
 async function updateServerAuthor(author) {
   return API.put(`authors/${author.id}`, {
-    author: author
-  })
+    author: author,
+  });
 }
-
 
 export {
   createAuthor,
@@ -37,5 +33,5 @@ export {
   getAuthor,
   getAuthorNames,
   getAuthors,
-  updateServerAuthor
-}
+  updateServerAuthor,
+};

@@ -1,29 +1,27 @@
-import API from './api'
+import API from "./api_url";
 
 async function createCharacter(playId, character) {
-  return API.post(
-    `plays/${playId}/characters`, {
-      character
-    }
-  )
+  return API.post(`plays/${playId}/characters`, {
+    character,
+  });
 }
 
 async function deleteCharacter(characterId) {
-  return API.delete(`characters/${characterId}`)
+  return API.delete(`characters/${characterId}`);
 }
 
 async function getCharacter(characterId) {
-  return API.request(`characters/${characterId}`)
+  return API.request(`characters/${characterId}`);
 }
 
 async function getCharacters(playId) {
-  return API.request(`plays/${playId}/characters`)
+  return API.request(`plays/${playId}/characters`);
 }
 
 async function updateServerCharacter(character) {
   return API.put(`characters/${character.id}`, {
-    character: character
-  })
+    character: character,
+  });
 }
 
 export {
@@ -31,5 +29,5 @@ export {
   deleteCharacter,
   getCharacter,
   getCharacters,
-  updateServerCharacter
-}
+  updateServerCharacter,
+};

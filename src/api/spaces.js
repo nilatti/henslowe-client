@@ -1,36 +1,32 @@
-import API from './api'
+import API from "./api_url";
 
 async function createSpace(space) {
-  return API.post(
-    'spaces', {
-      space
-    }
-  )
+  return API.post("spaces", {
+    space,
+  });
 }
 
 async function deleteSpace(spaceId) {
-  return API.delete(`spaces/${spaceId}`)
+  return API.delete(`spaces/${spaceId}`);
 }
 
 async function getSpace(spaceId) {
-  return API.request(`spaces/${spaceId}`)
+  return API.request(`spaces/${spaceId}`);
 }
 
 async function getSpaceNames() {
-  return API.request(`spaces/space_names`)
+  return API.request(`spaces/space_names`);
 }
 
-
 async function getSpaces() {
-  return API.request(`spaces`)
+  return API.request(`spaces`);
 }
 
 async function updateServerSpace(space) {
   return API.put(`spaces/${space.id}`, {
-    space: space
-  })
+    space: space,
+  });
 }
-
 
 export {
   createSpace,
@@ -38,5 +34,5 @@ export {
   getSpace,
   getSpaceNames,
   getSpaces,
-  updateServerSpace
-}
+  updateServerSpace,
+};

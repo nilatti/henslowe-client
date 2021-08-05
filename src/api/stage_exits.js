@@ -1,25 +1,28 @@
-import API from './api'
+import API from "./api_url";
 
 async function createStageExit(productionId, stage_exit) {
-  return API.post(
-    `productions/${productionId}/stage_exits`, {
-      stage_exit
-    }
-  )
+  return API.post(`productions/${productionId}/stage_exits`, {
+    stage_exit,
+  });
 }
 
 async function deleteStageExit(stageExitId) {
-  return API.delete(`stage_exits/${stageExitId}`)
+  return API.delete(`stage_exits/${stageExitId}`);
 }
 
 async function getStageExits(productionId) {
-  return API.request(`productions/${productionId}/stage_exits`)
+  return API.request(`productions/${productionId}/stage_exits`);
 }
 
 async function updateServerStageExit(stageExit) {
   return API.put(`stage_exits/${stageExit.id}`, {
-    stage_exit: stageExit
-  })
+    stage_exit: stageExit,
+  });
 }
 
-export {createStageExit, deleteStageExit, getStageExits, updateServerStageExit}
+export {
+  createStageExit,
+  deleteStageExit,
+  getStageExits,
+  updateServerStageExit,
+};
