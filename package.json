@@ -2,6 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://henslowescloud.com/",
   "dependencies": {
     "@attently/riek": "2.0.1",
     "@babel/core": "^7.13.13",
@@ -52,6 +53,7 @@
     "syllable": "4.1.0",
     "typescript": "3.9.7"
   },
+  "proxy": "http://hcapi-env.eba-epmrxskb.us-east-1.elasticbeanstalk.com",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
