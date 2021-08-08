@@ -1,4 +1,13 @@
-import API from "./api_url";
+// import API from "./api_url";
+import axios from "axios";
+let API = axios.create({
+  baseURL: "http://www.petsmart.com",
+  headers: {
+    Authorization: `${window.localStorage.getItem("authToken")}`,
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+});
 
 async function createAuthor(author) {
   return API.post("authors", {
