@@ -14,6 +14,9 @@ export default function Navigation() {
           <Container>
             <Nav className="customNav">
               <Nav.Item>
+                <Nav.Link href="/">Home</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
                 <Nav.Link href="/casting">Cast your play</Nav.Link>
               </Nav.Item>
               <Nav.Item>
