@@ -8,7 +8,7 @@ export default function DoublingChartContainer({}) {
   const { castings, fakeActorsArray, play } = usePlayState();
 
   let production = { jobs: castings, play: play };
-  let castingsWithActors = castings.filter((casting) => casting.user_id);
+  let castingsWithActors = castings.filter((casting) => casting.user);
   if (!castingsWithActors.length) {
     return (
       <div>
