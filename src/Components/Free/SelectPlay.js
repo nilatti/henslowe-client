@@ -17,7 +17,6 @@ export default function SelectPlay() {
     if (response.status >= 400) {
       setErrorStatus("Error fetching plays");
     } else {
-      console.log(response.data);
       let shakespeare = response.data.filter(
         (play) => play.author_id == SHAKESPEARE_ID
       );

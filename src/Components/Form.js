@@ -3,8 +3,11 @@ import styled from "styled-components";
 export const Form = styled.form`
   display: flex;
   flex-flow: column nowrap;
-  width: ${(props) => props.width || "35%"};
+  width: ${(props) => props.mobileWidth || "85%"};
   margin: 0 auto;
+  @media screen and (min-width: 600px) {
+    width: ${(props) => props.width || "35%"};
+  }
   label {
     flex-basis: 25%;
   }

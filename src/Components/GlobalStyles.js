@@ -86,6 +86,17 @@ export const GlobalStyles = createGlobalStyle`
   .past-event {
     font-style: italic;
   }
+  .customNav {
+    background-color: var(--color-light);
+    color: var(--color-dark);
+    padding: 10px;
+    @media screen and (min-width: 600px) {
+      background-color: inherit;
+      color: inherit;
+      padding: inherit;
+    }
+  }
+
 `;
 
 //can't set BP vars so here's where we'll document them.

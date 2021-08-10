@@ -10,44 +10,65 @@ export default function Navigation() {
   const superAdmin = getSuperAdminRole(me);
   return (
     <header>
-      <Navbar>
-        <Nav>
-          <Nav.Item>
-            <Nav.Link href="/">Dashboard</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="/productions">Productions</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="/theaters">Theaters</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="/spaces">Spaces</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="/users">Users</Nav.Link>
-          </Nav.Item>
-          {superAdmin && (
-            <>
-              <Nav.Item>
-                <Nav.Link href="/authors">Authors</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link href="/plays">Plays</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link href="/specializations">Specializations</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link href="/jobs">Jobs</Nav.Link>
-              </Nav.Item>
-            </>
-          )}
-          {/* <Nav.Item>
+      <Navbar collapseOnSelect fixed="top" expand="lg">
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav>
+            <Nav.Item>
+              <Nav.Link href="/" eventKey="1">
+                Dashboard
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/productions" eventKey="2">
+                Productions
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/theaters" eventKey="3">
+                Theaters
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/spaces" eventKey="4">
+                Spaces
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/users" eventKey="5">
+                Users
+              </Nav.Link>
+            </Nav.Item>
+            {superAdmin && (
+              <>
+                <Nav.Item>
+                  <Nav.Link href="/authors" eventKey="6">
+                    Authors
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link href="/plays" eventKey="7">
+                    Plays
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link href="/specializations" eventKey="8">
+                    Specializations
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link href="/jobs" eventKey="9">
+                    Jobs
+                  </Nav.Link>
+                </Nav.Item>
+              </>
+            )}
+            {/* <Nav.Item>
             Hi, {me?.first_name}
             <LogoutHooks />
           </Nav.Item> */}
-        </Nav>
+          </Nav>
+        </Navbar.Collapse>
       </Navbar>
     </header>
   );
