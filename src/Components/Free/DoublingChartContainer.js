@@ -13,6 +13,7 @@ export default function DoublingChartContainer({}) {
     return (
       <div>
         You don't have any actors cast.
+        <br />
         <Link to="/casting">Go to cast some people</Link> and then come back
         here.
       </div>

@@ -19,6 +19,7 @@ export const GlobalStyles = createGlobalStyle`
 
     a {
       display: inline-block;
+      font-weight: 600;
       position: relative;
       text-decoration: none;
       color: inherit;

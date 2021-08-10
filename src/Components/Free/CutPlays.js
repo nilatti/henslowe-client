@@ -52,7 +52,11 @@ export default function CutPlays() {
   if (loading) {
     return (
       <Modal>
-        <h1>Loading play to cut!</h1>
+        <h1>Loading play</h1>
+        <div>
+          This takes a little while, but it only has to happen once until you
+          switch plays or close your browser
+        </div>
         <Spinner />
       </Modal>
     );
