@@ -1,5 +1,5 @@
 import axios from "axios";
-export const baseUrl = "https://api.henslowe.com/api";
+export const baseUrl = "https://api.henslowescloud.com/api";
 export default axios.create({
   baseURL: baseUrl,
   headers: {
