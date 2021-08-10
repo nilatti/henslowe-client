@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-
+const MobileNote = styled.div`
+  display: flex;
+  font-weight: 600;
+  font-size: 1.25rem;
+  @media screen and (min-width: 800px) {
+    display: none;
+  }
+`;
 const WelcomeDiv = styled.div`
   padding: 10px 0;
   a {
@@ -10,6 +17,10 @@ const WelcomeDiv = styled.div`
 export default function Welcome() {
   return (
     <div>
+      <MobileNote>
+        Due to the text-heavy nature of these tools, they don't work well on
+        mobile devices. You might want to switch to a computer.
+      </MobileNote>
       <WelcomeDiv>
         This free service provides tools for cutting and doubling plays
         (currently only Shakespeare, but that may change). There will soon be an
