@@ -15,7 +15,7 @@ export const GlobalStyles = createGlobalStyle`
     --cancel-button-border-color: #005a41;
     --cancel-button-color: #005a41;
 
-    background-color: var(--color-background);
+    /* background-color: var(--color-background); */
 
     a {
       display: inline-block;
