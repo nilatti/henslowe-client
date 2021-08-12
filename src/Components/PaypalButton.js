@@ -7,15 +7,15 @@ export default function PaypalButton() {
     <PaypalContainer>
       <div>
         <em>
-          <strong>This service will become unavailable on August 20.</strong>
+          <strong>This service will become unavailable on September 3.</strong>
           <br />
           It costs $100/month to operate.
           <br />
           If I get $100 in donations, I'll leave it up for another month.
           <br />
           <strong>
-            Update: Three awesome people have donated a total of $40! If we get
-            to $50, we can extend the shut-off date to September 3.
+            Update: Four awesome people have donated a total of $50, which
+            allowed us to extend our shut off date by two weeks!
           </strong>
           <br />
           Please help pay for server costs by hitting the donate button!
