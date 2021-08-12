@@ -13,6 +13,11 @@ export default function PaypalButton() {
           <br />
           If I get $100 in donations, I'll leave it up for another month.
           <br />
+          <strong>
+            Update: Three awesome people have donated a total of $40! If we get
+            to $50, we can extend the shut-off date to September 3.
+          </strong>
+          <br />
           Please help pay for server costs by hitting the donate button!
         </em>
       </div>
