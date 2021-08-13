@@ -92,7 +92,7 @@ export const GlobalStyles = createGlobalStyle`
     color: var(--color-dark);
     padding: 10px;
     @media screen and (min-width: 600px) {
-      background-color: inherit;
+      background-color: white;
       color: inherit;
       padding: inherit;
     }
