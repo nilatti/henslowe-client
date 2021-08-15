@@ -22,6 +22,11 @@ export default function DoublingChartContainer({}) {
 
   return (
     <>
+      <div>
+        Orange indicates one actor playing two characters in an act/scene/french
+        scene. A character name in parenthesis indicates that the character is
+        onstage but (in your cut) doesn't talk.
+      </div>
       <Tabs>
         <Tab eventKey="acts" title="Acts">
           <DoublingChartShow

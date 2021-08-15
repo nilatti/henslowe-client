@@ -1,4 +1,4 @@
-import API from "./api_url";
+import API from "./api";
 
 async function buildRehearsalSchedule(productionId, rehearsalSchedulePattern) {
   return API.put(`productions/${productionId}/build_rehearsal_schedule`, {

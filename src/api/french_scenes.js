@@ -1,4 +1,4 @@
-import API from "./api_url";
+import API from "./api";
 
 async function createFrenchScene(sceneId, french_scene) {
   return API.post(`french_scenes`, {

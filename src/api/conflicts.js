@@ -1,4 +1,4 @@
-import API from "./api_url";
+import API from "./api";
 
 async function buildConflictPattern(
   parentId,

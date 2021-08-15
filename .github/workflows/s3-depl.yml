@@ -13,6 +13,12 @@ jobs:
       matrix:
         node-version: [14.x]
     steps:
+      - uses: actions/checkout@master
+      - name: copy file
+        uses: canastro/copy-file-action@master
+        with:
+          source: "src/api/server_api.js"
+          target: "src/api/api.js"
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2

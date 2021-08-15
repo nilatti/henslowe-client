@@ -1,4 +1,4 @@
-import API from "./api_url";
+import API from "./api";
 
 async function createCharacter(playId, character) {
   return API.post(`plays/${playId}/characters`, {

@@ -34,7 +34,7 @@ export default function Double() {
   }
   return (
     <>
-      <h2>Are you ready to double {play.title}?</h2>
+      <h2>Doubling chart for {play.title}</h2>
       <Button onClick={clearPlay}>Select a different play</Button>
       <DoublingChartContainer />
     </>
