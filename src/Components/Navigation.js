@@ -1,5 +1,5 @@
 import { Nav, Navbar } from "react-bootstrap";
-// import LogoutHooks from "./LogoutHooks";
+import LogoutHooks from "./LogoutHooks";
 import { useMeState } from "../lib/meState";
 import { getSuperAdminRole } from "../utils/authorizationUtils";
 
@@ -63,10 +63,10 @@ export default function Navigation() {
                 </Nav.Item>
               </>
             )}
-            {/* <Nav.Item>
-            Hi, {me?.first_name}
-            <LogoutHooks />
-          </Nav.Item> */}
+            <Nav.Item>
+              Hi, {me?.first_name}
+              <LogoutHooks />
+            </Nav.Item>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
