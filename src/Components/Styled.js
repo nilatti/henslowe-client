@@ -86,3 +86,17 @@ export const FancyCheckBoxLabel = styled.div`
     transform: translateY(10px);
   }
 `;
+
+export const DefaultTable = styled.table`
+  margin-top: 25px;
+  width: 100%;
+  th {
+    font-weight: 600;
+  }
+  td {
+    padding: 5px;
+  }
+  tr:nth-child(odd) {
+    background-color: var(--color-background);
+  }
+`;

@@ -11,22 +11,27 @@ import {
 } from "./hardcodedConstants";
 
 import { intersection } from "../utils/arrayUtils";
+import { getItem } from "../api/crud";
+import { getJobs } from "../api/jobs";
 
 export function getOverlap(loggedInUser, targetUser) {
   if (!loggedInUser | !targetUser) return;
   //build an array of roles to analyze at the end and pick the highest access one to return
   let roleArray = [];
-  let loggedInUserPastTheaters = loggedInUser.jobs.filter(
+  let loggedInUserPastTheaters = loggedInUser.jobs?.filter(
     (job) => moment(job.end_date) < moment()
   );
-  let loggedInUserPastTheaterIds = loggedInUserPastTheaters.map(
+  if (!loggedInUserPastTheaters) {
+    return;
+  }
+  let loggedInUserPastTheaterIds = loggedInUserPastTheaters?.map(
     (job) => job.theater_id
   );
 
-  let targetUserPastTheaters = targetUser.jobs.filter(
+  let targetUserPastTheaters = targetUser.jobs?.filter(
     (job) => moment(job.end_date) < moment()
   );
-  let targetUserPastTheaterIds = targetUserPastTheaters.map(
+  let targetUserPastTheaterIds = targetUserPastTheaters?.map(
     (job) => job.theater_id
   );
 
@@ -174,20 +179,40 @@ export function getUserRoleForTheater(user, theaterId) {
   }
 }
 
-export function getUserRoleForProduction(user, production) {
-  let productionId = Number(production.id);
-  let productionJobs = user.jobs.filter(
-    (job) => job.production_id === productionId
-  );
-  let jobTitles = productionJobs.map((job) => job.specialization?.title);
-  if (
-    getUserRoleForTheater(user, production.theater_id) === "admin" ||
-    _.intersection(jobTitles, PRODUCTION_ADMIN).length > 0 ||
-    getSuperAdminRole(user)
-  ) {
-    return "admin";
-  } else if (productionJobs.length > 0) {
-    return "member";
+export async function getUserRoleForProduction(user, productionId) {
+  let productionJobs = [];
+  let jobsResponse = await getJobs({
+    user_id: user.id,
+    production_id: productionId,
+  });
+
+  if (jobsResponse.status >= 400) {
+    console.log("error! getting jobs");
+  } else {
+    productionJobs = jobsResponse.data;
+  }
+
+  let production = {};
+  console.log("inside auth", productionId);
+  let productionResponse = await getItem(productionId, "production");
+  console.log(198);
+  if (productionResponse.status >= 400) {
+    console.log("error getting production");
+  } else {
+    production = productionResponse.data;
+  }
+
+  if (productionJobs.length) {
+    let jobTitles = productionJobs.map((job) => job.specialization?.title);
+    if (
+      getUserRoleForTheater(user, production.theater_id) === "admin" ||
+      intersection(jobTitles, PRODUCTION_ADMIN).length > 0 ||
+      getSuperAdminRole(user)
+    ) {
+      return "admin";
+    } else {
+      return "member";
+    }
   } else {
     return "visitor";
   }

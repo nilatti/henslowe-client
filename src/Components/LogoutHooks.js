@@ -1,11 +1,12 @@
 import React from "react";
-import { useGoogleLogout } from "react-google-login";
+import { GoogleLogout } from "react-google-login";
 import { useMeState } from "../lib/meState";
+import { useMountedState } from "../lib/mountedState";
 
-const clientId =
-  "247444257677-eeu6fplpufskarhr4k7n9e1sooqe9c66.apps.googleusercontent.com";
+const clientId = process.env.REACT_APP_GOOGLE_CLIENT_KEY;
 
 function LogoutHooks() {
+  const isMounted = useMountedState();
   const { clearMe } = useMeState();
   const onLogoutSuccess = () => {
     clearMe();
@@ -15,16 +16,28 @@ function LogoutHooks() {
     console.log("Handle failure cases");
   };
 
-  const { signOut } = useGoogleLogout({
-    clientId,
-    onLogoutSuccess,
-    onFailure,
-  });
+  // function signOut() {
+  //   if (isMounted()) {
+  //     useGoogleLogout({
+  //       clientId,
+  //       onLogoutSuccess,
+  //       onFailure,
+  //     });
+  //   }
+  // }
 
+  const signOut = () =>
+    useGoogleLogout({
+      clientId,
+      onLogoutSuccess,
+      onFailure,
+    });
   return (
-    <button onClick={signOut} className="button">
-      <span className="buttonText">Sign out</span>
-    </button>
+    <GoogleLogout
+      clientId={clientId}
+      buttonText="Logout"
+      onLogoutSuccess={onLogoutSuccess}
+    ></GoogleLogout>
   );
 }
 

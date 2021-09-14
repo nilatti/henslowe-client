@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Tab, Tabs } from "react-bootstrap";
 import DoublingChartShow from "./DoublingChartShow";
 import Modal from "../Modal";
@@ -23,7 +24,14 @@ export default function DoublingChartContainer() {
   }
   return (
     <>
-      {production.play && <h2>Doubling Charts for {production.play.title}</h2>}
+      {production.play && (
+        <h2>
+          Doubling Charts for{" "}
+          <Link to={`/productions/${production.id}`}>
+            {production.play.title}
+          </Link>
+        </h2>
+      )}
       <Tabs>
         <Tab eventKey="acts" title="Acts">
           <DoublingChartShow

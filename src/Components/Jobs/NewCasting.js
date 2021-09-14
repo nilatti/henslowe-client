@@ -13,7 +13,6 @@ export default function NewCasting({ production, users }) {
   const [selectedUser, setSelectedUser] = useState([]);
 
   function handleChangeUser(e) {
-    console.log(e[0]);
     if (e.length > 0) {
       setSelectedUser([e[0]]);
     }

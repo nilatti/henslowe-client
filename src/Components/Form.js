@@ -1,10 +1,12 @@
 import styled from "styled-components";
 
 export const Form = styled.form`
+  background-color: var(--color-background);
   display: flex;
   flex-flow: column nowrap;
-  width: ${(props) => props.mobileWidth || "85%"};
+  padding: 5px;
   margin: 0 auto;
+  width: ${(props) => props.mobileWidth || "85%"};
   @media screen and (min-width: 600px) {
     width: ${(props) => props.width || "35%"};
   }
@@ -78,7 +80,7 @@ export const FormGroup = styled.div`
 
 export const FormGroupInline = styled.div`
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column nowrap;
 
   margin: 10px 0;
   width: 100%;
@@ -86,10 +88,17 @@ export const FormGroupInline = styled.div`
   @media screen and (min-width: 480px) {
     flex-flow: row wrap;
   }
+  input {
+    flex-basis: 50%;
+  }
+  input[type="number"] {
+    flex-basis: 10%;
+  }
   label {
+    flex-basis: 80%;
     @media screen and (min-width: 480px) {
+      flex-basis: 50%;
       padding-right: 25px;
-
       text-align: right;
     }
   }

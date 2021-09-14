@@ -7,6 +7,7 @@ import { getSuperAdminRole } from "../utils/authorizationUtils";
 // between routes.
 export default function Navigation() {
   const { me } = useMeState();
+
   const superAdmin = getSuperAdminRole(me);
   return (
     <header>
@@ -64,7 +65,7 @@ export default function Navigation() {
               </>
             )}
             <Nav.Item>
-              Hi, {me?.first_name}
+              Hi, {me?.name}
               <LogoutHooks />
             </Nav.Item>
           </Nav>

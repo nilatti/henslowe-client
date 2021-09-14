@@ -16,7 +16,7 @@ import ConflictPatternShow from "./ConflictPatternShow";
 import { overlap } from "../../utils/arrayUtils";
 import { useConflicts } from "../../lib/conflictState";
 
-export default function ConflictsList() {
+export default function ConflictsList({ current = false }) {
   const {
     conflicts,
     conflictPatterns,
@@ -143,7 +143,7 @@ export default function ConflictsList() {
 
   function handleConflictCreate(conflict) {
     createConflict(conflict, parentId, parentType);
-    history.push(`/${parentType}s/${parentId}`);
+    // history.push(`/${parentType}s/${parentId}`);
   }
 
   function handleConflictDelete(conflictId) {
@@ -171,7 +171,17 @@ export default function ConflictsList() {
   }
   if (conflicts) {
     let showConflicts = conflicts
-      .filter((conflict) => !conflict.regular)
+      .filter((conflict) => {
+        if (current) {
+          return (
+            (!conflict.regular &&
+              new Date(conflict.start_time) <= Date.now()) ||
+            new Date(conflict.end_time) >= Date.now()
+          );
+        } else {
+          return !conflict.regular;
+        }
+      })
       .map((conflict) => (
         <EditableConflict
           conflict={conflict}
@@ -182,14 +192,25 @@ export default function ConflictsList() {
           role={localRole}
         />
       ));
-    let showConflictPatterns = conflictPatterns?.map((conflictPattern) => (
-      <ConflictPatternShow
-        conflictPattern={conflictPattern}
-        handleDeleteClick={handleConflictPatternDelete}
-        key={conflictPattern.id}
-        role={localRole}
-      />
-    ));
+    let showConflictPatterns = conflictPatterns
+      ?.filter((conflictPattern) => {
+        if (current) {
+          return (
+            new Date(conflictPattern.start_time) <= Date.now() ||
+            new Date(conflictPattern.end_time) >= Date.now()
+          );
+        } else {
+          return true;
+        }
+      })
+      .map((conflictPattern) => (
+        <ConflictPatternShow
+          conflictPattern={conflictPattern}
+          handleDeleteClick={handleConflictPatternDelete}
+          key={conflictPattern.id}
+          role={localRole}
+        />
+      ));
     return (
       <>
         <h4>One-Off Conflicts</h4>

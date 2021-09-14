@@ -1,121 +1,123 @@
-import PropTypes from 'prop-types';
-import React, {
-  Component
-} from 'react'
+import PropTypes from "prop-types";
+import React, { Component } from "react";
 
-import {Button} from 'react-bootstrap'
+import { Button } from "react-bootstrap";
 
-import { RIEInput} from '@attently/riek'
+import { RIEInput } from "@attently/riek";
 
 import {
   createStageExit,
   deleteStageExit,
   getStageExits,
-  updateServerStageExit
-} from '../../../api/stage_exits'
+  updateServerStageExit,
+} from "../../../api/stage_exits";
 
-import NewStageExitForm from './NewStageExitForm'
-import {ProductionAuthContext} from '../../Contexts'
+import NewStageExitForm from "./NewStageExitForm";
+// import {ProductionAuthContext} from '../../Contexts'
 
 class StageExitsList extends Component {
   state = {
     newStageExitFormOpen: false,
     stageExits: [],
-  }
+  };
 
   componentDidMount() {
-    this.loadStageExitsFromServer()
+    this.loadStageExitsFromServer();
   }
 
   createNewStageExit = (stageExit) => {
-    this.createServerStageExit(stageExit)
-    this.handleToggleClick()
-  }
+    this.createServerStageExit(stageExit);
+    this.handleToggleClick();
+  };
 
   handleToggleClick = () => {
-    this.setState({newStageExitFormOpen: !this.state.newStageExitFormOpen})
-  }
+    this.setState({ newStageExitFormOpen: !this.state.newStageExitFormOpen });
+  };
 
   onDeleteClick = (stageExitId) => {
-    this.deleteStageExit(stageExitId)
-  }
+    this.deleteStageExit(stageExitId);
+  };
 
   onSave = (nameObj, stageExitId) => {
     let stageExitObj = {
       id: stageExitId,
-      name: nameObj['name']
-    }
-    this.updateServerStageExit(stageExitObj)
-  }
+      name: nameObj["name"],
+    };
+    this.updateServerStageExit(stageExitObj);
+  };
 
   async createServerStageExit(stageExit) {
-    const response = await createStageExit(this.props.productionId, stageExit)
+    const response = await createStageExit(this.props.productionId, stageExit);
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error creating stage exit'
-      })
+        errorStatus: "Error creating stage exit",
+      });
     } else {
       this.setState({
-        stageExits: [...this.state.stageExits, response.data].sort((a, b) => (a.name > b.name) - (a.name < b.name))
-      })
+        stageExits: [...this.state.stageExits, response.data].sort(
+          (a, b) => (a.name > b.name) - (a.name < b.name)
+        ),
+      });
     }
   }
 
   async deleteStageExit(stageExitId) {
-    const response = await deleteStageExit(stageExitId)
+    const response = await deleteStageExit(stageExitId);
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error deleting stage exit'
-      })
+        errorStatus: "Error deleting stage exit",
+      });
     } else {
       this.setState({
-        stageExits: this.state.stageExits.filter(stageExit =>
-          stageExit.id !== stageExitId
-        )
-      })
+        stageExits: this.state.stageExits.filter(
+          (stageExit) => stageExit.id !== stageExitId
+        ),
+      });
     }
   }
 
   async loadStageExitsFromServer() {
-    const response = await getStageExits(this.props.productionId)
+    const response = await getStageExits(this.props.productionId);
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error fetching stage exits'
-      })
+        errorStatus: "Error fetching stage exits",
+      });
     } else {
       this.setState({
-        stageExits: response.data
-      })
+        stageExits: response.data,
+      });
     }
   }
 
   async updateServerStageExit(stageExitAttrs) {
-    const response = await updateServerStageExit(stageExitAttrs)
+    const response = await updateServerStageExit(stageExitAttrs);
     if (response.status >= 400) {
       this.setState({
-        errorStatus: 'Error updating stage exits'
-      })
+        errorStatus: "Error updating stage exits",
+      });
     } else {
-      this.setState(state => {
+      this.setState((state) => {
         const stageExitList = state.stageExits.map((stageExit) => {
           if (stageExit.id === stageExitAttrs.id) {
-            return stageExitAttrs
+            return stageExitAttrs;
           } else {
-            return stageExit
+            return stageExit;
           }
-        })
-        const stageExitListSorted = stageExitList.sort((a, b) => (a.name > b.name) - (a.name < b.name))
+        });
+        const stageExitListSorted = stageExitList.sort(
+          (a, b) => (a.name > b.name) - (a.name < b.name)
+        );
         return {
-          stageExits: stageExitListSorted
-        }
-      })
+          stageExits: stageExitListSorted,
+        };
+      });
     }
   }
 
   render() {
-    let stageExits = this.state.stageExits.map(stageExit =>
+    let stageExits = this.state.stageExits.map((stageExit) => (
       <li key={stageExit.id}>
-        <ProductionAuthContext.Consumer>
+        {/* <ProductionAuthContext.Consumer>
         {(role) => {
           if (role === 'admin') {
             return (
@@ -139,14 +141,13 @@ class StageExitsList extends Component {
         }
         }
         }
-        </ProductionAuthContext.Consumer>
-
+        </ProductionAuthContext.Consumer> */}
       </li>
-    )
+    ));
     return (
       <div>
         <h3>Stage Exits</h3>
-        <ProductionAuthContext.Consumer>
+        {/* <ProductionAuthContext.Consumer>
           {(role) => {if (role === 'admin') {
             return (<p><em>Click to edit name</em></p>)
           }}}
@@ -176,16 +177,14 @@ class StageExitsList extends Component {
             }
                 }
             }
-        </ProductionAuthContext.Consumer>
-
-
+        </ProductionAuthContext.Consumer> */}
       </div>
-    )
+    );
   }
 }
 
 StageExitsList.propTypes = {
   productionId: PropTypes.number.isRequired,
-}
+};
 
-export default StageExitsList
+export default StageExitsList;

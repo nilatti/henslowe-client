@@ -1,6 +1,14 @@
 import PropTypes from "prop-types";
-import { Button, Col, Row, Tab, Tabs } from "react-bootstrap";
-import React, { useState } from "react";
+import styled from "styled-components";
+import { Tab, Tabs } from "react-bootstrap";
+import { useState } from "react";
+import { Button } from "../Button";
+import { Form, FormGroupInline } from "../Form";
+import { DefaultTable } from "../Styled";
+
+import { useForm } from "../../hooks/environmentUtils";
+import { formatDateForRails } from "../../utils/dateTimeUtils";
+import { upcomingRehearsalsList } from "../../utils/rehearsalUtils";
 
 import { BrowserRouter as Router, Link, useRouteMatch } from "react-router-dom";
 import {
@@ -11,28 +19,39 @@ import {
 import { getProductionCopyComplete } from "../../api/plays";
 
 import { useInterval } from "../../hooks/environmentUtils";
+import { StartEndDatePair } from "../../utils/formUtils";
 
 import ActorsList from "./Actors/ActorsList";
 import AuditionersList from "../Jobs/AuditionersList";
 import CastList from "../Jobs/CastList";
 import JobsListExcludingActorsAndAuditioners from "../Jobs/JobsListExcludingActorsAndAuditioners";
 import StageExitsList from "./SetDesign/StageExitsList";
-import { ProductionAuthContext } from "../Contexts";
+import { useProductionAuthState } from "../Contexts";
+import { useProductionState } from "../../lib/productionState";
 
-export default function ProductionShow({
-  production,
-  onEditClick,
-  onDeleteClick,
-}) {
-  let [productionCopyComplete, setProductionCopyComplete] = useState(
-    production.play.production_copy_complete
+const ProductionProfile = styled.div`
+  text-align: center;
+`;
+export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
+  const { loading, production } = useProductionState();
+  const { role } = useProductionAuthState();
+  const { url } = useRouteMatch();
+  const { inputs, handleChange } = useForm({
+    end_date: production.end_date || new Date(),
+    start_date: production.start_date || new Date(),
+    lines_per_minute: production.lines_per_minute || 20,
+  });
+  const [dateFormOpen, setDateFormOpen] = useState(false);
+  const [linesPerMinuteFormOpen, setLinesPerMinuteFormOpen] = useState(false);
+  const [productionCopyComplete, setProductionCopyComplete] = useState(
+    production.play?.production_copy_complete
   );
-  let [pollingInterval, setPollingInterval] = useState(
-    production.play.production_copy_complete ? null : 1000
+  const [pollingInterval, setPollingInterval] = useState(
+    production.play?.production_copy_complete ? null : 1000
   );
-  let { url } = useRouteMatch();
-  let linesTotal =
-    production.play.new_line_count || production.play.old_line_count || "";
+
+  const linesTotal =
+    production.play?.new_line_count || production.play?.old_line_count || "";
   let runTime = 0;
   if (linesTotal > 0 && production.lines_per_minute) {
     runTime = (linesTotal / production.lines_per_minute).toFixed(2);
@@ -41,7 +60,7 @@ export default function ProductionShow({
   //check if the play is ready for interaction
   useInterval(async () => {
     let productionCopyCompleteData = await getProductionCopyComplete(
-      production.play.id
+      production.play?.id
     );
     setProductionCopyComplete(
       productionCopyCompleteData.data.production_copy_complete
@@ -50,10 +69,38 @@ export default function ProductionShow({
       setPollingInterval(null);
     }
   }, pollingInterval);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    onFormSubmit({
+      id: production.id,
+      end_date: formatDateForRails(inputs.end_date),
+      lines_per_minute: inputs.lines_per_minute,
+      start_date: formatDateForRails(inputs.start_date),
+    });
+    setDateFormOpen(false);
+    setLinesPerMinuteFormOpen(false);
+  }
+
+  function toggleDateForm() {
+    if (role == "admin") {
+      setDateFormOpen(!dateFormOpen);
+    }
+  }
+
+  function toggleLinesPerMinuteForm() {
+    if (role == "admin") {
+      setLinesPerMinuteFormOpen(!linesPerMinuteFormOpen);
+    }
+  }
+  if (!production || loading) {
+    return <div>loading!</div>;
+  }
+
   return (
-    <Col md={12}>
-      <Row>
-        <Col md={12} className="production-profile">
+    <>
+      <div>
+        <ProductionProfile>
           <h2>
             {production.play ? (
               <Link to={`/plays/${production.play.id}`}>
@@ -71,118 +118,138 @@ export default function ProductionShow({
               "A Theater"
             )}
           </h2>
-          <p>
-            <em>
-              {production.start_date} - {production.end_date}
-            </em>
-          </p>
-          <ProductionAuthContext.Consumer>
-            {(value) => {
-              if (value === "admin") {
-                return (
-                  <>
-                    <span
-                      className="right floated edit icon"
-                      onClick={onEditClick}
-                    >
-                      <i className="fas fa-pencil-alt"></i>
-                    </span>
-                    <span
-                      className="right floated trash icon"
-                      onClick={() => {
-                        onDeleteClick(production.id);
-                      }}
-                    >
-                      <i className="fas fa-trash-alt"></i>
-                    </span>
-                  </>
-                );
-              }
-            }}
-          </ProductionAuthContext.Consumer>
-        </Col>
-      </Row>
+          <div onDoubleClick={() => toggleDateForm()}>
+            {dateFormOpen ? (
+              <Form noValidate onSubmit={(e) => handleSubmit(e)}>
+                <StartEndDatePair
+                  endDate={inputs.end_date}
+                  handleChange={handleChange}
+                  startDate={inputs.start_date}
+                />
+                <Button type="submit">Submit</Button>
+                <Button type="button" onClick={toggleDateForm}>
+                  Cancel
+                </Button>
+              </Form>
+            ) : (
+              <span>
+                {production.start_date} - {production.end_date}
+              </span>
+            )}
+          </div>
+
+          {role == "admin" && (
+            <>
+              <span
+                className="right floated trash icon"
+                onClick={() => {
+                  onDeleteClick(production.id);
+                }}
+              >
+                <i className="fas fa-trash-alt"></i>
+              </span>
+            </>
+          )}
+        </ProductionProfile>
+      </div>
       <hr />
       {productionCopyComplete && (
-        <Row>
-          <Col md={12}>
-            {production.lines_per_minute > 0 ? (
-              <p>Lines per minute: {production.lines_per_minute}</p>
+        <div>
+          <div>
+            {production.lines_per_minute > 0 && linesPerMinuteFormOpen ? (
+              <Form noValidate onSubmit={(e) => handleSubmit(e)} width="65%">
+                <FormGroupInline>
+                  <label htmlFor="lines_per_minute">Lines Per Minute:</label>
+                  <input
+                    id="lines_per_minute"
+                    type="number"
+                    name="lines_per_minute"
+                    onChange={handleChange}
+                    value={inputs.lines_per_minute}
+                  />
+                </FormGroupInline>
+                <Button type="submit">Submit</Button>
+                <Button type="button" onClick={toggleLinesPerMinuteForm}>
+                  Cancel
+                </Button>
+              </Form>
             ) : (
-              <span></span>
+              <p onDoubleClick={() => toggleLinesPerMinuteForm()}>
+                Lines per minute:{" "}
+                {production.lines_per_minute || "lines per minute not yet set"}
+              </p>
             )}
             {linesTotal > 0 ? <p>Total lines: {linesTotal}</p> : <span></span>}
             {runTime ? <p>Run time: {runTime} minutes</p> : <span></span>}
-            <Link to={`${url}/doubling_charts/`}>
-              <Button variant="info">Show Doubling Charts</Button>
-            </Link>
-          </Col>
-        </Row>
+          </div>
+        </div>
       )}
       <hr />
-      <Row>
-        <Col>
-          <p>
-            <Link to={`${url}/rehearsal_schedule`}>
-              <Button>View Rehearsal Schedule</Button>
-            </Link>
-          </p>
-        </Col>
-      </Row>
+      {production.rehearsals && (
+        <div>
+          <h3>Upcoming Rehearsals</h3>
+          <div>
+            <DefaultTable>
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Location</th>
+                  <th>Title</th>
+                  <th>Notes</th>
+                  <th>Material</th>
+                  <th>Who is called</th>
+                </tr>
+              </thead>
+              <tbody>{upcomingRehearsalsList(production.rehearsals)}</tbody>
+            </DefaultTable>
+            <p>
+              <Link to={`${url}/rehearsal_schedule`}>
+                <Button>View Full Rehearsal Schedule</Button>
+              </Link>
+            </p>
+          </div>
+        </div>
+      )}
       <hr />
-      <Row>
+      <div>
         <h2>Production Jobs</h2>
-        <JobsListExcludingActorsAndAuditioners production={production} />
-      </Row>
+        {production.jobs && (
+          <JobsListExcludingActorsAndAuditioners
+            production={production}
+            role={role}
+          />
+        )}
+      </div>
       <hr />
-      <ProductionAuthContext.Consumer>
-        {(value) => {
-          if (value === "admin") {
-            return (
-              <>
-                <Row>
-                  <h2>Auditioners</h2>
-                  <div>
-                    <b>
-                      You have to add auditioners before you can cast the show
-                    </b>
-                  </div>
-                  <AuditionersList production={production} />
-                </Row>
-                <hr />
-              </>
-            );
-          }
-        }}
-      </ProductionAuthContext.Consumer>
+      {/* <div>
+        <h2>Auditioners</h2>
+        <div>
+          <b>You have to add auditioners before you can cast the show</b>
+        </div>
+        <AuditionersList production={production} />
+      </div>
+      <hr />
 
-      {productionCopyComplete && (
-        <Row>
-          <CastList production={production} />
-        </Row>
-      )}
+      <div>
+        <CastList production={production} />
+        <Link to={`${url}/doubling_charts/`}>
+          <Button variant="info">Show Doubling Charts</Button>
+        </Link>
+      </div>
+
       <hr />
-      <Row>
-        <Col md={12}>
+      <div>
+        <div>
           <ActorsList production={production} />
-        </Col>
-      </Row>
+        </div>
+      </div>
       <hr />
-      <Row>
+      <div>
         <h2>Set Design</h2>
-      </Row>
-      <Row>
+      </div>
+      <div>
         <StageExitsList productionId={production.id} />
-      </Row>
-    </Col>
+      </div> */}
+    </>
   );
-  // }
 }
-
-ProductionShow.propTypes = {
-  production: PropTypes.object.isRequired,
-  onDeleteClick: PropTypes.func.isRequired,
-  onEditClick: PropTypes.func.isRequired,
-};
-
-// export default ProductionShow

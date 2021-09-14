@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { Form } from "react-bootstrap";
 import Datetime from "react-datetime"; //updated!
-import moment from "moment";
-
-import PropTypes from "prop-types";
 
 import { isAfterDate, isAfterTime } from "../utils/dateTimeUtils";
 
@@ -22,6 +19,12 @@ function handleDateTimeChange(time, name, handleChange) {
   handleChange(event);
 }
 export function StartEndDatePair({ endDate, handleChange, startDate }) {
+  if (typeof endDate == "string") {
+    endDate = new Date(endDate);
+  }
+  if (typeof startDate == "string") {
+    startDate = new Date(startDate);
+  }
   const [tempStartDate, setTempStartDate] = useState(startDate);
 
   function handleStartDateChange(date, handleChange) {
@@ -90,12 +93,6 @@ export function StartEndTimePair({ endTime, handleChange, startTime }) {
 }
 
 export function StartEndDateTimePair({ endTime, handleChange, startTime }) {
-  // const [tempStartDate, setTempStartDate] = useState(startTime);
-  // function handleStartDateChange(date, handleChange) {
-  //   //this is a hacky workaround that keeps the end time after the start time.
-  //   setTempStartDate(date);
-  //   handleDateTimeChange(date, "start_date", handleChange);
-  // }
   return (
     <>
       <Form.Group controlId="start_time">

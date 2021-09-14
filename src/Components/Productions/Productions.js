@@ -1,89 +1,81 @@
-import React, { Component } from "react";
-import { Col, Row } from "react-bootstrap";
-import { Link, Route, Switch } from "react-router-dom";
-
-import { createProduction, deleteProduction } from "../../api/productions";
-import ProductionsList from "./ProductionsList";
+import { useState } from "react";
+import { Link, Route, Switch, useHistory } from "react-router-dom";
 import DoublingCharts from "./DoublingCharts";
-import EditableProduction from "./EditableProduction";
+import ProductionWrapper from "./ProductionWrapper";
+import ProductionsList from "./ProductionsList";
 import ProductionRehearsalSchedule from "./RehearsalSchedule/ProductionRehearsalSchedule";
 
 import NewProduction from "./NewProduction";
+import { createItem, deleteItem } from "../../api/crud";
+export default function Productions() {
+  const history = useHistory();
+  const [errors, setErrors] = useState([]);
 
-class Productions extends Component {
-  async createProduction(production) {
-    const response = await createProduction(production);
+  async function createProduction(production) {
+    const response = await createItem(production, "production");
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: "Error creating Production",
-      });
+      console.log("Error creating Production");
     } else {
-      this.props.history.push(`/productions/${response.data.id}`);
-      window.location.reload();
+      history.push(`/productions/${response.data.id}`);
+      // window.location.reload();
     }
   }
 
-  async deleteProduction(productionId) {
-    const response = await deleteProduction(productionId);
+  async function deleteProduction(productionId) {
+    const response = await deleteItem(productionId, "production");
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: "Error deleting Production",
-      });
+      console.log("Error deleting Production");
     } else {
-      this.props.history.push("/productions");
-      window.location.reload();
+      history.push("/productions");
+      // window.location.reload();
     }
   }
-
-  handleCreateFormSubmit = (production) => {
-    this.createProduction(production);
-  };
-  handleDeleteClick = (productionId) => {
-    this.deleteProduction(productionId);
-  };
-
-  render() {
-    return (
-      <Row>
-        <Col md={12}>
-          <div id="productions">
-            <h2>
-              <Link to="/productions">Productions</Link>
-            </h2>
-            <hr />
-            <Switch>
-              <Route
-                path="/productions/new"
-                render={(props) => (
-                  <NewProduction
-                    {...props}
-                    onFormSubmit={this.handleCreateFormSubmit}
-                  />
-                )}
-              />
-              <Route
-                path={`/productions/:productionId/doubling_charts/`}
-                component={DoublingCharts}
-              />
-              <Route path={`/productions/:productionId/rehearsal_schedule`}>
-                <ProductionRehearsalSchedule />
-              </Route>
-              <Route
-                path={`/productions/:productionId`}
-                render={(props) => (
-                  <EditableProduction
-                    {...props}
-                    onDeleteClick={this.handleDeleteClick}
-                  />
-                )}
-              />
-              <Route path="/productions/" component={ProductionsList} />
-            </Switch>
-          </div>
-        </Col>
-      </Row>
-    );
+  function handleCreateFormSubmit(production) {
+    createProduction(production);
   }
+
+  function handleDeleteClick(productionId) {
+    deleteProduction(productionId);
+  }
+
+  return (
+    <>
+      <div>
+        <div id="productions">
+          <h2>
+            <Link to="/productions">Productions</Link>
+          </h2>
+          <hr />
+          <Switch>
+            <Route
+              path="/productions/new"
+              render={(props) => (
+                <NewProduction
+                  {...props}
+                  onFormSubmit={handleCreateFormSubmit}
+                />
+              )}
+            />
+
+            <Route
+              path={`/productions/:productionId/doubling_charts/`}
+              component={DoublingCharts}
+            />
+            <Route path={`/productions/:productionId/rehearsal_schedule`}>
+              <ProductionRehearsalSchedule />
+            </Route>
+            <Route
+              path={`/productions/:productionId`}
+              render={(props) => <ProductionWrapper {...props} />}
+            />
+            <Route
+              path="/productions/"
+              component={ProductionsList}
+              onDeleteClick={handleDeleteClick}
+            />
+          </Switch>
+        </div>
+      </div>
+    </>
+  );
 }
-
-export default Productions;

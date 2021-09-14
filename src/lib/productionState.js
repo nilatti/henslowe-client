@@ -23,6 +23,7 @@ const ProductionStateProvider = ProductionStateContext.Provider;
 
 function ProductionProvider({ children }) {
   const { productionId } = useParams();
+  console.log("prod provider", productionId);
   const [actors, setActors] = useState([]);
   const [auditioners, setAuditioners] = useState([]);
   const [actorsAndAuditioners, setActorsAndAuditioners] = useState([]);
@@ -35,94 +36,85 @@ function ProductionProvider({ children }) {
 
   //get production
   useEffect(async () => {
+    console.log("get production called", productionId);
     setLoading(true);
-    const response = await getItem(productionId, "production");
-    if (response.status >= 400) {
-      console.log("error getting jobs");
-    } else {
-      setProduction(response.data);
-    }
-    setLoading(false);
-  }, []);
-  //get users who are hired to work on this production
-  useEffect(async () => {
-    setLoading(true);
-    const response = await getJobs({ production_id: productionId });
-    if (response.status >= 400) {
-      console.log("error getting jobs");
-    } else {
-      const hiredJobs = _.filter(response.data, function (o) {
-        return o.specialization_id !== AUDITIONER_SPECIALIZATION_ID;
-      });
-      const hiredJobUsers = hiredJobs.map((job) => job.user);
-      let compactHiredUsers = _.compact(hiredJobUsers);
-      let uniqueHiredUsers = _.uniqBy(compactHiredUsers, function (o) {
-        return o.id;
-      });
-      let uniqueHiredUsersWithJobs = uniqueHiredUsers.map((user) => {
-        let userJobs = _.filter(hiredJobs, function (j) {
-          return j.user_id === user.id;
-        });
-        return { ...user, jobs: userJobs };
-      });
-      setHiredUsers(uniqueHiredUsersWithJobs);
-      const auditionedUsers = _.filter(response.data, function (o) {
-        return o.specialization_id == AUDITIONER_SPECIALIZATION_ID;
-      });
-      const auditionedJobUsers = auditionedUsers.map((job) => job.user);
-      let compactAuditioners = _.compact(auditionedJobUsers);
-      let uniqueAuditioners = _.uniqBy(compactAuditioners, function (o) {
-        return o.id;
-      });
-      setAuditioners(uniqueAuditioners);
-      setCastings(
-        _.filter(response.data, function (j) {
-          return (j.specialization_id =
-            ACTOR_SPECIALIZATION_ID && j.character_id != null);
-        })
-      );
-    }
-    setLoading(false);
-  }, []); //maybe get it to run on production load?
-
-  useEffect(async () => {
-    setLoading(true);
-    console.log("get play hook called");
-    if (production.play?.id) {
-      const response = await getItem(production.play?.id, "play");
+    if (productionId) {
+      console.log(productionId);
+      const response = await getItem(productionId, "production");
+      console.log(42, response);
       if (response.status >= 400) {
+        console.log("error getting production");
+      } else {
+        setProduction(response.data);
+        console.log(production);
+      }
+      if (production.play?.id) {
+        const response = await getItem(production.play?.id, "play");
+        if (response.status >= 400) {
+          console.log("error getting rehearsals");
+        } else {
+          let newProd = { ...production };
+          newProd.play = response.data;
+          setProduction(newProd);
+          setLoading(false);
+        }
+      }
+      const rehearsalsResponse = await getItemsWithParent(
+        "production",
+        productionId,
+        "rehearsal"
+      );
+      if (rehearsalsResponse.status >= 400) {
         console.log("error getting rehearsals");
       } else {
-        let newProd = { ...production };
-        newProd.play = response.data;
-        setProduction(newProd);
-        setLoading(false);
+        let sortedRehearsals = _.sortBy(rehearsalsResponse.data, "start_time");
+        let datedRehearsals = sortedRehearsals.map((rehearsal) => {
+          return {
+            ...rehearsal,
+            date: moment(rehearsal.start_time).format("YYYY-MM-DD"),
+          };
+        });
+
+        setRehearsals(datedRehearsals);
       }
-    }
-  }, [production.id]);
-
-  //get rehearsals for production //maybe get it to run on production load?
-  useEffect(async () => {
-    const response = await getItemsWithParent(
-      "production",
-      productionId,
-      "rehearsal"
-    );
-    if (response) {
+      const jobsResponse = await getJobs({ production_id: productionId });
+      if (jobsResponse.status >= 400) {
+        console.log("error getting jobs");
+      } else {
+        const hiredJobs = _.filter(jobsResponse.data, function (o) {
+          return o.specialization_id !== AUDITIONER_SPECIALIZATION_ID;
+        });
+        const hiredJobUsers = hiredJobs.map((job) => job.user);
+        let compactHiredUsers = _.compact(hiredJobUsers);
+        let uniqueHiredUsers = _.uniqBy(compactHiredUsers, function (o) {
+          return o.id;
+        });
+        let uniqueHiredUsersWithJobs = uniqueHiredUsers.map((user) => {
+          let userJobs = _.filter(hiredJobs, function (j) {
+            return j.user_id === user.id;
+          });
+          return { ...user, jobs: userJobs };
+        });
+        setHiredUsers(uniqueHiredUsersWithJobs);
+        const auditionedUsers = _.filter(jobsResponse.data, function (o) {
+          return o.specialization_id == AUDITIONER_SPECIALIZATION_ID;
+        });
+        const auditionedJobUsers = auditionedUsers.map((job) => job.user);
+        let compactAuditioners = _.compact(auditionedJobUsers);
+        let uniqueAuditioners = _.uniqBy(compactAuditioners, function (o) {
+          return o.id;
+        });
+        setAuditioners(uniqueAuditioners);
+        setCastings(
+          _.filter(jobsResponse.data, function (j) {
+            return (j.specialization_id =
+              ACTOR_SPECIALIZATION_ID && j.character_id != null);
+          })
+        );
+      }
       setLoading(false);
-    }
-    if (response.status >= 400) {
-      console.log("error getting rehearsals");
     } else {
-      let sortedRehearsals = _.sortBy(response.data, "start_time");
-      let datedRehearsals = sortedRehearsals.map((rehearsal) => {
-        return {
-          ...rehearsal,
-          date: moment(rehearsal.start_time).format("YYYY-MM-DD"),
-        };
-      });
-
-      setRehearsals(datedRehearsals);
+      console.log("no production id");
     }
   }, []);
 

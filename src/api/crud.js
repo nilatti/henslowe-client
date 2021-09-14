@@ -7,7 +7,6 @@ async function createItem(item, itemType) {
 }
 
 async function createItemWithParent(parentType, parentId, itemType, item) {
-  console.log(item);
   return API.post(`${parentType}s/${parentId}/${itemType}s`, item);
 }
 
