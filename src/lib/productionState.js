@@ -9,133 +9,118 @@ import {
 import { buildRehearsalSchedule } from "../api/productions.js";
 
 import {
+  createItem,
   createItemWithParent,
   deleteItem,
   getItem,
   getItemsWithParent,
   updateServerItem,
 } from "../api/crud";
-import { getJobs } from "../api/jobs";
 
 const ProductionStateContext = createContext();
 const ProductionStateProvider = ProductionStateContext.Provider;
-///tktktk add switch so that it only loads what it needs. eg. only loads all the rehearsals when it's mounted in that context, only loads whole play when mounted in doubling chart context etc.
 
 function ProductionProvider({ children }) {
   const { productionId } = useParams();
-  console.log("prod provider", productionId);
   const [actors, setActors] = useState([]);
   const [auditioners, setAuditioners] = useState([]);
   const [actorsAndAuditioners, setActorsAndAuditioners] = useState([]);
   const [castings, setCastings] = useState([]);
   const [hiredUsers, setHiredUsers] = useState([]);
+  const [jobs, setJobs] = useState([]);
+  const [jobsActing, setJobsActing] = useState([]);
+  const [jobsNotActing, setJobsNotActing] = useState([]);
+  const [jobsAuditioned, setJobsAuditioned] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notActors, setNotActors] = useState([]);
   const [production, setProduction] = useState({});
   const [rehearsals, setRehearsals] = useState([]);
 
-  //get production
   useEffect(async () => {
-    console.log("get production called", productionId);
     setLoading(true);
     if (productionId) {
-      console.log(productionId);
       const response = await getItem(productionId, "production");
-      console.log(42, response);
       if (response.status >= 400) {
         console.log("error getting production");
       } else {
         setProduction(response.data);
-        console.log(production);
       }
-      if (production.play?.id) {
-        const response = await getItem(production.play?.id, "play");
-        if (response.status >= 400) {
-          console.log("error getting rehearsals");
-        } else {
-          let newProd = { ...production };
-          newProd.play = response.data;
-          setProduction(newProd);
-          setLoading(false);
-        }
-      }
-      const rehearsalsResponse = await getItemsWithParent(
-        "production",
-        productionId,
-        "rehearsal"
-      );
-      if (rehearsalsResponse.status >= 400) {
-        console.log("error getting rehearsals");
-      } else {
-        let sortedRehearsals = _.sortBy(rehearsalsResponse.data, "start_time");
-        let datedRehearsals = sortedRehearsals.map((rehearsal) => {
-          return {
-            ...rehearsal,
-            date: moment(rehearsal.start_time).format("YYYY-MM-DD"),
-          };
-        });
-
-        setRehearsals(datedRehearsals);
-      }
-      const jobsResponse = await getJobs({ production_id: productionId });
-      if (jobsResponse.status >= 400) {
-        console.log("error getting jobs");
-      } else {
-        const hiredJobs = _.filter(jobsResponse.data, function (o) {
-          return o.specialization_id !== AUDITIONER_SPECIALIZATION_ID;
-        });
-        const hiredJobUsers = hiredJobs.map((job) => job.user);
-        let compactHiredUsers = _.compact(hiredJobUsers);
-        let uniqueHiredUsers = _.uniqBy(compactHiredUsers, function (o) {
-          return o.id;
-        });
-        let uniqueHiredUsersWithJobs = uniqueHiredUsers.map((user) => {
-          let userJobs = _.filter(hiredJobs, function (j) {
-            return j.user_id === user.id;
-          });
-          return { ...user, jobs: userJobs };
-        });
-        setHiredUsers(uniqueHiredUsersWithJobs);
-        const auditionedUsers = _.filter(jobsResponse.data, function (o) {
-          return o.specialization_id == AUDITIONER_SPECIALIZATION_ID;
-        });
-        const auditionedJobUsers = auditionedUsers.map((job) => job.user);
-        let compactAuditioners = _.compact(auditionedJobUsers);
-        let uniqueAuditioners = _.uniqBy(compactAuditioners, function (o) {
-          return o.id;
-        });
-        setAuditioners(uniqueAuditioners);
-        setCastings(
-          _.filter(jobsResponse.data, function (j) {
-            return (j.specialization_id =
-              ACTOR_SPECIALIZATION_ID && j.character_id != null);
-          })
-        );
-      }
-      setLoading(false);
-    } else {
-      console.log("no production id");
     }
+    setLoading(false);
   }, []);
 
+  //set rehearsals
   useEffect(() => {
-    setActors(
-      _.filter(hiredUsers, function (j) {
-        let specializationIds = j.jobs.map((job) => job.specialization_id);
-        if (specializationIds.length) {
-          return specializationIds.includes(ACTOR_SPECIALIZATION_ID);
-        }
-      })
+    let sortedRehearsals = _.sortBy(production.rehearsals, "start_time");
+    let datedRehearsals = sortedRehearsals.map((rehearsal) => {
+      return {
+        ...rehearsal,
+        date: moment(rehearsal.start_time).format("YYYY-MM-DD"),
+      };
+    });
+    setRehearsals(datedRehearsals);
+  }, [JSON.stringify(production.rehearsals)]);
+
+  // set hired jobs
+  useEffect(() => {
+    if (production && production.jobs) {
+      const hiredJobs = production.jobs.filter(
+        (job) => job.specialization_id != AUDITIONER_SPECIALIZATION_ID
+      );
+      setJobs(hiredJobs);
+      const auditionedJobs = production.jobs.filter(
+        (job) => job.specialization_id == AUDITIONER_SPECIALIZATION_ID
+      );
+      setJobsAuditioned(auditionedJobs);
+    }
+  }, [JSON.stringify(production.jobs)]);
+
+  useEffect(() => {
+    if (jobs) {
+      setJobsActing(
+        jobs.filter((job) => job.specialization_id == ACTOR_SPECIALIZATION_ID)
+      );
+      setJobsNotActing(
+        jobs.filter((job) => job.specialization_id != ACTOR_SPECIALIZATION_ID)
+      );
+      const hiredJobUsers = jobs.map(
+        (job) =>
+          job.user && job.specialization_id != AUDITIONER_SPECIALIZATION_ID
+      );
+      let compactHiredUsers = _.compact(hiredJobUsers);
+      let uniqueHiredUsers = _.uniqBy(compactHiredUsers, function (o) {
+        o.id;
+      });
+      let uniqueHiredUsersWithJobs = uniqueHiredUsers.map((user) => {
+        let userJobs = jobs.filter((job) => {
+          job.user_id === user.id;
+        });
+        return { ...user, jobs: userJobs };
+      });
+      setHiredUsers(uniqueHiredUsersWithJobs);
+    }
+  }, [JSON.stringify(jobs)]);
+
+  useEffect(() => {
+    const auditionedJobUsers = jobsAuditioned.map((job) => job.user);
+    let compactAuditioners = _.compact(auditionedJobUsers);
+    let uniqueAuditioners = _.uniqBy(compactAuditioners, function (o) {
+      return o.id;
+    });
+    setAuditioners(uniqueAuditioners);
+  }, [JSON.stringify(jobsAuditioned)]);
+
+  useEffect(() => {
+    setCastings(
+      jobsActing.filter(
+        (job) =>
+          job.specialization_id == ACTOR_SPECIALIZATION_ID &&
+          job.character_id != null
+      )
     );
-    setNotActors(
-      _.filter(hiredUsers, function (j) {
-        let specializationIds = j.jobs.map((job) => job.specialization_id);
-        if (specializationIds.length) {
-          return !specializationIds.includes(ACTOR_SPECIALIZATION_ID);
-        }
-      })
-    );
-  }, [hiredUsers]);
+    setActors(_.compact(jobsActing.map((job) => job.user)));
+    setNotActors(_.compact(jobsNotActing.map((job) => job.user)));
+  }, [JSON.stringify(jobsActing)]);
 
   useEffect(() => {
     let uniqActorsAndAuditioners = _.uniqBy(
@@ -145,7 +130,7 @@ function ProductionProvider({ children }) {
       }
     );
     setActorsAndAuditioners(uniqActorsAndAuditioners);
-  }, [actors, auditioners]);
+  }, [JSON.stringify(actors), JSON.stringify(auditioners)]);
 
   async function createCharacter(characterName) {
     let character = {
@@ -169,7 +154,6 @@ function ProductionProvider({ children }) {
   async function createCasting(characterName, casting) {
     let character = await createCharacter(characterName);
     let castingWithCharacter = { ...casting, character_id: character.id };
-    console.log(castingWithCharacter);
     const response = await createItemWithParent(
       "production",
       productionId,
@@ -194,6 +178,17 @@ function ProductionProvider({ children }) {
       };
       let newCastings = castings.concat(tempCasting);
       setCastings(newCastings);
+    }
+  }
+
+  async function createJob(job) {
+    const response = await createItem(job, "job");
+    if (response.status >= 400) {
+      console.log("error creating job");
+    } else {
+      let tempProduction = { ...production };
+      tempProduction.jobs = [...production.jobs, response.data];
+      setProduction(tempProduction);
     }
   }
 
@@ -267,6 +262,35 @@ function ProductionProvider({ children }) {
     }
   }
 
+  async function deleteJob(jobId) {
+    const response = await deleteItem(jobId, "job");
+    if (response.status >= 400) {
+      console.log("error deleting job");
+    } else {
+      let tempProduction = { ...production };
+      tempProduction.jobs = production.jobs.filter((job) => job.id != jobId);
+      setProduction(tempProduction);
+    }
+  }
+
+  async function updateJob(updatedJob) {
+    const response = await updateServerItem(updatedJob, "job");
+    if (response.status >= 400) {
+      this.setState({
+        errorStatus: "Error updating job",
+      });
+    } else {
+      let newJobs = jobs.map((job) => {
+        if (job.id === updatedJob.id) {
+          return response.data;
+        } else {
+          return job;
+        }
+      });
+      setJobs(newJobs);
+    }
+  }
+
   async function updateRehearsal(updatedRehearsal) {
     delete updatedRehearsal.acts;
     delete updatedRehearsal.french_scenes;
@@ -301,9 +325,15 @@ function ProductionProvider({ children }) {
         auditioners,
         castings,
         createCasting,
+        createJob,
         createRehearsal,
         createRehearsalSchedulePattern,
+        deleteJob,
         deleteRehearsal,
+        jobs,
+        jobsActing,
+        jobsAuditioned,
+        jobsNotActing,
         loading,
         hiredUsers,
         notActors,
@@ -312,6 +342,7 @@ function ProductionProvider({ children }) {
         rehearsals,
         setHiredUsers,
         setCastings,
+        updateJob,
         updateRehearsal,
       }}
     >

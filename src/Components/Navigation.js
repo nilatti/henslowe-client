@@ -14,7 +14,7 @@ export default function Navigation() {
       <Navbar collapseOnSelect fixed="top" expand="lg">
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav>
+          <Nav className="customNav">
             <Nav.Item>
               <Nav.Link href="/" eventKey="1">
                 Dashboard

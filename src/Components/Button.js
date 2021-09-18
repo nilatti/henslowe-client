@@ -7,6 +7,7 @@ export const Button = styled.button`
   border-style: solid;
   color: ${(props) => props.colorProp || "var(--color-text-light)"};
   cursor: pointer;
+  display: ${(props) => props.display || "inline-block"};
   margin: ${(props) => props.margin || "5px"};
   max-width: ${(props) => props.maxWidth || "200px"};
 

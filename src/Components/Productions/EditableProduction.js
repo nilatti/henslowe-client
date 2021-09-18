@@ -7,14 +7,6 @@ import { useProductionState } from "../../lib/productionState";
 export default function EditableProduction({ onDeleteClick }) {
   const { loading, production } = useProductionState();
 
-  async function deleteJob(jobId) {
-    const response = await deleteItem(jobId, "job");
-    if (response.status >= 400) {
-      console.log("error deleting job");
-    } else {
-    }
-  }
-
   async function updateServerProduction(production) {
     const response = await updateServerItem(production, "production");
     if (response.status >= 400) {
@@ -28,7 +20,6 @@ export default function EditableProduction({ onDeleteClick }) {
     updateServerProduction(production);
     setEditFormOpen(false);
   }
-  console.log(loading);
   if (loading && !production) {
     return (
       <Modal>

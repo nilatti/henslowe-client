@@ -12,6 +12,7 @@ export const Form = styled.form`
   }
   label {
     flex-basis: 25%;
+    text-align: center;
   }
   input {
     height: calc(1.5em + 0.75rem + 2px);

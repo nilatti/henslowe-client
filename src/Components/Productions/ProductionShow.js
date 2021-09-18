@@ -1,39 +1,37 @@
-import PropTypes from "prop-types";
 import styled from "styled-components";
-import { Tab, Tabs } from "react-bootstrap";
 import { useState } from "react";
-import { Button } from "../Button";
-import { Form, FormGroupInline } from "../Form";
-import { DefaultTable } from "../Styled";
-
-import { useForm } from "../../hooks/environmentUtils";
-import { formatDateForRails } from "../../utils/dateTimeUtils";
-import { upcomingRehearsalsList } from "../../utils/rehearsalUtils";
-
+import { Tab, Tabs } from "react-bootstrap";
 import { BrowserRouter as Router, Link, useRouteMatch } from "react-router-dom";
-import {
-  calculateLineCount,
-  calculateRunTime,
-} from "../../utils/playScriptUtils";
-
-import { getProductionCopyComplete } from "../../api/plays";
-
-import { useInterval } from "../../hooks/environmentUtils";
-import { StartEndDatePair } from "../../utils/formUtils";
-
+import { Button } from "../Button";
+import { Spinner } from "../Loaders";
+import Modal from "../Modal";
 import ActorsList from "./Actors/ActorsList";
-import AuditionersList from "../Jobs/AuditionersList";
-import CastList from "../Jobs/CastList";
-import JobsListExcludingActorsAndAuditioners from "../Jobs/JobsListExcludingActorsAndAuditioners";
 import StageExitsList from "./SetDesign/StageExitsList";
+import { Form, FormGroupInline } from "../Form";
 import { useProductionAuthState } from "../Contexts";
+import AuditionersList from "../Jobs/AuditionersList";
+import JobsList from "../Jobs/JobsList";
+import CastList from "../Jobs/CastList";
+import { DefaultTable } from "../Styled";
+import { getProductionCopyComplete } from "../../api/plays";
+import { useForm, useInterval } from "../../hooks/environmentUtils";
 import { useProductionState } from "../../lib/productionState";
+import { formatDateForRails } from "../../utils/dateTimeUtils";
+import { StartEndDatePair } from "../../utils/formUtils";
+import { upcomingRehearsalsList } from "../../utils/rehearsalUtils";
 
 const ProductionProfile = styled.div`
   text-align: center;
 `;
 export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
-  const { loading, production } = useProductionState();
+  const {
+    createJob,
+    deleteJob,
+    jobsNotActing,
+    loading,
+    production,
+    rehearsals,
+  } = useProductionState();
   const { role } = useProductionAuthState();
   const { url } = useRouteMatch();
   const { inputs, handleChange } = useForm({
@@ -43,11 +41,9 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
   });
   const [dateFormOpen, setDateFormOpen] = useState(false);
   const [linesPerMinuteFormOpen, setLinesPerMinuteFormOpen] = useState(false);
-  const [productionCopyComplete, setProductionCopyComplete] = useState(
-    production.play?.production_copy_complete
-  );
+  const [productionCopyComplete, setProductionCopyComplete] = useState(false);
   const [pollingInterval, setPollingInterval] = useState(
-    production.play?.production_copy_complete ? null : 1000
+    production?.play?.production_copy_complete ? null : 1000
   );
 
   const linesTotal =
@@ -94,9 +90,13 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
     }
   }
   if (!production || loading) {
-    return <div>loading!</div>;
+    return (
+      <Modal>
+        <h1>Loading production</h1>
+        <Spinner />
+      </Modal>
+    );
   }
-
   return (
     <>
       <div>
@@ -185,7 +185,7 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
         </div>
       )}
       <hr />
-      {production.rehearsals && (
+      {!!rehearsals.length && (
         <div>
           <h3>Upcoming Rehearsals</h3>
           <div>
@@ -200,7 +200,7 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
                   <th>Who is called</th>
                 </tr>
               </thead>
-              <tbody>{upcomingRehearsalsList(production.rehearsals)}</tbody>
+              <tbody>{upcomingRehearsalsList(rehearsals)}</tbody>
             </DefaultTable>
             <p>
               <Link to={`${url}/rehearsal_schedule`}>
@@ -213,37 +213,47 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
       <hr />
       <div>
         <h2>Production Jobs</h2>
-        {production.jobs && (
-          <JobsListExcludingActorsAndAuditioners
+        {jobsNotActing && (
+          <JobsList
+            handleDeleteJob={deleteJob}
+            jobs={jobsNotActing}
+            onFormSubmit={createJob}
             production={production}
             role={role}
           />
         )}
       </div>
       <hr />
-      {/* <div>
+      <div>
         <h2>Auditioners</h2>
         <div>
           <b>You have to add auditioners before you can cast the show</b>
         </div>
-        <AuditionersList production={production} />
+        <AuditionersList
+          production={production}
+          role={role}
+          handleDeleteJob={deleteJob}
+          onFormSubmit={createJob}
+        />
       </div>
       <hr />
 
       <div>
-        <CastList production={production} />
+        <CastList />
         <Link to={`${url}/doubling_charts/`}>
           <Button variant="info">Show Doubling Charts</Button>
         </Link>
       </div>
 
       <hr />
+
       <div>
         <div>
           <ActorsList production={production} />
         </div>
       </div>
       <hr />
+      {/*
       <div>
         <h2>Set Design</h2>
       </div>

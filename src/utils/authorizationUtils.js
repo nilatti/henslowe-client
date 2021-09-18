@@ -193,9 +193,7 @@ export async function getUserRoleForProduction(user, productionId) {
   }
 
   let production = {};
-  console.log("inside auth", productionId);
   let productionResponse = await getItem(productionId, "production");
-  console.log(198);
   if (productionResponse.status >= 400) {
     console.log("error getting production");
   } else {

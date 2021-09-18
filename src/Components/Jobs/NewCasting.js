@@ -6,8 +6,8 @@ import { ACTOR_SPECIALIZATION_ID } from "../../utils/hardcodedConstants";
 import { buildUserName } from "../../utils/actorUtils";
 import { useProductionState } from "../../lib/productionState";
 
-export default function NewCasting({ production, users }) {
-  const { createCasting } = useProductionState();
+export default function NewCasting({ users }) {
+  const { createCasting, production } = useProductionState();
   const [formOpen, setFormOpen] = useState(false);
   const [selectedCharacterName, setSelectedCharacterName] = useState([]);
   const [selectedUser, setSelectedUser] = useState([]);
