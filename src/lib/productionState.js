@@ -16,6 +16,7 @@ import {
   getItemsWithParent,
   updateServerItem,
 } from "../api/crud";
+import { unique } from "jquery";
 
 const ProductionStateContext = createContext();
 const ProductionStateProvider = ProductionStateContext.Provider;
@@ -83,14 +84,13 @@ function ProductionProvider({ children }) {
       setJobsNotActing(
         jobs.filter((job) => job.specialization_id != ACTOR_SPECIALIZATION_ID)
       );
-      const hiredJobUsers = jobs.map(
+      const tempHiredJobs = jobs.filter(
         (job) =>
-          job.user && job.specialization_id != AUDITIONER_SPECIALIZATION_ID
+          job.user && job.specialization_id !== AUDITIONER_SPECIALIZATION_ID
       );
-      let compactHiredUsers = _.compact(hiredJobUsers);
-      let uniqueHiredUsers = _.uniqBy(compactHiredUsers, function (o) {
-        o.id;
-      });
+      const tempHiredJobUsers = tempHiredJobs.map((job) => job.user);
+      let compactHiredUsers = _.compact(tempHiredJobUsers);
+      let uniqueHiredUsers = _.uniqBy(compactHiredUsers, "id");
       let uniqueHiredUsersWithJobs = uniqueHiredUsers.map((user) => {
         let userJobs = jobs.filter((job) => {
           job.user_id === user.id;
@@ -118,8 +118,12 @@ function ProductionProvider({ children }) {
           job.character_id != null
       )
     );
-    setActors(_.compact(jobsActing.map((job) => job.user)));
-    setNotActors(_.compact(jobsNotActing.map((job) => job.user)));
+    let compactActing = _.compact(jobsActing.map((job) => job.user));
+    let uniqActing = _.uniqBy(compactActing, "id");
+    setActors(uniqActing);
+    let compactNotActing = _.compact(jobsNotActing.map((job) => job.user));
+    let uniqNotActing = _.uniqBy(compactNotActing, "id");
+    setNotActors(uniqNotActing);
   }, [JSON.stringify(jobsActing)]);
 
   useEffect(() => {

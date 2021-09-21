@@ -4,6 +4,7 @@ import DoublingCharts from "./DoublingCharts";
 import ProductionWrapper from "./ProductionWrapper";
 import ProductionsList from "./ProductionsList";
 import ProductionRehearsalSchedule from "./RehearsalSchedule/ProductionRehearsalSchedule";
+import SetDesignDashboard from "./SetDesign/SetDesignDashboard";
 
 import NewProduction from "./NewProduction";
 import { createItem, deleteItem } from "../../api/crud";
@@ -63,6 +64,9 @@ export default function Productions() {
             />
             <Route path={`/productions/:productionId/rehearsal_schedule`}>
               <ProductionRehearsalSchedule />
+            </Route>
+            <Route path={`/productions/:productionId/set`}>
+              <SetDesignDashboard />
             </Route>
             <Route
               path={`/productions/:productionId`}

@@ -249,17 +249,21 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
 
       <div>
         <div>
-          <ActorsList production={production} />
+          <ActorsList />
         </div>
       </div>
       <hr />
-      {/*
+
       <div>
-        <h2>Set Design</h2>
+        <h2>Design & Tech</h2>
+        <ul>
+          <Link to={`/productions/${production.id}/set`}>
+            Set Design Dashboard
+          </Link>
+          <li>TK Costume Design Dashboard</li>
+          <li>TK props dashboard</li>
+        </ul>
       </div>
-      <div>
-        <StageExitsList productionId={production.id} />
-      </div> */}
     </>
   );
 }

@@ -76,7 +76,7 @@ export default function CastList({}) {
   }
   return (
     <CastListStyle>
-      <h2>Casting by Character</h2>
+      <h2>Cast</h2>
       <div>{castingsItems}</div>
       <NewCasting
         onFormClose={toggleNewCastingForm}

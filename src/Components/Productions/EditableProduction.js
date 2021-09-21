@@ -1,4 +1,4 @@
-import { deleteItem, getItem, updateServerItem } from "../../api/crud";
+import { updateServerItem } from "../../api/crud";
 import ProductionShow from "./ProductionShow";
 import { Spinner } from "../Loaders";
 import Modal from "../Modal";
