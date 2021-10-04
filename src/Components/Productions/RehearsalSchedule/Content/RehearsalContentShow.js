@@ -3,6 +3,7 @@ import { forwardRef, useEffect, useRef, useState } from "react";
 import uuid from "react-uuid";
 import styled from "styled-components";
 import { EditIcons } from "../../../Styled";
+import { rehearsalContent } from "../../../../utils/rehearsalUtils";
 
 const ContentShow = styled.div`
   display: flex;
@@ -18,17 +19,11 @@ export default function RehearsalContentShow({
 }) {
   const [content, setContent] = useState([]);
   useEffect(() => {
-    let content = [];
-    if (acts && acts.length) {
-      acts.map((item) => content.push(item.heading));
-    }
-    if (scenes && scenes.length) {
-      scenes.map((item) => content.push(item.pretty_name));
-    }
-    if (frenchScenes && frenchScenes.length) {
-      frenchScenes.map((item) => content.push(item.pretty_name));
-    }
-    content = content.sort();
+    let content = rehearsalContent({
+      acts: acts,
+      frenchScenes: frenchScenes,
+      scenes: scenes,
+    });
     setContent(content.map((item) => <li key={uuid()}>{item}</li>));
   }, [acts, scenes, frenchScenes]);
 

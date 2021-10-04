@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import CastingContainer from "./CastingContainer";
+import CastingContainer from "../Jobs/CastingContainer";
 import FakeActors from "../Productions/FakeActors";
 
 import SelectPlay from "./SelectPlay";
@@ -17,9 +17,17 @@ export default function Casting({}) {
     setFakeActors,
     play,
     setPlay,
+    updateActorJobs,
+    updateCastings,
   } = usePlayState();
+
   function clearPlay() {
     setPlay(null);
+  }
+
+  function onCastingSubmit(job, actor) {
+    updateActorJobs(actor, job);
+    updateCastings(job, actor);
   }
 
   if (!play?.id) {
@@ -41,7 +49,12 @@ export default function Casting({}) {
 
   let castingsItems = castings.map((casting) => (
     <li key={casting.character.id}>
-      <CastingContainer casting={casting} onDeleteClick={() => console.log()} />
+      <CastingContainer
+        availableActors={fakeActorsArray}
+        casting={casting}
+        onDeleteClick={() => console.log()}
+        onFormSubmit={onCastingSubmit}
+      />
     </li>
   ));
   return (

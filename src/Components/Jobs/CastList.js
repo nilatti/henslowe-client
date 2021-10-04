@@ -16,9 +16,16 @@ const CastListStyle = styled.div`
   flex-flow: column nowrap;
 `;
 
-export default function CastList({ production }) {
-  const { actorsAndAuditioners, castings, loading, setCastings } =
-    useProductionState();
+export default function CastList({}) {
+  const {
+    actorsAndAuditioners,
+    castings,
+    createCasting,
+    loading,
+    productionId,
+    setCastings,
+    updateJob,
+  } = useProductionState();
   const [newCastingFormOpen, setNewCastingFormOpen] = useState(false);
 
   async function deleteCasting(castingId) {
@@ -31,8 +38,19 @@ export default function CastList({ production }) {
     }
   }
 
-  function handleNewCastingFormSubmit(casting) {
-    console.log(casting);
+  function handleNewCastingFormSubmit(characterName, casting) {
+    createCasting(characterName, casting);
+  }
+
+  function onCastingSubmit(job, actor) {
+    let updatedJob = { ...job };
+    updatedJob.user_id = actor.id;
+    delete updatedJob.character;
+    delete updatedJob.created_at;
+    delete updatedJob.updated_at;
+    delete updatedJob.specialization;
+    delete updatedJob.theater;
+    updateJob(updatedJob);
   }
 
   function toggleNewCastingForm() {
@@ -43,6 +61,7 @@ export default function CastList({ production }) {
       <CastingContainer
         casting={casting}
         onDeleteClick={deleteCasting}
+        onFormSubmit={onCastingSubmit}
         availableActors={actorsAndAuditioners}
       />
     </li>
@@ -57,12 +76,11 @@ export default function CastList({ production }) {
   }
   return (
     <CastListStyle>
-      <h2>Casting by Character</h2>
+      <h2>Cast</h2>
       <div>{castingsItems}</div>
       <NewCasting
         onFormClose={toggleNewCastingForm}
         onFormSubmit={handleNewCastingFormSubmit}
-        production={production}
         users={actorsAndAuditioners}
       />
     </CastListStyle>

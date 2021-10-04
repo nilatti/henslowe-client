@@ -19,6 +19,9 @@ async function getProduction(productionId) {
   return API.request(`productions/${productionId}`);
 }
 
+async function getProductionSkeleton(productionId) {
+  return API.request(`productions/${productionId}/get_production_skeleton`);
+}
 async function getProductionWithPlayText(productionId) {
   return API.request(
     `productions/${productionId}/get_production_with_play_text`
@@ -55,6 +58,7 @@ export {
   getProductionNames,
   getProductions,
   getProductionsForTheater,
+  getProductionSkeleton,
   getProductionWithPlayText,
   updateServerProduction,
 };

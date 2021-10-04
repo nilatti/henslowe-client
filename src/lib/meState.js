@@ -1,27 +1,29 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import { buildUserName } from "../utils/actorUtils";
 const MeStateContext = createContext();
 const MeStateProvider = MeStateContext.Provider;
 
 function MeProvider({ children }) {
-  const [me, setMe] = useState({});
-  const [meName, setMeName] = useState("");
+  const history = useHistory();
+  const [me, setMe] = useState(JSON.parse(localStorage.getItem("user")) || {});
   const [signingIn, setSigningIn] = useState(false);
 
   useEffect(() => {
-    if (!me.name) {
+    if (!me.email && localStorage.getItem("user")) {
       setMe(JSON.parse(localStorage.getItem("user")));
+    } else if (new Date(localStorage.getItem("token_expire")) > new Date()) {
+      setMe(null);
+      localStorage.clear();
     }
   }, []);
 
   useEffect(() => {
     if (me) {
-      setMeName(buildUserName(me));
-      localStorage.setItem("userId", me.id);
-    } else {
-      setMeName("");
+      setMe({ ...me, name: buildUserName(me) });
+      localStorage.setItem("user", JSON.stringify(me));
     }
-  }, []);
+  }, [me?.first_name, me?.preferred_name]);
 
   function clearMe() {
     localStorage.clear();
@@ -33,7 +35,6 @@ function MeProvider({ children }) {
       value={{
         clearMe,
         me,
-        meName,
         signingIn,
         setMe,
         setSigningIn,

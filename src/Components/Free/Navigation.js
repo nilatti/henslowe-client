@@ -1,4 +1,4 @@
-// import LoginHooks from "../LoginHooks";
+import LoginHooks from "../LoginHooks";
 import styled from "styled-components";
 import { Nav, Navbar, Container } from "react-bootstrap";
 import PaypalButton from "../PaypalButton";
@@ -31,7 +31,7 @@ export default function Navigation() {
               <Nav.Item>
                 <Nav.Link href="/part-scripts">Generate part scripts</Nav.Link>
               </Nav.Item>
-              {/* <LoginHooks /> */}
+              <LoginHooks />
               <PaypalButton />
             </Nav>
           </Container>

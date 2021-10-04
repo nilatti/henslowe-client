@@ -55,19 +55,19 @@ export default function RehearsalPeopleForm({
 
   function markUnavailable(usersArr) {
     return usersArr.map((user) => {
-      if (user.conflicts.length === 0) {
+      if (user?.conflicts?.length === 0) {
         return { ...user, isAvailable: true };
       } else {
-        let conflicts_with_this_rehearsal = 0;
-        user.conflicts.map((conflict) => {
+        let conflictsWithThisRehearsal = 0;
+        user?.conflicts?.map((conflict) => {
           if (
             conflict.start_time <= rehearsal.end_time &&
             rehearsal.start_time <= conflict.end_time
           ) {
-            conflicts_with_this_rehearsal += 1;
+            conflictsWithThisRehearsal += 1;
           }
         });
-        if (conflicts_with_this_rehearsal <= 0) {
+        if (conflictsWithThisRehearsal <= 0) {
           return { ...user, isAvailable: false };
         } else {
           return { ...user, isAvailable: true };

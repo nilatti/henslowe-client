@@ -18,14 +18,12 @@ export default function RehearsalForm({
   onFormSubmit,
   rehearsal,
 }) {
-  const { inputs, handleChange } = useForm(
-    rehearsal || {
-      end_time: new Date(),
-      notes: "",
-      start_time: new Date(),
-      title: "",
-    }
-  );
+  const { inputs, handleChange } = useForm({
+    end_time: rehearsal.end_time || new Date(),
+    notes: rehearsal.notes || "",
+    start_time: rehearsal.start_time || new Date(),
+    title: rehearsal.title || "",
+  });
 
   const { productionId } = useProductionState();
 

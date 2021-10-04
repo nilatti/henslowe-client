@@ -1,15 +1,40 @@
 import { createContext, useContext, useEffect, useState } from "react";
 const roles = "";
 export const AppAuthContext = createContext(roles);
-export const ProductionAuthContext = createContext(roles);
 
 import { useMeState } from "../lib/meState";
 import {
   getOverlap,
   getSuperAdminRole,
+  getUserRoleForProduction,
   getUserRoleForSpace,
   getUserRoleForTheater,
 } from "../utils/authorizationUtils";
+
+//production auth provider
+const ProductionAuthContext = createContext();
+const ProductionAuthStateProvider = ProductionAuthContext.Provider;
+
+function ProductionAuthProvider({ productionId, children }) {
+  const { me } = useMeState();
+  const [role, setRole] = useState("visitor");
+  useEffect(async () => {
+    let userRole = await getUserRoleForProduction(me, productionId);
+    setRole(userRole);
+  }, []);
+  return (
+    <ProductionAuthStateProvider value={{ role }}>
+      {children}
+    </ProductionAuthStateProvider>
+  );
+}
+
+function useProductionAuthState() {
+  const all = useContext(ProductionAuthContext);
+  return all;
+}
+
+export { ProductionAuthProvider, useProductionAuthState };
 
 //space auth provider
 const SpaceAuthContext = createContext();
@@ -64,9 +89,7 @@ function TheaterAuthProvider({ theaterId, children }) {
   );
 }
 
-// make a custom hook for accessing the cart local state
 function useTheaterAuthState() {
-  // We use a consumer here to access the local state
   const all = useContext(TheaterAuthContext);
   return all;
 }

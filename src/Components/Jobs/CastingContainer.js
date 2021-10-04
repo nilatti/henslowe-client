@@ -1,25 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-
-import { Typeahead } from "react-bootstrap-typeahead";
-import { Form, FormGroupInline } from "../Form";
-import { updateServerItem } from "../../api/crud";
-import CastingForm from "../Jobs/CastingForm";
-import CastingShow from "../Jobs/CastingShow";
-
+import CastingForm from "./CastingForm";
+import CastingShow from "./CastingShow";
 import { buildUserName } from "../../utils/actorUtils";
-
-import { calculateLineCount } from "../../utils/playScriptUtils";
-import { createSuper } from "typescript";
-
-// import { ProductionAuthContext } from "../Contexts";
-
 export default function CastingContainer({
   availableActors,
   casting,
   onDeleteClick,
+  onFormSubmit,
 }) {
-  const [formOpen, setFormOpen] = useState(false);
+  const [editFormOpen, setEditFormOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(
     casting.user
       ? [
@@ -30,32 +19,38 @@ export default function CastingContainer({
         ]
       : []
   );
-  let lineCount = casting.character?.new_line_count;
 
+  let lineCount =
+    casting.character.new_line_count || casting.character.old_line_count;
+  useEffect(() => {
+    setSelectedUser(
+      casting.user
+        ? [
+            {
+              id: casting.user?.id,
+              name: buildUserName(casting.user),
+            },
+          ]
+        : []
+    );
+  }, [JSON.stringify(casting.user)]);
   function handleChangeUser(e) {
     if (e.length > 0) {
-      setFormOpen(false);
+      toggleForm();
       setSelectedUser([e[0]]);
-
-      updateJobOnServer(e[0].id);
-    }
-  }
-  function toggleForm() {
-    setFormOpen(!formOpen);
-  }
-  async function updateJobOnServer(actorId) {
-    let newCasting = { ...casting, user_id: actorId };
-    const response = await updateServerItem(newCasting, "job");
-
-    if (response >= 400) {
-      console.log("Error writing casting to server");
     } else {
+      setSelectedUser([]);
     }
+    onFormSubmit(casting, e[0]);
+  }
+
+  function toggleForm() {
+    setEditFormOpen(!editFormOpen);
   }
 
   return (
     <div key={casting.character.id}>
-      {formOpen ? (
+      {editFormOpen ? (
         <CastingForm
           availableActors={availableActors}
           casting={casting}
@@ -75,58 +70,3 @@ export default function CastingContainer({
     </div>
   );
 }
-
-//     this.formToggle();
-//   }
-
-//   handleFormClose = () => {
-//     this.setState({
-//       newCastingFormOpen: false,
-//     });
-//   };
-
-//   onDeleteClick = (castingId) => {
-//     this.deleteCasting(castingId);
-//   };
-
-//   render() {
-//     let lineCount = this.props.casting.character?.new_line_count;
-//     let selectedUser = this.state.selectedUser;
-//     return (
-//       <div>
-//         {this.state.editOpen ? (
-//           <Form>
-//             <Form.Group>
-//               <Form.Label>{this.props.casting.character.name}</Form.Label>
-//               <Typeahead
-//                 id="user"
-//                 options={this.props.availableActors}
-//                 onBlur={() => {
-//                   this.formToggle();
-//                 }}
-//                 onChange={(selected) => {
-//                   this.handleChangeUser(selected);
-//                 }}
-//                 selected={this.state.selectedUser}
-//                 placeholder="Choose actor"
-//               />
-//               <Form.Control.Feedback type="invalid">
-//                 User is required
-//               </Form.Control.Feedback>
-//             </Form.Group>
-//           </Form>
-//         ) : (
-//           <div>
-//             <span>{this.props.casting.character?.name}</span>
-
-//             {lineCount > 0 ? <em> ({lineCount}) </em> : <span> </span>}
-//             <ProductionAuthContext.Consumer>
-//               {(value) => {
-//                 if (value === "admin") {
-//                   return (
-//                     <span>
-//                       {selectedUser.length > 0 ? (
-//                         <span onClick={() => this.handleEditClick()}>
-//                           {selectedUser[0].name}
-//                         </span>
-//
