@@ -116,6 +116,7 @@ export default function RehearsalContentForm({
     if (playContent?.length > 0) {
       let newRehearsalContent =
         playContent.filter((item) => item.isScheduled) || [];
+      console.log("119", newRehearsalContent);
       let uniqUserIds = processUsers(newRehearsalContent);
       let singularTextUnit = "";
       if (rehearsal.text_unit) {

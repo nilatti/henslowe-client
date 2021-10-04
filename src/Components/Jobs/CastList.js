@@ -43,14 +43,16 @@ export default function CastList({}) {
   }
 
   function onCastingSubmit(job, actor) {
-    let updatedJob = { ...job };
-    updatedJob.user_id = actor.id;
-    delete updatedJob.character;
-    delete updatedJob.created_at;
-    delete updatedJob.updated_at;
-    delete updatedJob.specialization;
-    delete updatedJob.theater;
-    updateJob(updatedJob);
+    if (actor) {
+      let updatedJob = { ...job };
+      updatedJob.user_id = actor.id;
+      delete updatedJob.character;
+      delete updatedJob.created_at;
+      delete updatedJob.updated_at;
+      delete updatedJob.specialization;
+      delete updatedJob.theater;
+      updateJob(updatedJob);
+    }
   }
 
   function toggleNewCastingForm() {
