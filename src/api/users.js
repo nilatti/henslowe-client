@@ -7,7 +7,6 @@ async function buildUserConflictPattern(userId, conflictSchedulePattern) {
 }
 
 async function createUser(user) {
-  console.log("api call", user);
   return API.post("users", {
     user,
   });
@@ -33,23 +32,6 @@ async function getUsers() {
   return API.request(`users`);
 }
 
-async function requestPasswordReset(email) {
-  let user = { user: { email: email } };
-  return API.post("password", user).catch((error) => {
-    return error.response;
-  });
-}
-
-async function resetPassword(token, password, passwordConfirmation) {
-  return API.put("password", {
-    user: {
-      reset_password_token: token,
-      password: password,
-      password_confirmation: passwordConfirmation,
-    },
-  });
-}
-
 async function updateServerUser(user) {
   return API.put(`users/${user.id}`, {
     id: user.id,
@@ -64,7 +46,5 @@ export {
   loginUser,
   getUser,
   getUsers,
-  requestPasswordReset,
-  resetPassword,
   updateServerUser,
 };

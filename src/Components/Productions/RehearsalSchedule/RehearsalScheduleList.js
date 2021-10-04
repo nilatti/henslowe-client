@@ -1,6 +1,7 @@
 import _ from "lodash";
 import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import EditableRehearsal from "./EditableRehearsal";
@@ -151,7 +152,14 @@ export default function RehearsalScheduleList() {
   return (
     <RehearsalScheduleListStyles>
       <h2>
-        Rehearsal Schedule{" "}
+        Rehearsal Schedule for{" "}
+        <Link to={`/productions/${production.id}`}>
+          {production.play.title}
+        </Link>{" "}
+        at{" "}
+        <Link to={`/theaters/${production.theater.id}`}>
+          {production.theater.name}
+        </Link>
         <span className="right floated edit icon" onClick={toggleAddRehearsal}>
           <i className="fas fa-pencil-alt"></i>
         </span>

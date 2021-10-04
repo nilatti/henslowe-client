@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, Route, Switch, useHistory } from "react-router-dom";
 import { createItem, deleteItem, updateServerItem } from "../../api/crud";
 import { getItems } from "../../api/crud";
+import { useMeState } from "../../lib/meState";
+import { useMountedState } from "../../lib/mountedState";
 import UsersList from "./UsersList";
 import EditableUser from "./EditableUser";
 import NewUser from "./NewUser";
@@ -11,29 +13,41 @@ export default function Users() {
   const history = useHistory();
   const [users, setUsers] = useState([]);
   const [errors, setErrors] = useState([]);
+  const isMounted = useMountedState();
+  const { me } = useMeState();
 
   useEffect(async () => {
     const response = await getItems("user");
     if (response.status >= 400) {
       setErrors((errors) => [...errors, "Error fetching users"]);
     } else {
-      setUsers(response.data.filter((user) => !user.fake));
+      if (isMounted()) {
+        setUsers(response.data.filter((user) => !user.fake));
+      }
     }
   }, []);
 
+  function closeForm() {
+    history.push("/");
+  }
+
   async function handleCreateFormSubmit(user) {
-    const response = await createItem(user, "user");
-    if (response.status >= 400) {
-      console.log("error fetching user");
+    if (me && me.email) {
+      handleEditFormSubmit(user);
     } else {
-      if (registerNewUser) {
-        let userId = new String(response.data.id);
-        localStorage.setItem("userId", userId);
-        setMe(JSON.stringify(response.data));
-        localStorage.setItem("user", JSON.stringify(response.data));
-        history.push(`/dashboard/`);
+      const response = await createItem(user, "user");
+      if (response.status >= 400) {
+        console.log("error fetching user");
       } else {
-        history.push(`/users/`);
+        if (registerNewUser) {
+          let userId = new String(response.data.id);
+          localStorage.setItem("userId", userId);
+          setMe(JSON.stringify(response.data));
+          localStorage.setItem("user", JSON.stringify(response.data));
+          history.push(`/dashboard/`);
+        } else {
+          history.push(`/users/`);
+        }
       }
     }
   }
@@ -77,7 +91,11 @@ export default function Users() {
         <Route
           path="/users/new"
           render={(props) => (
-            <NewUser {...props} onFormSubmit={handleCreateFormSubmit} />
+            <NewUser
+              {...props}
+              onFormSubmit={handleCreateFormSubmit}
+              onFormClose={closeForm}
+            />
           )}
         />
         <Route

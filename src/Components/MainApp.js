@@ -4,5 +4,5 @@ import { useMeState } from "../lib/meState";
 
 export default function MainApp() {
   const { me } = useMeState();
-  return <>{me ? <PrivatePage /> : <PublicPage />}</>;
+  return <>{me?.email ? <PrivatePage /> : <PublicPage />}</>;
 }

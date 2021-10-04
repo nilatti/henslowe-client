@@ -3,39 +3,32 @@ import PropTypes from "prop-types";
 import { Button } from "../Button";
 import { Form, FormGroupInline } from "../Form";
 import { useForm } from "../../hooks/environmentUtils";
+import { useMeState } from "../../lib/meState";
 import TimezonePicker from "react-timezone";
 
-export default function UserForm({
-  onFormClose,
-  onFormSubmit,
-  registerNewUser,
-  user,
-}) {
-  const { inputs, handleChange } = useForm(
-    user || {
-      ...user,
-      bio: "",
-      birthdate: "",
-      city: "",
-      description: "",
-      email: "",
-      emergency_contact_name: "",
-      emergency_contact_number: "",
-      first_name: "",
-      gender: "",
-      last_name: "",
-      middle_name: "",
-      password: "",
-      password_confirmation: "",
-      phone_number: "",
-      preferred_name: "",
-      program_name: "",
-      state: "",
-      timezone: "",
-      website: "",
-      zip: "",
-    }
-  );
+export default function UserForm({ onFormClose, onFormSubmit, user }) {
+  const { me } = useMeState();
+  const { inputs, handleChange } = useForm({
+    bio: user?.bio || "",
+    birthdate: user?.birthdate || "",
+    city: user?.city || "",
+    description: user?.description || "",
+    email: user?.email || me?.email || "",
+    emergency_contact_name: user?.emergency_contact_name || "",
+    emergency_contact_number: user?.emergency_contact_number || "",
+    first_name: user?.first_name || me?.first_name || "",
+    gender: user?.gender || "",
+    id: user?.id || me?.id || null,
+    last_name: user?.last_name || me?.last_name || "",
+    middle_name: user?.middle_name || "",
+    phone_number: user?.phone_number || "",
+    preferred_name: user?.preferred_name || "",
+    program_name: user?.program_name || "",
+    state: user?.state || "",
+    timezone: user?.timezone || "",
+    website: user?.website || "",
+    zip: user?.zip || "",
+  });
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -117,28 +110,6 @@ export default function UserForm({
           required
           type="email"
           value={inputs.email}
-        />
-      </FormGroupInline>
-      <FormGroupInline>
-        <label>Password</label>
-        <input
-          autoComplete="new-password"
-          name="password"
-          onChange={handleChange}
-          placeholder="password"
-          type="password"
-          value={inputs.password}
-        />
-      </FormGroupInline>
-      <FormGroupInline>
-        <label>Confirm Password</label>
-        <input
-          autoComplete="new-password"
-          name="password_confirmation"
-          onChange={handleChange}
-          placeholder="confirm password"
-          type="password"
-          value={inputs.password_confirmation}
         />
       </FormGroupInline>
       <FormGroupInline>
@@ -251,7 +222,7 @@ export default function UserForm({
         />
       </FormGroupInline>
       <Button type="submit">
-        {registerNewUser ? <>Register</> : <>Create User</>}
+        <>Submit</>
       </Button>
       <Button type="button" onClick={onFormClose}>
         Cancel
@@ -260,15 +231,7 @@ export default function UserForm({
   );
 }
 
-//       </Form>
-//       <hr />
-//     </Col>
-//   )
-// }
-// }
-
 UserForm.propTypes = {
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
 };

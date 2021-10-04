@@ -64,17 +64,6 @@ export default function NewProductionForm({
     start_date: new Date(),
   });
 
-  function handleDateTimeChange(time, name) {
-    let e = {
-      target: {
-        value: time,
-        name: name,
-        type: "datetime",
-      },
-    };
-    handleChange(e);
-  }
-
   function handleSubmit(event) {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {

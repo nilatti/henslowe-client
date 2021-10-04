@@ -1,191 +1,116 @@
-import PropTypes from 'prop-types';
-import React, {
-  Component
-} from 'react'
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { Button } from "react-bootstrap";
 
-import {Button} from 'react-bootstrap'
-
-import { RIEInput} from '@attently/riek'
+import { RIEInput } from "@attently/riek";
+import StageExitShow from "./StageExitShow";
+import { useProductionAuthState } from "../../Contexts";
+import LoadingModal from "../../LoadingModal";
 
 import {
-  createStageExit,
-  deleteStageExit,
-  getStageExits,
-  updateServerStageExit
-} from '../../../api/stage_exits'
+  createItemWithParent,
+  deleteItem,
+  getItemsWithParent,
+  updateServerItem,
+} from "../../../api/crud";
 
-import NewStageExitForm from './NewStageExitForm'
-import {ProductionAuthContext} from '../../Contexts'
+import StageExitForm from "./StageExitForm";
 
-class StageExitsList extends Component {
-  state = {
-    newStageExitFormOpen: false,
-    stageExits: [],
-  }
+export default function StageExitsList() {
+  const { productionId } = useParams();
+  const { role } = useProductionAuthState();
+  const [loading, setLoading] = useState(false);
+  const [newStageExitFormOpen, setNewStageExitFormOpen] = useState(false);
+  const [stageExits, setStageExits] = useState([]);
 
-  componentDidMount() {
-    this.loadStageExitsFromServer()
-  }
-
-  createNewStageExit = (stageExit) => {
-    this.createServerStageExit(stageExit)
-    this.handleToggleClick()
-  }
-
-  handleToggleClick = () => {
-    this.setState({newStageExitFormOpen: !this.state.newStageExitFormOpen})
-  }
-
-  onDeleteClick = (stageExitId) => {
-    this.deleteStageExit(stageExitId)
-  }
-
-  onSave = (nameObj, stageExitId) => {
-    let stageExitObj = {
-      id: stageExitId,
-      name: nameObj['name']
-    }
-    this.updateServerStageExit(stageExitObj)
-  }
-
-  async createServerStageExit(stageExit) {
-    const response = await createStageExit(this.props.productionId, stageExit)
+  useEffect(async () => {
+    setLoading(true);
+    const response = await getItemsWithParent(
+      "production",
+      productionId,
+      "stage_exit"
+    );
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error creating stage exit'
-      })
-    } else {
-      this.setState({
-        stageExits: [...this.state.stageExits, response.data].sort((a, b) => (a.name > b.name) - (a.name < b.name))
-      })
-    }
-  }
+      console.log("error fetching stage exits");
+    } else setStageExits(response.data);
+    setLoading(false);
+  }, []);
 
-  async deleteStageExit(stageExitId) {
-    const response = await deleteStageExit(stageExitId)
+  async function createNewStageExit(stageExit) {
+    const response = await createItemWithParent(
+      "production",
+      productionId,
+      "stage_exit",
+      stageExit
+    );
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error deleting stage exit'
-      })
+      console.log("error creating stage exit");
     } else {
-      this.setState({
-        stageExits: this.state.stageExits.filter(stageExit =>
-          stageExit.id !== stageExitId
-        )
-      })
+      let tempStageExits = [...stageExits, response.data];
+      setStageExits(tempStageExits);
+      setNewStageExitFormOpen(false);
     }
   }
 
-  async loadStageExitsFromServer() {
-    const response = await getStageExits(this.props.productionId)
+  async function deleteStageExit(stageExitId) {
+    const response = await deleteItem(stageExitId, "stage_exit");
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error fetching stage exits'
-      })
+      console.log("error deleting stage exit");
     } else {
-      this.setState({
-        stageExits: response.data
-      })
+      let tempStageExits = stageExits.filter(
+        (stageExit) => stageExit.id !== stageExitId
+      );
+      setStageExits(tempStageExits);
     }
   }
 
-  async updateServerStageExit(stageExitAttrs) {
-    const response = await updateServerStageExit(stageExitAttrs)
+  async function updateStageExit(newStageExit) {
+    const response = await updateServerItem(newStageExit, "stage_exit");
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error updating stage exits'
-      })
+      console.log("error updating stage exit");
     } else {
-      this.setState(state => {
-        const stageExitList = state.stageExits.map((stageExit) => {
-          if (stageExit.id === stageExitAttrs.id) {
-            return stageExitAttrs
-          } else {
-            return stageExit
-          }
-        })
-        const stageExitListSorted = stageExitList.sort((a, b) => (a.name > b.name) - (a.name < b.name))
-        return {
-          stageExits: stageExitListSorted
+      let tempStageExits = stageExits.map((stageExit) => {
+        if (stageExit.id == newStageExit.id) {
+          return { ...newStageExit };
+        } else {
+          return stageExit;
         }
-      })
+      });
+      setStageExits(tempStageExits);
     }
   }
-
-  render() {
-    let stageExits = this.state.stageExits.map(stageExit =>
-      <li key={stageExit.id}>
-        <ProductionAuthContext.Consumer>
-        {(role) => {
-          if (role === 'admin') {
-            return (
-              <>
-              <RIEInput
-                value={stageExit.name}
-                change={(selected) => this.onSave(selected, stageExit.id)}
-                propName='name'
-              />
-              <span className='right floated trash icon'
-              onClick={() => this.onDeleteClick(stageExit.id)}
-            >
-              <i className="fas fa-trash-alt"></i>
-            </span>
-            </>
-            )
-          } else {
-            return (
-              <span>{stageExit.name}</span>
-            )
-        }
-        }
-        }
-        </ProductionAuthContext.Consumer>
-
-      </li>
-    )
-    return (
-      <div>
-        <h3>Stage Exits</h3>
-        <ProductionAuthContext.Consumer>
-          {(role) => {if (role === 'admin') {
-            return (<p><em>Click to edit name</em></p>)
-          }}}
-        </ProductionAuthContext.Consumer>
-
-        <ul>
-          {stageExits}
-        </ul>
-        <ProductionAuthContext.Consumer>
-          {(value) => {
-            if (value === 'admin' && this.state.newStageExitFormOpen) {
-              return (
-                <NewStageExitForm
-                  onFormClose={this.handleToggleClick}
-                  onFormSubmit={this.createNewStageExit}
-                  productionId={this.props.productionId}
-                />
-              )
-            } else if (value === 'admin') {
-              return (
-                <Button
-                  onClick={this.handleToggleClick}
-                >
-                  Add New
-                </Button>
-              )
-            }
-                }
-            }
-        </ProductionAuthContext.Consumer>
-
-
-      </div>
-    )
+  function toggleNewStageExitForm() {
+    setNewStageExitFormOpen(!newStageExitFormOpen);
   }
+
+  if (loading) return <LoadingModal />;
+  let formattedStageExits = stageExits.map((stageExit) => (
+    <StageExitShow
+      key={stageExit.id}
+      onDelete={deleteStageExit}
+      onFormSubmit={updateStageExit}
+      stageExit={stageExit}
+    />
+  ));
+
+  return (
+    <div>
+      {role === "admin" && (
+        <p>
+          <em>Click to edit name</em>
+        </p>
+      )}
+
+      <ul>{formattedStageExits}</ul>
+      {newStageExitFormOpen ? (
+        <StageExitForm
+          onFormClose={toggleNewStageExitForm}
+          onFormSubmit={createNewStageExit}
+          productionId={parseInt(productionId)}
+        />
+      ) : (
+        <Button onClick={toggleNewStageExitForm}>Add New</Button>
+      )}
+    </div>
+  );
 }
-
-StageExitsList.propTypes = {
-  productionId: PropTypes.number.isRequired,
-}
-
-export default StageExitsList

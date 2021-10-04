@@ -1,78 +1,77 @@
-import _ from 'lodash'
-import PropTypes from 'prop-types';
-import React, {
-  Component
-} from 'react'
-import {
-  Link
-} from 'react-router-dom'
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import JobForm from "./JobForm";
+import { Button } from "../Button";
+import { getItem } from "../../api/crud";
+import { buildUserName } from "../../utils/actorUtils";
+import { AUDITIONER_SPECIALIZATION_ID } from "../../utils/hardcodedConstants";
+import { useProductionState } from "../../lib/productionState";
+export default function AuditionersList({
+  handleDeleteJob,
+  onFormSubmit,
+  role,
+}) {
+  const { jobsAuditioned, production } = useProductionState();
+  const [auditionerSpecialization, setAuditionerSpecialization] = useState();
+  const [formattedJobs, setFormattedJobs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [newJobFormOpen, setNewJobFormOpen] = useState(false);
 
-import {
-  buildUserName
-} from '../../utils/actorUtils'
-
-import {
-  getSpecializations
-} from '../../api/specializations'
-
-class AuditionersList extends Component {
-
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
-  componentDidMount = () => {
-    this.loadSpecializationsFromServer()
-  }
-  getAuditioners() {
-    let auditioners = this.props.production.jobs.filter(job => job.specialization.title === 'Auditioner')
-    return _.sortBy(auditioners, [function(o) { return o.user.first_name; }])
-  }
-
-  async loadSpecializationsFromServer() {
-    const response = await getSpecializations()
+  useEffect(async () => {
+    setLoading(true);
+    const response = await getItem(
+      AUDITIONER_SPECIALIZATION_ID,
+      "specialization"
+    );
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error fetching specializations'
-      })
+      console.log("error getting specialization");
     } else {
-      this.setState({
-        auditionerSpecialization: response.data.filter(specialization => specialization.title == 'Auditioner')[0]
-      })
+      setAuditionerSpecialization(response.data);
     }
-  }
-  render() {
-    let productionSet = this.props.production !== undefined ? true : false
-    let jobs = this.getAuditioners().map(job =>
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    let formatted = jobsAuditioned.map((job) => (
       <li key={job.id}>
-        {job.user ? buildUserName(job.user) : ''}
+        <Link to={`/users/${job.id}`}>{buildUserName(job.user)}</Link>
+        {role == "admin" && (
+          <>
+            <span
+              className="right floated trash icon"
+              onClick={() => {
+                handleDeleteJob(job.id);
+              }}
+            >
+              <i className="fas fa-trash-alt"></i>
+            </span>
+          </>
+        )}
       </li>
-    )
+    ));
+    setFormattedJobs(formatted);
+  }, [jobsAuditioned]);
 
-    return (
-      <div>
-        <ul>
-          {jobs}
-        </ul>
-        <Link
-          to={{
-            pathname: '/jobs/new',
-            state: {
-              production: this.props.production,
-              theater: this.props.theater,
-              specialization: this.state.auditionerSpecialization,
-            }
-          }}
-        >
-          Add New Auditioner
-        </Link>
-      </div>
-    )
+  function toggleNewJobForm() {
+    setNewJobFormOpen(!newJobFormOpen);
   }
+  if (loading) {
+    return <div>Loading!</div>;
+  }
+  return (
+    <div>
+      <ul>{formattedJobs}</ul>
+      {role == "admin" && (
+        <Button onClick={toggleNewJobForm}>Add a new auditioner</Button>
+      )}
+      {newJobFormOpen && role == "admin" && (
+        <JobForm
+          production={production}
+          specialization={auditionerSpecialization}
+          onFormClose={toggleNewJobForm}
+          onFormSubmit={onFormSubmit}
+        />
+      )}
+    </div>
+  );
 }
-
-AuditionersList.propTypes = {
-  production: PropTypes.object.isRequired,
-}
-
-export default AuditionersList

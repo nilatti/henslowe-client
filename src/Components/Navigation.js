@@ -1,5 +1,5 @@
 import { Nav, Navbar } from "react-bootstrap";
-// import LogoutHooks from "./LogoutHooks";
+import LogoutHooks from "./LogoutHooks";
 import { useMeState } from "../lib/meState";
 import { getSuperAdminRole } from "../utils/authorizationUtils";
 
@@ -7,13 +7,14 @@ import { getSuperAdminRole } from "../utils/authorizationUtils";
 // between routes.
 export default function Navigation() {
   const { me } = useMeState();
+
   const superAdmin = getSuperAdminRole(me);
   return (
     <header>
       <Navbar collapseOnSelect fixed="top" expand="lg">
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav>
+          <Nav className="customNav">
             <Nav.Item>
               <Nav.Link href="/" eventKey="1">
                 Dashboard
@@ -63,10 +64,10 @@ export default function Navigation() {
                 </Nav.Item>
               </>
             )}
-            {/* <Nav.Item>
-            Hi, {me?.first_name}
-            <LogoutHooks />
-          </Nav.Item> */}
+            <Nav.Item>
+              Hi, {me?.name}
+              <LogoutHooks />
+            </Nav.Item>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
