@@ -32,6 +32,10 @@ async function getUsers() {
   return API.request(`users`);
 }
 
+async function getFakeUsers() {
+  return API.request(`users/fake`);
+}
+
 async function updateServerUser(user) {
   return API.put(`users/${user.id}`, {
     id: user.id,
@@ -46,5 +50,6 @@ export {
   loginUser,
   getUser,
   getUsers,
+  getFakeUsers,
   updateServerUser,
 };

@@ -1,11 +1,12 @@
 import styled from "styled-components";
 
 export const Form = styled.form`
-  background-color: var(--color-background);
+  background-color: ${(props) =>
+    props.backgroundColor || "var(--color-background)"};
   display: flex;
   flex-flow: column nowrap;
   padding: 5px;
-  margin: 0 auto;
+  margin: ${(props) => props.margin || "0 auto"};
   width: ${(props) => props.mobileWidth || "85%"};
   @media screen and (min-width: 600px) {
     width: ${(props) => props.width || "35%"};

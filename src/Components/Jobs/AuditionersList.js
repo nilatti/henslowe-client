@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import JobForm from "./JobForm";
@@ -32,9 +33,19 @@ export default function AuditionersList({
   }, []);
 
   useEffect(() => {
-    let formatted = jobsAuditioned.map((job) => (
+    let sortedJobs = _.sortBy(jobsAuditioned, [
+      "user.gender",
+      "user.last_name",
+    ]);
+    let formatted = sortedJobs.map((job) => (
       <li key={job.id}>
-        <Link to={`/users/${job.id}`}>{buildUserName(job.user)}</Link>
+        {job.user.fake ? (
+          <em style={{ color: "var(--fake-actor)" }}>
+            {buildUserName(job.user)}
+          </em>
+        ) : (
+          <Link to={`/users/${job.id}`}> {buildUserName(job.user)}</Link>
+        )}
         {role == "admin" && (
           <>
             <span
@@ -60,6 +71,11 @@ export default function AuditionersList({
   }
   return (
     <div>
+      <div>
+        <em style={{ color: "var(--fake-actor)" }}>
+          Fake actors are listed in teal
+        </em>
+      </div>
       <ul>{formattedJobs}</ul>
       {role == "admin" && (
         <Button onClick={toggleNewJobForm}>Add a new auditioner</Button>

@@ -14,6 +14,7 @@ export const GlobalStyles = createGlobalStyle`
     --cancel-button-background-color: #a9cfd0;
     --cancel-button-border-color: #005a41;
     --cancel-button-color: #005a41;
+    --fake-actor: #35aa9a;
 
     /* background-color: var(--color-background); */
 

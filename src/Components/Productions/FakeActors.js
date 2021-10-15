@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Button } from "../Button";
 import { Form, FormGroupInline } from "../Form";
 import { useForm } from "../../hooks/environmentUtils";
+//actors is object { female: int, male: int, nonbinary: int}
 export default function FakeActors({ actors, onSubmit }) {
-  const [formOpen, setFormOpen] = useState(false);
+  const [formOpen, setFormOpen] = useState(true);
   const { inputs, handleChange } = useForm({
     female: actors?.female || 0,
     male: actors?.male || 0,
@@ -20,12 +21,15 @@ export default function FakeActors({ actors, onSubmit }) {
     setFormOpen(!formOpen);
   }
 
-  if (
-    formOpen ||
-    (actors?.female === 0 && actors?.male === 0 && actors?.nonbinary === 0)
-  ) {
+  if (formOpen) {
     return (
       <Form noValidate onSubmit={handleSubmit} width="40%">
+        <div>
+          <em>
+            Please note, you cannot make the number lower than the current count
+            for a given gender.
+          </em>
+        </div>
         <FormGroupInline>
           <label>Female Actors</label>
           <input
@@ -33,7 +37,7 @@ export default function FakeActors({ actors, onSubmit }) {
             onChange={handleChange}
             type="number"
             value={inputs.female}
-            min="0"
+            min={actors.female}
             max="999"
           />
         </FormGroupInline>
@@ -44,7 +48,7 @@ export default function FakeActors({ actors, onSubmit }) {
             onChange={handleChange}
             type="number"
             value={inputs.male}
-            min="0"
+            min={actors.male}
             max="999"
           />
         </FormGroupInline>
@@ -55,13 +59,14 @@ export default function FakeActors({ actors, onSubmit }) {
             onChange={handleChange}
             type="number"
             value={inputs.nonbinary}
-            min="0"
+            min={actors.nonbinary}
             max="999"
           />
         </FormGroupInline>
         <Button type="submit" variant="primary" maxWidth="100%" margin="0">
           Submit
         </Button>
+        <Button onClick={toggleFormOpen}>Cancel</Button>
       </Form>
     );
   }

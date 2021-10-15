@@ -16,8 +16,8 @@ import {
   getItemsWithParent,
   updateServerItem,
 } from "../api/crud";
-import { unique } from "jquery";
-
+import { getJobs } from "../api/jobs";
+import { getFakeUsers } from "../api/users";
 const ProductionStateContext = createContext();
 const ProductionStateProvider = ProductionStateContext.Provider;
 
@@ -27,6 +27,13 @@ function ProductionProvider({ children }) {
   const [auditioners, setAuditioners] = useState([]);
   const [actorsAndAuditioners, setActorsAndAuditioners] = useState([]);
   const [castings, setCastings] = useState([]);
+  const [fakeActorCount, setFakeActorCount] = useState({
+    female: 0,
+    male: 0,
+    nonbinary: 0,
+  });
+  const [fakeActorsArray, setFakeActorsArray] = useState([]);
+  const [fullPlay, setFullPlay] = useState();
   const [hiredUsers, setHiredUsers] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [jobsActing, setJobsActing] = useState([]);
@@ -73,6 +80,31 @@ function ProductionProvider({ children }) {
         (job) => job.specialization_id == AUDITIONER_SPECIALIZATION_ID
       );
       setJobsAuditioned(auditionedJobs);
+
+      let tempFakeActorsJobs = production.jobs.filter(
+        (j) =>
+          j.user &&
+          j.user.fake &&
+          (j.specialization_id == AUDITIONER_SPECIALIZATION_ID ||
+            j.specialization_id == ACTOR_SPECIALIZATION_ID)
+      );
+      let tempFakeActors = _.compact(tempFakeActorsJobs.map((j) => j.user));
+      let tempFakeActorsUniq = _.uniqBy(tempFakeActors, "id");
+      let tempFakeActorsSorted = _.sortBy(tempFakeActorsUniq, [
+        "gender",
+        "last_name",
+      ]);
+      setFakeActorsArray(tempFakeActorsSorted);
+
+      let tempFakeActorCount = { female: 0, male: 0, nonbinary: 0 };
+      tempFakeActorsUniq.forEach((a) => {
+        if (a.gender) {
+          tempFakeActorCount[a.gender]++;
+        } else {
+          tempFakeActorCount["nonbinary"]++;
+        }
+      });
+      setFakeActorCount(tempFakeActorCount);
     }
   }, [JSON.stringify(production.jobs)]);
 
@@ -97,7 +129,11 @@ function ProductionProvider({ children }) {
         });
         return { ...user, jobs: userJobs };
       });
-      setHiredUsers(uniqueHiredUsersWithJobs);
+      let sortedHiredUsers = _.sortBy(uniqueHiredUsersWithJobs, [
+        "fake",
+        "last_name",
+      ]);
+      setHiredUsers(sortedHiredUsers);
     }
   }, [JSON.stringify(jobs)]);
 
@@ -133,9 +169,45 @@ function ProductionProvider({ children }) {
         return o.id;
       }
     );
-    setActorsAndAuditioners(uniqActorsAndAuditioners);
+    let sortedActorsAndAuditioners = _.sortBy(uniqActorsAndAuditioners, [
+      "fake",
+      "gender",
+      "last_name",
+    ]);
+    setActorsAndAuditioners(sortedActorsAndAuditioners);
   }, [JSON.stringify(actors), JSON.stringify(auditioners)]);
 
+  function returnRandomFakeActors(
+    actorPool,
+    gender,
+    currentNumber,
+    desiredNumber
+  ) {
+    let numberToAdd = desiredNumber - currentNumber;
+    let poolForGender = actorPool.filter((actor) => actor.gender == gender);
+    let additionalFakeActors = [];
+    do {
+      //get random actor from pool for gender
+      let newActor =
+        poolForGender[Math.floor(Math.random() * poolForGender.length)];
+      if (
+        //make sure they aren't already in the pool
+        additionalFakeActors.some((actor) => actor.id === newActor.id) ||
+        //or already a fake actor on this production
+        fakeActorsArray.some((actor) => actor.id === newActor.id)
+      ) {
+      } else {
+        additionalFakeActors.push(newActor);
+      }
+      //stop when we get the number desired
+    } while (additionalFakeActors.length < numberToAdd);
+    return additionalFakeActors;
+  }
+  function updateProductionPlay(playData) {
+    let tempProduction = { ...production };
+    tempProduction.play = playData;
+    setProduction(tempProduction);
+  }
   async function createCharacter(characterName) {
     let character = {
       name: characterName,
@@ -277,21 +349,65 @@ function ProductionProvider({ children }) {
     }
   }
 
+  async function updateFakeActors(actorCount) {
+    setLoading(true);
+    let allFakeUsersResponse = await getFakeUsers();
+    if (allFakeUsersResponse.status >= 400) {
+      console.log("error getting fake users");
+    } else {
+      //need to add some NB actors
+      let fakeAuditionersFemale = returnRandomFakeActors(
+        allFakeUsersResponse.data,
+        "female",
+        fakeActorCount.female,
+        actorCount.female
+      );
+      let fakeAuditionersMale = returnRandomFakeActors(
+        allFakeUsersResponse.data,
+        "male",
+        fakeActorCount.female,
+        actorCount.female
+      );
+      let fakeAuditioners = fakeAuditionersFemale.concat(fakeAuditionersMale);
+      //create job for each
+      fakeAuditioners.forEach((auditioner) => {
+        createJob({
+          production_id: production.id,
+          specialization_id: AUDITIONER_SPECIALIZATION_ID,
+          theater_id: production.theater_id,
+          user_id: auditioner.id,
+        });
+      });
+    }
+    setLoading(false);
+    //actorCount is an object: { female: int, male: int, nonbinary: int}
+  }
+
+  async function reassignAllRolesForUser(newUserId, oldUserId) {
+    setLoading(true);
+    let allJobs = jobsActing.filter((job) => job.user_id == oldUserId);
+    allJobs.forEach((job) => {
+      updateJob({ ...job, user_id: newUserId });
+    });
+    setLoading(false);
+  }
+
   async function updateJob(updatedJob) {
+    setLoading(true);
     const response = await updateServerItem(updatedJob, "job");
     if (response.status >= 400) {
       this.setState({
         errorStatus: "Error updating job",
       });
     } else {
-      let newJobs = jobs.map((job) => {
-        if (job.id === updatedJob.id) {
-          return response.data;
-        } else {
-          return job;
-        }
-      });
-      setJobs(newJobs);
+      const jobsResponse = await getJobs({ production_id: productionId });
+      if (jobsResponse.status >= 400) {
+        console.log("error fetching jobs");
+      } else {
+        let tempProduction = { ...production, jobs: jobsResponse.data };
+        setProduction(tempProduction);
+        setLoading(false);
+      }
     }
   }
 
@@ -334,6 +450,9 @@ function ProductionProvider({ children }) {
         createRehearsalSchedulePattern,
         deleteJob,
         deleteRehearsal,
+        fakeActorCount,
+        fakeActorsArray,
+        fullPlay,
         jobs,
         jobsActing,
         jobsAuditioned,
@@ -343,10 +462,14 @@ function ProductionProvider({ children }) {
         notActors,
         production,
         productionId,
+        reassignAllRolesForUser,
         rehearsals,
-        setHiredUsers,
         setCastings,
+        setFullPlay,
+        setHiredUsers,
+        updateFakeActors,
         updateJob,
+        updateProductionPlay,
         updateRehearsal,
       }}
     >

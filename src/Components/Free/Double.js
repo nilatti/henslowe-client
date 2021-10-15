@@ -1,5 +1,4 @@
 //this is the container for doubling for UNPAID customers. It talks to the play state provider
-import Casting from "./Casting";
 import SelectPlay from "./SelectPlay";
 import { Button } from "../Button";
 import { Spinner } from "../Loaders";

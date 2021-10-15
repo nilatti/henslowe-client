@@ -136,7 +136,7 @@ export default function DoublingChartShow({
       }
       return (
         <td key={uuid()} className={doublingProblem}>
-          {_.join(blockCharactersNames, ",")}
+          {_.join(blockCharactersNames, ", ")}
         </td>
       );
     });
@@ -180,7 +180,7 @@ export default function DoublingChartShow({
     return row;
   }
 
-  if (!production.play?.acts || !castings.length) {
+  if (!production.play?.acts?.length > 0 || !castings.length) {
     return (
       <Modal>
         <h1>Loading the doubling chart to show you!</h1>
