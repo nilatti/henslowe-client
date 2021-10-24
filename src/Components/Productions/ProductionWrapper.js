@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import EditableProduction from "./EditableProduction";
+import ProductionShow from "./ProductionShow";
 import { ProductionAuthProvider } from "../Contexts";
 import { ProductionProvider } from "../../lib/productionState";
 
@@ -8,7 +8,7 @@ export default function ProductionWrapper({}) {
   return (
     <ProductionAuthProvider productionId={productionId}>
       <ProductionProvider>
-        <EditableProduction />
+        <ProductionShow />
       </ProductionProvider>
     </ProductionAuthProvider>
   );

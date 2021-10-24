@@ -12,11 +12,14 @@ export default function AuditionersList({
   onFormSubmit,
   role,
 }) {
-  const { jobsAuditioned, production } = useProductionState();
+  const { actors, jobsAuditioned, production } = useProductionState();
   const [auditionerSpecialization, setAuditionerSpecialization] = useState();
   const [formattedJobs, setFormattedJobs] = useState([]);
+  const [hideCast, setHideCast] = useState(false);
   const [loading, setLoading] = useState(false);
   const [newJobFormOpen, setNewJobFormOpen] = useState(false);
+
+  let actorIds = actors.map((actor) => actor.id);
 
   useEffect(async () => {
     setLoading(true);
@@ -37,7 +40,11 @@ export default function AuditionersList({
       "user.gender",
       "user.last_name",
     ]);
-    let formatted = sortedJobs.map((job) => (
+    console.log(hideCast);
+    let hideAlreadyCast = hideCast
+      ? sortedJobs.filter((job) => !actorIds.includes(job.user.id))
+      : sortedJobs;
+    let formatted = hideAlreadyCast.map((job) => (
       <li key={job.id}>
         {job.user.fake ? (
           <em style={{ color: "var(--fake-actor)" }}>
@@ -61,8 +68,10 @@ export default function AuditionersList({
       </li>
     ));
     setFormattedJobs(formatted);
-  }, [jobsAuditioned]);
-
+  }, [jobsAuditioned, hideCast]);
+  function toggleHideCast() {
+    setHideCast(!hideCast);
+  }
   function toggleNewJobForm() {
     setNewJobFormOpen(!newJobFormOpen);
   }
@@ -79,6 +88,11 @@ export default function AuditionersList({
       <ul>{formattedJobs}</ul>
       {role == "admin" && (
         <Button onClick={toggleNewJobForm}>Add a new auditioner</Button>
+      )}
+      {hideCast ? (
+        <Button onClick={toggleHideCast}>Show already cast</Button>
+      ) : (
+        <Button onClick={toggleHideCast}>Hide already cast</Button>
       )}
       {newJobFormOpen && role == "admin" && (
         <JobForm

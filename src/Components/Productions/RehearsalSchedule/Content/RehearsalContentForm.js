@@ -6,10 +6,9 @@
 //4. organize content checks what users are not available, and recommends or doesn't recommend content depending on that.
 //5. mark what else is scheduled for this time that is not the content type we're working with (contentNotToEdit). Make a list of it to display in "also rehearsing" (contentNotToEdit)
 //6. take contentNotToEdit and mark anything within them as "rehearsing in part of another thing" in playContent. Remove from displayed checkboxes. In otherwords, if Act 1 is in contentNotToEdit and we're scheduling scenes, don't show any Act 1 scenes as options.
-// TKTKTK if there is a change, figure out which of the users currently called are no longer in any called scenes (but are actors) and offer to remove them.
+//7. if there is a change, figure out which of the users currently called are no longer in any called scenes (but are actors) and offer to remove them.
 //tktktk make it scroll back up to the relevant element when the form closes
 import _ from "lodash";
-import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ExtraUsers from "./ExtraUsers";
@@ -21,7 +20,6 @@ import Modal from "../../../Modal";
 import { Spinner } from "../../../Loaders";
 
 import {
-  getPlayOnStages,
   getPlayActOnStages,
   getPlayFrenchSceneOnStages,
   getPlaySceneOnStages,
@@ -79,7 +77,7 @@ export default function RehearsalContentForm({
   useEffect(async () => {
     let scheduledContent = await organizePlayContent(playContent);
     setPlayContent(scheduledContent);
-  }, [playContent?.length, rehearsalContent?.length]);
+  }, [playContent?.length]);
 
   useEffect(() => {
     formatRehearsalContent();
@@ -205,6 +203,7 @@ export default function RehearsalContentForm({
         let user = _.find(actors, ["id", userId]);
         return buildUserName(user);
       });
+      callList = _.uniq(callList);
       callList = callList.sort();
       callList = callList.join(", ");
       return { ...item, furtherInfo: callList }; //this will let it easily pop into the furtherInfo slot in DraggableList
@@ -229,13 +228,10 @@ export default function RehearsalContentForm({
   function updateCheckedContent(e) {
     const targetId = Number(e.target.id);
     let checked = !e.target.dataset.checked; //this will come through as the opposite of what it should be because data-checked hasn't been updated at the point when this is called
-    setPlayContent(
-      playContent.map((item) =>
-        item.id === targetId
-          ? { ...item, isScheduled: !item.isScheduled }
-          : item
-      )
+    let tempPlayContent = playContent.map((item) =>
+      item.id === targetId ? { ...item, isScheduled: !item.isScheduled } : item
     );
+    setPlayContent(tempPlayContent);
     let rehearsalItem = _.find(playContent, { id: targetId });
     if (checked) {
       setRehearsalContent(rehearsalContent.concat(rehearsalItem)); //add it to the rehearsal list if it's checked
@@ -316,6 +312,7 @@ export default function RehearsalContentForm({
       setPlayContent(playContentData);
     }
   }
+
   async function organizePlayContent(tempContent) {
     let rehearsalUnavailableUsers = unavailableUsers(actors, rehearsal);
     let unavailableUsersMarked = markContentUserUnavailable(

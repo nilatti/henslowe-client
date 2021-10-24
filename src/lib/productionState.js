@@ -1,4 +1,5 @@
-import _ from "lodash";
+import _, { set } from "lodash";
+import { useHistory } from "react-router-dom";
 import moment from "moment";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -35,6 +36,7 @@ function ProductionProvider({ children }) {
   const [fakeActorsArray, setFakeActorsArray] = useState([]);
   const [fullPlay, setFullPlay] = useState();
   const [hiredUsers, setHiredUsers] = useState([]);
+  const history = useHistory();
   const [jobs, setJobs] = useState([]);
   const [jobsActing, setJobsActing] = useState([]);
   const [jobsNotActing, setJobsNotActing] = useState([]);
@@ -59,6 +61,7 @@ function ProductionProvider({ children }) {
 
   //set rehearsals
   useEffect(() => {
+    console.log(62);
     let sortedRehearsals = _.sortBy(production.rehearsals, "start_time");
     let datedRehearsals = sortedRehearsals.map((rehearsal) => {
       return {
@@ -66,8 +69,9 @@ function ProductionProvider({ children }) {
         date: moment(rehearsal.start_time).format("YYYY-MM-DD"),
       };
     });
+    console.log(datedRehearsals);
     setRehearsals(datedRehearsals);
-  }, [JSON.stringify(production.rehearsals)]);
+  }, [JSON.stringify(production.rehearsals?.length)]);
 
   // set hired jobs
   useEffect(() => {
@@ -130,8 +134,9 @@ function ProductionProvider({ children }) {
         return { ...user, jobs: userJobs };
       });
       let sortedHiredUsers = _.sortBy(uniqueHiredUsersWithJobs, [
-        "fake",
         "last_name",
+        "first_name",
+        "email",
       ]);
       setHiredUsers(sortedHiredUsers);
     }
@@ -327,6 +332,33 @@ function ProductionProvider({ children }) {
     }
   }
 
+  async function deleteProduction(productionId) {
+    setLoading(true);
+    const response = await deleteItem(productionId, "production");
+    if (response.status >= 400) {
+      console.log("error deleting production");
+    } else {
+      setProduction({});
+      setActors([]);
+      setAuditioners([]);
+      setActorsAndAuditioners([]);
+      setCastings([]);
+      setFakeActorCount({ female: 0, male: 0, nonbinary: 0 });
+      setFakeActorsArray([]);
+      setFullPlay([]);
+      setHiredUsers([]);
+      setJobs([]);
+      setJobsActing([]);
+      setJobsNotActing([]);
+      setJobsAuditioned([]);
+      setLoading(false);
+      setNotActors([]);
+      setRehearsals([]);
+      setLoading(false);
+      history.push("/productions");
+    }
+    setLoading(false);
+  }
   async function deleteRehearsal(rehearsalId) {
     const response = await deleteItem(rehearsalId, "rehearsal");
     if (response.status >= 400) {
@@ -411,28 +443,31 @@ function ProductionProvider({ children }) {
     }
   }
 
+  async function updateProduction(production) {
+    const response = await updateServerItem(production, "production");
+    if (response.status >= 400) {
+      console.log("Error updating production");
+    } else {
+      setProduction(response.data);
+    }
+  }
+
   async function updateRehearsal(updatedRehearsal) {
-    delete updatedRehearsal.acts;
-    delete updatedRehearsal.french_scenes;
-    delete updatedRehearsal.scenes;
-    delete updatedRehearsal.spaces;
-    delete updatedRehearsal.users;
     const response = await updateServerItem(updatedRehearsal, "rehearsal");
     if (response.status >= 400) {
       this.setState({
         errorStatus: "Error updating rehearsal",
       });
     } else {
-      let newRehearsals = rehearsals.map((rehearsal) => {
-        if (rehearsal.id === updatedRehearsal.id) {
-          return {
-            ...response.data,
-            date: moment(rehearsal.start_time).format("YYYY-MM-DD"),
-          };
-        } else {
-          return rehearsal;
-        }
-      });
+      console.log(response.data);
+      let newRehearsals = rehearsals.map((rehearsal) =>
+        rehearsal.id === updatedRehearsal.id
+          ? {
+              ...response.data,
+              date: moment(rehearsal.start_time).format("YYYY-MM-DD"),
+            }
+          : rehearsal
+      );
       setRehearsals(newRehearsals);
     }
   }
@@ -449,6 +484,7 @@ function ProductionProvider({ children }) {
         createRehearsal,
         createRehearsalSchedulePattern,
         deleteJob,
+        deleteProduction,
         deleteRehearsal,
         fakeActorCount,
         fakeActorsArray,
@@ -469,6 +505,7 @@ function ProductionProvider({ children }) {
         setHiredUsers,
         updateFakeActors,
         updateJob,
+        updateProduction,
         updateProductionPlay,
         updateRehearsal,
       }}

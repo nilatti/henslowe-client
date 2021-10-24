@@ -26,19 +26,22 @@ export default function LoginHooks() {
     let tokenExpire = new Date();
     tokenExpire = tokenExpire.setDate(tokenExpire.getDate() + 250);
     localStorage.setItem("token_expire", JSON.stringify(tokenExpire));
-    setMe(data.user);
-    if (!data.user.program_name) {
+    setMe(data);
+    if (!data.program_name) {
       history.push(`/users/new`);
     } else {
       history.push("/");
     }
+  };
+  const handleFailure = () => {
+    console.log("login failed");
   };
   return (
     <GoogleLogin
       clientId={clientId}
       buttonText="Log in with Google"
       onSuccess={handleLogin}
-      onFailure={handleLogin}
+      onFailure={() => handleFailure}
       cookiePolicy={"single_host_origin"}
       responseType="code"
     />

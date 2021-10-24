@@ -5,12 +5,12 @@ import { BrowserRouter as Router, Link, useRouteMatch } from "react-router-dom";
 import { Button } from "../Button";
 import { Spinner } from "../Loaders";
 import Modal from "../Modal";
-import ActorsList from "./Actors/ActorsList";
+import PeopleList from "./People/PeopleList";
 import StageExitsList from "./SetDesign/StageExitsList";
 import { Form, FormGroupInline } from "../Form";
 import { useProductionAuthState } from "../Contexts";
 import AuditionersList from "../Jobs/AuditionersList";
-import JobsList from "../Jobs/JobsList";
+import ProductionJobsList from "../Jobs/ProductionJobsList";
 import CastList from "../Jobs/CastList";
 import { DefaultTable } from "../Styled";
 import { getProductionCopyComplete } from "../../api/plays";
@@ -27,11 +27,14 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
   const {
     createJob,
     deleteJob,
+    deleteProduction,
     jobsNotActing,
     loading,
     production,
     rehearsals,
+    updateProduction,
   } = useProductionState();
+
   const { role } = useProductionAuthState();
   const { url } = useRouteMatch();
   const { inputs, handleChange } = useForm({
@@ -68,7 +71,7 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    onFormSubmit({
+    updateProduction({
       id: production.id,
       end_date: formatDateForRails(inputs.end_date),
       lines_per_minute: inputs.lines_per_minute,
@@ -97,6 +100,7 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
       </Modal>
     );
   }
+  console.log(role);
   return (
     <>
       <div>
@@ -143,7 +147,7 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
               <span
                 className="right floated trash icon"
                 onClick={() => {
-                  onDeleteClick(production.id);
+                  deleteProduction(production.id);
                 }}
               >
                 <i className="fas fa-trash-alt"></i>
@@ -214,7 +218,7 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
       <div>
         <h2>Production Jobs</h2>
         {jobsNotActing && (
-          <JobsList
+          <ProductionJobsList
             handleDeleteJob={deleteJob}
             jobs={jobsNotActing}
             onFormSubmit={createJob}
@@ -249,7 +253,7 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
 
       <div>
         <div>
-          <ActorsList />
+          <PeopleList />
         </div>
       </div>
       <hr />

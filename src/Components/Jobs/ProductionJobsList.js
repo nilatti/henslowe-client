@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import JobForm from "./JobForm";
-import JobListItem from "./JobListItem";
+import ProductionJobListItem from "./ProductionJobListItem";
 import { Button } from "../Button";
 
-export default function JobsList({
+export default function ProductionJobsList({
   handleDeleteJob,
   jobs,
   onFormSubmit,
@@ -12,9 +12,10 @@ export default function JobsList({
 }) {
   const [formattedJobs, setFormattedJobs] = useState([]);
   const [newJobFormOpen, setNewJobFormOpen] = useState(false);
+
   useEffect(() => {
-    const jobsLI = jobs.map((job) => (
-      <JobListItem
+    const jobsLI = jobs?.map((job) => (
+      <ProductionJobListItem
         job={job}
         role={role}
         key={job.id}

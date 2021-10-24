@@ -38,5 +38,5 @@ const ConfirmationText = styled.div`
   font-size: 1.1rem;
 `;
 export default function Confirm({ children }) {
-  return <Container>THIS IS THE CONFIRMATION {children}</Container>;
+  return <Container>{children}</Container>;
 }

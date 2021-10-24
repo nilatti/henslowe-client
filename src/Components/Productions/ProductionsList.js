@@ -1,49 +1,42 @@
-import React, {
-  Component
-} from 'react'
-import {
-  Link
-} from 'react-router-dom'
+import _ from "lodash";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-import {
-  getProductionNames
-} from '../../api/productions'
+import LoadingModal from "../LoadingModal";
 
-class ProductionsList extends Component {
-  state = {
-    productions: [],
-  }
+import { getProductionNames } from "../../api/productions";
 
-  componentDidMount() {
-    this.loadProductionsFromServer()
-  }
+export default function ProductionsList() {
+  const [loading, setLoading] = useState(true);
+  const [productions, setProductions] = useState([]);
 
-  async loadProductionsFromServer() {
-    const response = await getProductionNames()
+  useEffect(async () => {
+    const response = await getProductionNames();
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error fetching productions'
-      })
+      console.log("error loading productions");
     } else {
-      this.setState({
-        productions: response.data
-      })
+      let uniqProductions = _.uniqBy(response.data, "id");
+      setProductions(uniqProductions);
     }
+    setLoading(false);
+  }, []);
+  if (loading) {
+    return <LoadingModal displayText="Loading productions" />;
   }
 
-  render() {
-    let productions = this.state.productions.map(production =>
-      <li key={production.id}> <Link to={`/productions/${production.id}`}>{production.play ? production.play.title : 'A play'} at {production.theater.name || 'A theater'}</Link></li>
-    )
-    return (
-      <div>
-        <ul>
-          {productions}
-        </ul>
-        <Link to='/productions/new'>Add New</Link>
-      </div>
-    )
-  }
+  let productionsLI = productions.map((production) => (
+    <li key={production.id}>
+      {" "}
+      <Link to={`/productions/${production.id}`}>
+        {production.play ? production.play.title : "A play"} at{" "}
+        {production.theater.name || "A theater"}
+      </Link>
+    </li>
+  ));
+  return (
+    <div>
+      <ul>{productionsLI}</ul>
+      <Link to="/productions/new">Add New</Link>
+    </div>
+  );
 }
-
-export default ProductionsList

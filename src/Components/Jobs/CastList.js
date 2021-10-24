@@ -80,12 +80,6 @@ export default function CastList({}) {
     if (actor) {
       let updatedJob = { ...job };
       updatedJob.user_id = actor.id;
-      //tk is all this deleting actually necessary?
-      delete updatedJob.character;
-      delete updatedJob.created_at;
-      delete updatedJob.updated_at;
-      delete updatedJob.specialization;
-      delete updatedJob.theater;
       updateJob(updatedJob);
     }
   }

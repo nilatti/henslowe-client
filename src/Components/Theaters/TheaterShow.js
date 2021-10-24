@@ -4,7 +4,8 @@ import { Tab, Tabs } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 import { Button } from "../Button";
-import JobsList from "../Jobs/JobsList";
+import JobsList from "../Jobs/ProductionJobsList";
+import { deleteItem } from "../../api/crud";
 import ProductionInfoTab from "../Productions/ProductionInfoTab";
 import SpaceAgreementFormForTheatersToggle from "../SpaceAgreements/SpaceAgreementFormForTheatersToggle";
 import SpaceInfoTab from "../Spaces/SpaceInfoTab";
@@ -16,14 +17,27 @@ export default function TheaterShow({
   onFormSubmit,
   theater,
 }) {
+  console.log(theater);
   const { role } = useTheaterAuthState();
   const [key, setKey] = useState();
+  const [jobs, setJobs] = useState(theater.jobs);
+
   function handleDeleteClick() {
     onDeleteClick(theater.id);
   }
 
   function handleSelect(key) {
     setKey(key);
+  }
+
+  async function handleDeleteJob(jobId) {
+    const response = await deleteItem(jobId, "job");
+    if (response.status >= 400) {
+      console.log("error deleting job");
+    } else {
+      newJobs = jobs.filter((job) => job.id != jobId);
+      setJobs(newJobs);
+    }
   }
 
   let productionTabs;
@@ -120,11 +134,16 @@ export default function TheaterShow({
         {productionTabs}
       </Tabs>
       <h2>People</h2>
-
-      <JobsList theater={theater} />
+      <JobsList handleDeleteJob={handleDeleteJob} jobs={jobs} role={role} />
     </div>
   );
 }
+
+//handleDeleteJob,
+// jobs,
+// onFormSubmit,
+// production,
+// role,
 
 TheaterShow.propTypes = {
   theater: PropTypes.object.isRequired,

@@ -28,6 +28,9 @@ const RehearsalScheduleListStyles = styled.div`
       cursor: pointer;
     }
   }
+  div {
+    text-align: center;
+  }
 `;
 
 export default function RehearsalScheduleList() {
@@ -160,32 +163,33 @@ export default function RehearsalScheduleList() {
         <Link to={`/theaters/${production.theater.id}`}>
           {production.theater.name}
         </Link>
-        <span className="right floated edit icon" onClick={toggleAddRehearsal}>
-          <i className="fas fa-pencil-alt"></i>
-        </span>
       </h2>
+      <div>
+        <span className="right floated edit icon" onClick={toggleAddRehearsal}>
+          <i className="fas fa-pencil-alt"></i> Edit rehearsal schedule
+        </span>
+      </div>
       <h3>
         {moment(startTime).format("MMM D, YYYY")}-
         {moment(endTime).format("MMM D, YYYY")}
       </h3>
+      <div>
+        //tktktk add role here--not everyone should be able to edit or add
+        rehearsals
+      </div>
       <EditButtons show={addRehearsalsOpen}>
         <RehearsalPatternCreatorToggle production={production} isOpen={false} />
         <RehearsalFormToggle isOpen={false} production={production} />
       </EditButtons>
-      {lastWeekRehearsals && (
-        <Button onClick={updateDatesLast}>Last Week</Button>
-      )}
-      {nextWeekRehearsals && (
-        <Button
-          onClick={updateDatesNext}
-          backgroundColor={"var(--color-med)"}
-          borderColor={"var(--color-med)"}
-          color={"var(--color-text-light)"}
-        >
-          Next Week
-        </Button>
-      )}
-
+      <Button onClick={updateDatesLast}>Last Week</Button>
+      <Button
+        onClick={updateDatesNext}
+        backgroundColor={"var(--color-med)"}
+        borderColor={"var(--color-med)"}
+        color={"var(--color-text-light)"}
+      >
+        Next Week
+      </Button>
       <div>
         <hr />
         {!!thisWeekRehearsals?.length ? (

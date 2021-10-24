@@ -12,6 +12,7 @@ import {
 
 import { intersection } from "../utils/arrayUtils";
 import { getItem } from "../api/crud";
+import { getProductionSkeleton } from "../api/productions";
 import { getJobs } from "../api/jobs";
 
 export function getOverlap(loggedInUser, targetUser) {
@@ -166,10 +167,19 @@ export function getSuperAdminRole(user) {
     return false;
   }
 }
-export function getUserRoleForTheater(user, theaterId) {
-  theaterId = Number(theaterId);
+export async function getUserRoleForTheater(user, theaterId) {
   if (getSuperAdminRole(user)) return "admin";
-  let theaterJobs = user.jobs.filter((job) => job.theater_id === theaterId);
+  theaterId = Number(theaterId);
+  let theaterJobs;
+  let theaterJobsResponse = await getJobs({
+    theater_id: theaterId,
+    user_id: user.id,
+  });
+  if (theaterJobsResponse >= 400) {
+    console.log("error getting theater job");
+  } else {
+    theaterJobs = theaterJobsResponse.data;
+  }
   if (theaterJobs.length === 0) return "visitor";
   let jobTitles = theaterJobs.map((job) => job.specialization?.title);
   if (_.intersection(jobTitles, THEATER_ADMIN).length > 0) {
@@ -180,20 +190,25 @@ export function getUserRoleForTheater(user, theaterId) {
 }
 
 export async function getUserRoleForProduction(user, productionId) {
-  let productionJobs = [];
-  let jobsResponse = await getJobs({
-    user_id: user.id,
-    production_id: productionId,
-  });
-
-  if (jobsResponse.status >= 400) {
-    console.log("error! getting jobs");
-  } else {
-    productionJobs = jobsResponse.data;
+  console.log(user);
+  if (getSuperAdminRole(user)) {
+    return "admin";
   }
+  let productionJobs;
 
-  let production = {};
-  let productionResponse = await getItem(productionId, "production");
+  let productionJobsResponse = await getJobs({
+    production_id: productionId,
+    user_id: user.id,
+  });
+  if (productionJobsResponse.status >= 400) {
+    console.log("error fetching user production jobs");
+  } else {
+    productionJobs = productionJobsResponse.data;
+  }
+  console.log(productionJobsResponse);
+
+  let production = {}; //need the production bc need theater id
+  let productionResponse = await getProductionSkeleton(productionId);
   if (productionResponse.status >= 400) {
     console.log("error getting production");
   } else {
@@ -204,8 +219,7 @@ export async function getUserRoleForProduction(user, productionId) {
     let jobTitles = productionJobs.map((job) => job.specialization?.title);
     if (
       getUserRoleForTheater(user, production.theater_id) === "admin" ||
-      intersection(jobTitles, PRODUCTION_ADMIN).length > 0 ||
-      getSuperAdminRole(user)
+      intersection(jobTitles, PRODUCTION_ADMIN).length > 0
     ) {
       return "admin";
     } else {

@@ -14,9 +14,10 @@ import { Spinner } from "../Loaders";
 export default function EditableTheater({ onDeleteClick, onFormSubmit }) {
   const [errors, setErrors] = useState([]);
   const [formOpen, setFormOpen] = useState(false);
-  const [theater, setTheater] = useState({});
+  const [theater, setTheater] = useState();
   const [loading, setLoading] = useState(false);
-  let { theaterId } = useParams();
+  const { theaterId } = useParams();
+
   useEffect(async () => {
     setLoading(true);
     let response = await getItem(theaterId, "theater");
@@ -28,6 +29,7 @@ export default function EditableTheater({ onDeleteClick, onFormSubmit }) {
     }
     setLoading(false);
   }, []);
+
   function handleEditClick() {
     setFormOpen(true);
   }
@@ -38,7 +40,7 @@ export default function EditableTheater({ onDeleteClick, onFormSubmit }) {
     onFormSubmit(theater);
   }
 
-  if (loading) {
+  if (loading || !theater) {
     return (
       <Modal>
         <h1>Loading!</h1>
@@ -59,7 +61,7 @@ export default function EditableTheater({ onDeleteClick, onFormSubmit }) {
   }
 
   return (
-    <TheaterAuthProvider theaterId={theater.id}>
+    <TheaterAuthProvider theaterId={theaterId}>
       <TheaterShow
         theater={theater}
         onEditClick={handleEditClick}
