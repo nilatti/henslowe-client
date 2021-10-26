@@ -4,7 +4,7 @@ import Authors from "./Authors/Authors";
 import Dashboard from "./Dashboard/Dashboard";
 import Jobs from "./Jobs/Jobs";
 import Plays from "./Plays/Plays";
-import PlayScripts from "./PlayScripts/PlayScripts";
+
 import Productions from "./Productions/Productions";
 import Spaces from "./Spaces/Spaces";
 import Specializations from "./Specializations/Specializations";
@@ -23,7 +23,7 @@ export default function Main() {
           path="/authors"
           render={(props) => <Authors {...props} authorFormOpen={false} />}
         />
-        <Route path="/plays/:id/playscripts/" component={PlayScripts} />
+
         <Route path="/plays" component={Plays} />
         <Route path={`/productions`} component={Productions} />
         <Route path="/theaters" component={Theaters} />

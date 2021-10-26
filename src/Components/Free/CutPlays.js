@@ -7,7 +7,7 @@ import { Spinner } from "../Loaders";
 import Modal from "../Modal";
 
 import SelectPlay from "./SelectPlay";
-import EditScript from "../PlayScripts/EditScript";
+import EditScript from "../Plays/PlayScripts/EditScript";
 
 export default function CutPlays() {
   const { characters, loading, play, playSkeleton, setPlay, updateLine } =

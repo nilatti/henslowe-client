@@ -193,7 +193,7 @@ function PlayProvider({ children }) {
         return newAct;
       }
     });
-    let newPlay = { ...play, acts: newActs };
+    let newPlay = { ...play, acts: newActs, full: true, free: true };
     sessionStorage.setItem("play", JSON.stringify(newPlay));
     setPlay(newPlay);
   }
@@ -207,7 +207,7 @@ function PlayProvider({ children }) {
         console.log("error getting play");
       } else {
         sessionStorage.setItem("play", JSON.stringify(response.data));
-        setPlay(response.data);
+        setPlay({ ...response.data, full: true, free: true });
       }
       let skeletonResponse = await getPlaySkeleton(playId);
       if (skeletonResponse.status >= 400) {
@@ -218,7 +218,7 @@ function PlayProvider({ children }) {
           "play_skeleton",
           JSON.stringify(skeletonResponse.data)
         );
-        setPlaySkeleton(skeletonResponse.data);
+        setPlaySkeleton({ ...skeletonResponse.data, free: true });
       }
       let casting = buildCastings(response.data.characters);
       setCastings(casting);

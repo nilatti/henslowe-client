@@ -47,6 +47,20 @@ function countWords(words) {
   return countArray;
 }
 
+function determineTypeOfLine(line) {
+  let type = "";
+  if (
+    line.kind.match(/business|delivery|entrance|exit|mixed|modifier|location/)
+  ) {
+    type = "stage_direction";
+  } else if (line.kind.match(/flourish|music/)) {
+    type = "sound_cue";
+  } else {
+    type = "line";
+  }
+  return type;
+}
+
 function filterEmptyActs(acts) {
   return _.filter(acts, function (act) {
     if (act.original_line_count > 0 && act.new_line_count > 0) {
@@ -281,6 +295,7 @@ export {
   calculateChange,
   calculateLineCount,
   calculateRunTime,
+  determineTypeOfLine,
   filterEmptyContent,
   getFrenchScenesFromAct,
   getFrenchScenesFromPlay,

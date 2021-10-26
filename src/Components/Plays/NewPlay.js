@@ -1,48 +1,19 @@
-import PropTypes from 'prop-types';
+import PlayForm from "./PlayForm";
 
-import React, {
-  Component
-} from 'react'
-
-import {
-  Col,
-  Row
-} from 'react-bootstrap'
-
-import PlayForm from './PlayForm'
-
-class NewPlay extends Component {
-
-  handleFormClose = () => {
-    this.setState({
-      isOpen: false
-    })
+export default function NewPlay({ onFormSubmit }) {
+  function handleFormClose() {
+    history.push("/plays");
   }
-  handleFormSubmit = (theater) => {
-    this.handleFormClose()
-    this.props.onFormSubmit(theater)
+  function handleFormSubmit(play) {
+    onFormSubmit(play);
   }
-
-  render() {
-    return (
-      <Row>
-        <Col md={12} >
-          <div id="new-play-form">
-            <PlayForm
-            isOnAuthorPage={false} 
-            onFormSubmit={this.handleFormSubmit}
-            onFormClose={this.handleFormClose}
-             />
-          </div>
-        </Col>
-      </Row>
-    )
-  }
+  return (
+    <div id="new-play-form">
+      <PlayForm
+        isOnAuthorPage={false}
+        onFormSubmit={handleFormSubmit}
+        onFormClose={handleFormClose}
+      />
+    </div>
+  );
 }
-
-NewPlay.propTypes = {
-  onFormSubmit: PropTypes.func.isRequired,
-}
-
-
-export default NewPlay

@@ -6,20 +6,7 @@ export default function PaypalButton() {
   return (
     <PaypalContainer>
       <div>
-        <em>
-          <strong>This service will become unavailable on September 17.</strong>
-          <br />
-          It costs $100/month to operate.
-          <br />
-          If I get $100 in donations, I'll leave it up for another month.
-          <br />
-          <strong>
-            Update: Six awesome people have donated a total of $100, which
-            allowed us to extend our shut off date by a month!
-          </strong>
-          <br />
-          Please help pay for server costs by hitting the donate button!
-        </em>
+        <em>Please help pay for server costs by hitting the donate button!</em>
       </div>
 
       <form action="https://www.paypal.com/donate" method="post" target="_top">

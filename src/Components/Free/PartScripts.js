@@ -4,7 +4,7 @@ import SelectPlay from "./SelectPlay";
 import { Spinner } from "../Loaders";
 import Modal from "../Modal";
 import { Button } from "../Button";
-import PartScriptContainer from "../PlayScripts/PartScripts/PartScriptContainer";
+import PartScriptContainer from "../Plays/PlayScripts/PartScripts/PartScriptContainer";
 import { usePlayState } from "../../lib/freePlayState";
 
 export default function PartScripts() {

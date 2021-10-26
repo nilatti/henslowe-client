@@ -1,12 +1,12 @@
 //this is the container for doubling for UNPAID customers. It talks to the play state provider
 import SelectPlay from "./SelectPlay";
-import WordCloudPresenter from "../PlayScripts/WordClouds/WordCloudContainer";
+import WordCloudPresenter from "../Plays/PlayScripts/WordClouds/WordCloudContainer";
 import { Button } from "../Button";
 import { Spinner } from "../Loaders";
 import Modal from "../Modal";
 import { usePlayState } from "../../lib/freePlayState";
 
-export default function Double() {
+export default function WordCloud() {
   const { loading, play, setPlay } = usePlayState();
   function clearPlay() {
     setPlay(null);
