@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tab, Tabs } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
@@ -6,14 +6,18 @@ import ActInfoTab from "./ActInfoTab";
 import LoadingModal from "../LoadingModal";
 import { usePlayState } from "../../lib/playState";
 export default function TextUnitBreakdown() {
-  const { loading, play } = usePlayState();
+  const { loading, loadPlay, play } = usePlayState();
 
   const [key, setKey] = useState();
   let actTabs;
   function handleSelect(key) {
     setKey(key);
   }
-  if (loading) {
+  useEffect(() => {
+    loadPlay();
+  }, []);
+
+  if (loading || !play.medium) {
     return <LoadingModal />;
   }
 

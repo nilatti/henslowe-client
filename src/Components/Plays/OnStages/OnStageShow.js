@@ -1,137 +1,96 @@
-import _ from "lodash";
-import PropTypes from "prop-types";
-import React, { Component } from "react";
-import { Form } from "react-bootstrap";
+import styled from "styled-components";
+import { useState } from "react";
+import { TextAreaInputWithToggle } from "../../Inputs";
+import { usePlayState } from "../../../lib/playState";
+import { useForm } from "../../../hooks/environmentUtils";
 
-class OnStageShow extends Component {
-  state = {
-    description: "",
-    descriptionEditOpen: false,
-  };
+const OnStageShowStyles = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  padding: 10px;
+  div {
+    flex: 1;
+  }
+`;
+export default function OnStageShow({ onStage }) {
+  const { deleteOnStage, updateOnStage } = usePlayState();
+  const [descriptionEditOpen, setDescriptionEditOpen] = useState(false);
+  const [nonspeaking, setNonspeaking] = useState(onStage.nonspeaking);
 
-  handleChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value,
-    });
-  };
+  const { inputs, handleChange } = useForm({
+    description: onStage.description || "",
+    id: onStage.id || null,
+  });
 
-  handleDescriptionSave = () => {
-    let workingOnStage = {
-      ...this.props.onStage,
-      description: this.state.description,
-    };
-    this.props.onEdit(
-      this.props.actId,
-      this.props.sceneId,
-      this.props.frenchSceneId,
-      workingOnStage
-    );
-  };
+  function handleDelete() {
+    deleteOnStage(onStage);
+  }
 
-  handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      this.toggleDescriptionEdit();
-      this.handleDescriptionSave();
-    } else if (e.key === "Escape") {
-      this.toggleDescriptionEdit();
-    }
-  };
+  function handleNonspeakingClick(bool) {
+    setNonspeaking(bool);
+    let workingOnStage = { ...onStage, nonspeaking: bool };
+    updateOnStage(workingOnStage);
+  }
 
-  handleNonspeakingClick = (bool) => {
-    let workingOnStage = { ...this.props.onStage, nonspeaking: bool };
-    this.props.onEdit(
-      this.props.actId,
-      this.props.sceneId,
-      this.props.frenchSceneId,
-      workingOnStage
-    );
-  };
+  function handleSubmit(e) {
+    e.preventDefault();
+    updateOnStage(inputs);
+    setDescriptionEditOpen(false);
+  }
 
-  toggleDescriptionEdit = () => {
-    this.setState({
-      descriptionEditOpen: !this.state.descriptionEditOpen,
-    });
-  };
+  function toggleDescriptionEditOpen() {
+    setDescriptionEditOpen(!descriptionEditOpen);
+  }
 
-  render() {
-    let character = _.find(this.props.play.characters, {
-      id: this.props.onStage.character_id,
-    });
-    let character_group = _.find(this.props.play.character_groups, {
-      id: this.props.onStage.character_group_id,
-    });
-    if (character) {
-    } else if (character_group) {
-    } else {
-      console.log(
-        "can not find character or group",
-        this.props.onStage.character_id,
-        this.props.onStage
-      );
-    }
+  let characterName;
+  if (onStage.character) {
+    characterName = onStage.character.name;
+  } else if (onStage.character_group) {
+    characterName = onStage.character_group.name;
+  } else {
+    characterName = "";
+  }
+  return (
+    <OnStageShowStyles>
+      <div>{characterName}</div>
 
-    let characterName;
-    if (character) {
-      characterName = character.name;
-    } else if (character_group) {
-      characterName = character_group.name;
-    } else {
-      characterName = "";
-    }
-
-    let onStage = this.props.onStage.nonspeaking;
-    return (
+      <TextAreaInputWithToggle
+        formOpen={descriptionEditOpen}
+        handleChange={handleChange}
+        handleFormClose={toggleDescriptionEditOpen}
+        handleSubmit={handleSubmit}
+        label="Description"
+        name="description"
+        toggleForm={toggleDescriptionEditOpen}
+        toggleText="Click to add description"
+        value={inputs.description}
+      />
       <div>
-        {characterName}
-        {this.state.descriptionEditOpen ? (
-          <Form.Group>
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-              type="textarea"
-              placeholder={this.props.onStage.description || "description"}
-              name="description"
-              onChange={this.handleChange}
-              onKeyDown={this.handleKeyPress}
-              value={this.state.description || ""}
-            />
-          </Form.Group>
+        {nonspeaking ? (
+          <span onDoubleClick={() => handleNonspeakingClick(false)}>
+            {" "}
+            Nonspeaking
+          </span>
         ) : (
-          <span onClick={() => this.toggleDescriptionEdit()}>
-            {this.props.onStage.description || "  Click to edit description  "}
+          <span onDoubleClick={() => handleNonspeakingClick(true)}>
+            {" "}
+            Speaking
           </span>
         )}
-        &nbsp; Nonspeaking role?{" "}
-        {this.props.onStage.nonspeaking ? (
-          <span onClick={() => this.handleNonspeakingClick(false)}>yes</span>
-        ) : (
-          <span onClick={() => this.handleNonspeakingClick(true)}>no</span>
-        )}
-        <span
-          className="right floated trash icon"
-          onClick={() =>
-            this.props.onDeleteClick(
-              this.props.actId,
-              this.props.sceneId,
-              this.props.frenchSceneId,
-              this.props.onStage.id
-            )
-          }
-        >
-          <i className="fas fa-trash-alt"></i>
-        </span>
       </div>
-    );
-  }
+      <div className="right floated trash icon" onClick={handleDelete}>
+        <i className="fas fa-trash-alt"></i>
+      </div>
+    </OnStageShowStyles>
+  );
 }
-
-OnStageShow.propTypes = {
-  actId: PropTypes.number.isRequired,
-  frenchSceneId: PropTypes.number.isRequired,
-  onDeleteClick: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired,
-  onStage: PropTypes.object.isRequired,
-  sceneId: PropTypes.number.isRequired,
-  play: PropTypes.object.isRequired,
-};
-
-export default OnStageShow;
+//   handleNonspeakingClick = (bool) => {
+//     let workingOnStage = { ...this.props.onStage, nonspeaking: bool };
+//     this.props.onEdit(
+//       this.props.actId,
+//       this.props.sceneId,
+//       this.props.frenchSceneId,
+//       workingOnStage
+//     );
+//   };

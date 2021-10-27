@@ -10,7 +10,7 @@ function NumberInput({
   value,
 }) {
   return (
-    <Form noValidate onSubmit={(e) => handleSubmit(e)} width="65%">
+    <Form noValidate onSubmit={(e) => handleSubmit(e)} width="85%">
       <FormGroupInline>
         <label htmlFor={name}>{label}</label>
         <input
@@ -56,7 +56,7 @@ function NumberRangeWithToggle({
       )}
 
       {formOpen && (
-        <Form noValidate onSubmit={(e) => handleSubmit(e)} width="65%">
+        <Form noValidate onSubmit={(e) => handleSubmit(e)} width="85%">
           <FormGroupInline>
             <label htmlFor={startName}>{startLabel}:</label>
             <input
@@ -100,7 +100,7 @@ function TextAreaInputWithToggle({
 }) {
   if (formOpen) {
     return (
-      <Form noValidate onSubmit={(e) => handleSubmit(e)} width="65%">
+      <Form noValidate onSubmit={(e) => handleSubmit(e)} width="85%">
         <FormGroupInline>
           <label htmlFor={name}>{label}</label>
           <textarea
@@ -131,7 +131,7 @@ function TextInput({
   value,
 }) {
   return (
-    <Form noValidate onSubmit={(e) => handleSubmit(e)} width="65%">
+    <Form noValidate onSubmit={(e) => handleSubmit(e)} width="85%">
       <FormGroupInline>
         <label htmlFor={name}>{label}</label>
         <input id={name} name={name} onChange={handleChange} value={value} />

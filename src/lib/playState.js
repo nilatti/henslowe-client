@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { updateServerItem } from "../api/crud";
+import { deleteItem, getItem, updateServerItem } from "../api/crud";
 import { getPlayScript, getPlaySkeleton } from "../api/plays";
 import { determineTypeOfLine } from "../utils/playScriptUtils";
 const PlayStateContext = createContext();
@@ -10,8 +10,11 @@ function PlayProvider({ children }) {
   const { playId } = useParams();
   const [loading, setLoading] = useState(false);
   const [acts, setActs] = useState([]);
+  const [characters, setCharacters] = useState([]);
+  const [characterGroups, setCharacterGroups] = useState([]);
   const [frenchScenes, setFrenchScenes] = useState([]);
   const [lines, setLines] = useState([]);
+  const [onStages, setOnStages] = useState([]);
   const [play, setPlay] = useState([]);
   const [scenes, setScenes] = useState([]);
 
@@ -31,6 +34,12 @@ function PlayProvider({ children }) {
   useEffect(() => {
     if (play.acts) {
       setActs(play.acts);
+    }
+    if (play.characters) {
+      setCharacters(play.characters);
+    }
+    if (play.character_groups) {
+      setCharacterGroups(play.character_groups);
     }
   }, [play]);
 
@@ -59,6 +68,12 @@ function PlayProvider({ children }) {
       (frenchScene) => (allLines = allLines.concat(frenchScene.lines))
     );
     setLines(allLines);
+
+    let allOnStages = [];
+    frenchScenes.map(
+      (frenchScene) => (allOnStages = allOnStages.concat(frenchScene.on_stages))
+    );
+    setOnStages(allOnStages);
   }, [frenchScenes]);
 
   function getSelectedText(textMenuKey, textUnit) {
@@ -98,6 +113,60 @@ function PlayProvider({ children }) {
     handleLineSubmit(line, type);
   }
 
+  function updateLocalAct(newAct) {
+    let updatedPlay = { ...play };
+    updatedPlay.acts = updatedPlay.acts.map((a) =>
+      a.id === newAct.id ? newAct : a
+    );
+    setPlay(updatedPlay);
+  }
+
+  function updateLocalFrenchScene(newFrenchScene) {
+    let updatedScene = scenes.find((s) => s.id === newFrenchScene.scene_id);
+    updatedScene.french_scenes = updatedScene.french_scenes.map((fs) =>
+      fs.id === newFrenchScene.id ? newFrenchScene : fs
+    );
+    updateLocalScene(updatedScene);
+  }
+
+  function updateLocalLine(newLine) {
+    let workingLines = lines.map((l) =>
+      l.id === newLine.id ? { ...l, newLine } : l
+    );
+    setLines(workingLines);
+    let workingFrenchScene = frenchScenes.find(
+      (frenchScene) => frenchScene.id == newLine.french_scene_id
+    );
+    let updatedFrenchScene = { ...workingFrenchScene };
+    updatedFrenchScene.lines = updatedFrenchScene.lines.map((oldLine) =>
+      oldLine.id === newLine.id ? { ...oldLine, newLine } : oldLine
+    );
+    updateLocalFrenchScene(updatedFrenchScene);
+  }
+
+  function updateLocalOnStage(newOnStage) {
+    let workingOnStages = onStages.map((os) =>
+      os.id === newOnStage.id ? { ...os, newOnStage } : os
+    );
+    setOnStages(workingOnStages);
+    let workingFrenchScene = frenchScenes.find(
+      (frenchScene) => frenchScene.id == newOnStage.french_scene_id
+    );
+    let updatedFrenchScene = { ...workingFrenchScene };
+    updatedFrenchScene.on_stages = updatedFrenchScene.on_stages.map((os) =>
+      os.id === newOnStage.id ? { ...os, newOnStage } : os
+    );
+    updateLocalFrenchScene(updatedFrenchScene);
+  }
+
+  function updateLocalScene(newScene) {
+    let updatedAct = acts.find((a) => a.id === newScene.act_id);
+    updatedAct.scenes = updatedAct.scenes.map((s) =>
+      s.id === newScene.id ? newScene : s
+    );
+    updateLocalAct(updatedAct);
+  }
+
   async function cutEntireText(lineArray) {
     const types = ["lines", "stage_directions", "sound_cues"];
     types.forEach(function (type) {
@@ -116,40 +185,35 @@ function PlayProvider({ children }) {
     });
   }
 
+  async function deleteOnStage(onStage) {
+    let response = await deleteItem(onStage.id, "on_stage");
+    if (response.status >= 400) {
+      console.log("error deleting onstage");
+    } else {
+      let updatedOnStages = onStages.filter((os) => os.id != onStage.id);
+      setOnStages(updatedOnStages);
+      let workingFrenchScene = frenchScenes.find(
+        (fs) => fs.id === onStage.french_scene_id
+      );
+      let workingOnStages = workingFrenchScene.on_stages.filter(
+        (os) => os.id != onStage.id
+      );
+      let updatedFrenchScene = {
+        ...workingFrenchScene,
+        on_stages: workingOnStages,
+      };
+      updateLocalFrenchScene(updatedFrenchScene);
+    }
+  }
+
   async function handleLineSubmit(line, type) {
     line.character_id = line.character_id || line.character?.id;
     delete line.diffed_content;
-    console.log(line);
     const response = await updateServerItem(line, type);
     if (response.status >= 400) {
       setError(`Error updating ${type}`);
     } else {
-      let lineLocation = locateLineInPlay(line);
-      let workingAct = play.acts.find((act) => act.id == lineLocation.actId);
-      let workingScene = workingAct.scenes.find(
-        (scene) => scene.id == lineLocation.sceneId
-      );
-      let workingFrenchScene = workingScene.french_scenes.find(
-        (frenchScene) => frenchScene.id == lineLocation.frenchSceneId
-      );
-      let updatedFrenchScene = { ...workingFrenchScene };
-      updatedFrenchScene.lines = updatedFrenchScene.lines.map((oldLine) =>
-        oldLine.id === line.id ? line : oldLine
-      );
-      let updatedScene = { ...workingScene };
-      updatedScene.french_scenes = updatedScene.french_scenes.map((fs) =>
-        fs.id === updatedFrenchScene.id ? updatedFrenchScene : fs
-      );
-      let updatedAct = { ...workingAct };
-      updatedAct.scenes = updatedAct.scenes.map((s) =>
-        s.id === updatedScene.id ? updatedScene : s
-      );
-
-      let updatedPlay = { ...play };
-      updatedPlay.acts = updatedPlay.acts.map((a) =>
-        a.id === updatedAct.id ? updatedAct : a
-      );
-      setPlay(updatedPlay);
+      updateLocalLine(response.data);
     }
   }
 
@@ -162,8 +226,22 @@ function PlayProvider({ children }) {
       } else {
         setPlay({ ...response.data, full: true });
       }
-      console.log(play);
       setLoading(false);
+    }
+  }
+
+  async function loadPlay() {
+    if (!play.full && !play.medium) {
+      setLoading(true);
+      const response = await getItem(playId, "play");
+      if (response.status >= 400) {
+        console.log("error fetching play");
+      } else {
+        setPlay({ ...response.data, medium: true });
+      }
+      setLoading(false);
+    } else if (play.full) {
+      setPlay({ ...play, medium: true });
     }
   }
 
@@ -184,19 +262,51 @@ function PlayProvider({ children }) {
       updateTextInState(type, updatedLines);
     });
   }
+  async function updatePlayTextItem(item, type) {
+    const response = await updateServerItem(item, type);
+    if (response.status >= 400) {
+      console.log("error updating item");
+    } else {
+      let updatedPlay = { ...play };
+      let data = response.data;
+      if (type == "act") {
+        updateLocalAct(data);
+      } else if (type == "scene") {
+        updateLocalScene(data);
+      } else if (type == "french_scene") {
+        updateLocalFrenchScene(data);
+      }
+      setPlay(updatedPlay);
+    }
+  }
+
+  async function updateOnStage(onStage) {
+    const response = await updateServerItem(onStage, "on_stage");
+    if (response.status >= 400) {
+      console.log("error updating item");
+    } else {
+      updateLocalOnStage(response.data);
+    }
+  }
   return (
     <PlayStateProvider
       value={{
         acts,
+        characters,
+        characterGroups,
         cutEntireText,
+        deleteOnStage,
         frenchScenes,
         getSelectedText,
         loadFullPlay,
         loading,
+        loadPlay,
+        updateOnStage,
         play,
         scenes,
         unCutEntireText,
         updateLine,
+        updatePlayTextItem,
       }}
     >
       {children}

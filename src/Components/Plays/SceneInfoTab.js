@@ -1,6 +1,6 @@
 import { useState } from "react";
 import FrenchSceneInfoTab from "./FrenchSceneInfoTab";
-import { Col, Row, Tab, Tabs } from "react-bootstrap";
+import { Row, Tab, Tabs } from "react-bootstrap";
 import { filterEmptyContent } from "../../utils/playScriptUtils";
 import TextInfo from "./TextInfo";
 
@@ -21,6 +21,7 @@ export default function SceneInfoTab({ prettyName, scene }) {
             key={`french_scene-${frenchScene.id}`}
           >
             <FrenchSceneInfoTab
+              actId={scene.act_id}
               frenchScene={frenchScene}
               prettyName={fsPrettyName}
             />
