@@ -77,7 +77,9 @@ export default function EditScript({ handleLineSubmit, linesPerMinute }) {
 
   return (
     <EditScriptStyles>
-      <h2>{play.title}</h2>
+      <h2>
+        <Link to={`/plays/${play.id}`}>{play.title}</Link>
+      </h2>
 
       <div className="instructions">
         To edit text, double-click on it.

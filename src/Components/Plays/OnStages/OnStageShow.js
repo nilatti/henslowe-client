@@ -85,12 +85,3 @@ export default function OnStageShow({ onStage }) {
     </OnStageShowStyles>
   );
 }
-//   handleNonspeakingClick = (bool) => {
-//     let workingOnStage = { ...this.props.onStage, nonspeaking: bool };
-//     this.props.onEdit(
-//       this.props.actId,
-//       this.props.sceneId,
-//       this.props.frenchSceneId,
-//       workingOnStage
-//     );
-//   };

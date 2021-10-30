@@ -38,7 +38,9 @@ export default function PlayShow() {
               </Link>
             </li>
             <li>
-              <Link to={`/`}>Character breakdown</Link>
+              <Link to={`/plays/${play.id}/character_breakdown`}>
+                Character breakdown
+              </Link>
             </li>
             <li>
               <Link to={`/`}>Character chart</Link>

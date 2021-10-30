@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { deleteItem, getItem, updateServerItem } from "../api/crud";
+import { createItem, deleteItem, getItem, updateServerItem } from "../api/crud";
 import { getPlayScript, getPlaySkeleton } from "../api/plays";
 import { determineTypeOfLine } from "../utils/playScriptUtils";
 const PlayStateContext = createContext();
@@ -10,6 +10,7 @@ function PlayProvider({ children }) {
   const { playId } = useParams();
   const [loading, setLoading] = useState(false);
   const [acts, setActs] = useState([]);
+  const [charactersAll, setCharactersAll] = useState([]);
   const [characters, setCharacters] = useState([]);
   const [characterGroups, setCharacterGroups] = useState([]);
   const [frenchScenes, setFrenchScenes] = useState([]);
@@ -40,6 +41,15 @@ function PlayProvider({ children }) {
     }
     if (play.character_groups) {
       setCharacterGroups(play.character_groups);
+    }
+    if (play.characters && play.character_groups) {
+      let flaggedCharacters = play.characters.map((c) => {
+        return { ...c, type: "character" };
+      });
+      let flaggedCharacterGroups = play.character_groups.map((c) => {
+        return { ...c, type: "character_group" };
+      });
+      setCharactersAll(flaggedCharacters.concat(flaggedCharacterGroups));
     }
   }, [play]);
 
@@ -167,6 +177,20 @@ function PlayProvider({ children }) {
     updateLocalAct(updatedAct);
   }
 
+  async function addNewCharacter(character) {
+    let response = await createItem(character, character.type);
+    if (response.status >= 400) {
+      console.log("error creating character");
+    } else {
+      let workingPlay = { ...play };
+      workingPlay[`${character.type}s`] = [
+        ...workingPlay[`${character.type}s`],
+        response.data,
+      ];
+      setPlay(workingPlay);
+    }
+    return response.data.id;
+  }
   async function cutEntireText(lineArray) {
     const types = ["lines", "stage_directions", "sound_cues"];
     types.forEach(function (type) {
@@ -262,6 +286,33 @@ function PlayProvider({ children }) {
       updateTextInState(type, updatedLines);
     });
   }
+
+  async function updateCharacter(character) {
+    let response = await updateServerItem(character, character.type);
+    if (response.status >= 400) {
+      console.log("error updating character");
+    } else {
+      let characterArray = play[`${character.type}s`];
+      let updatedCharacters = characterArray.map((c) =>
+        c.id === character.id ? { ...c, character } : c
+      );
+      let workingPlay = { ...play, [character.type]: updatedCharacters };
+      setPlay(workingPlay);
+      if (character.type === "character") {
+        let workingCharacters = characters.map((c) =>
+          c.id === character.id ? { ...c, character } : c
+        );
+        setCharacters(workingCharacters);
+      } else {
+        let workingCharacterGroups = characterGroups.map((c) =>
+          c.id === character.id ? { ...c, character } : c
+        );
+        setCharacterGroups(workingCharacterGroups);
+      }
+      setCharactersAll(characters.concat(characterGroups));
+    }
+  }
+
   async function updatePlayTextItem(item, type) {
     const response = await updateServerItem(item, type);
     if (response.status >= 400) {
@@ -292,6 +343,8 @@ function PlayProvider({ children }) {
     <PlayStateProvider
       value={{
         acts,
+        addNewCharacter,
+        charactersAll,
         characters,
         characterGroups,
         cutEntireText,
@@ -305,6 +358,7 @@ function PlayProvider({ children }) {
         play,
         scenes,
         unCutEntireText,
+        updateCharacter,
         updateLine,
         updatePlayTextItem,
       }}

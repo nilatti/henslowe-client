@@ -5,11 +5,15 @@ export const Form = styled.form`
     props.backgroundColor || "var(--color-background)"};
   display: flex;
   flex-flow: column nowrap;
-  padding: 5px;
+  padding: 25px;
   margin: ${(props) => props.margin || "0 auto"};
   width: ${(props) => props.mobileWidth || "85%"};
   @media screen and (min-width: 600px) {
     width: ${(props) => props.width || "35%"};
+  }
+  fieldset {
+    display: flex;
+    padding: 7px 0;
   }
   label {
     flex-basis: 25%;

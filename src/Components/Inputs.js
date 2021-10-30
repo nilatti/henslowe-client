@@ -144,9 +144,37 @@ function TextInput({
   );
 }
 
+function TextInputWithToggle({
+  formOpen,
+  handleChange,
+  handleFormClose,
+  handleSubmit,
+  label,
+  name,
+  toggleForm,
+  toggleText,
+  value,
+}) {
+  if (formOpen) {
+    return (
+      <TextInput
+        handleChange={handleChange}
+        handleFormClose={handleFormClose}
+        handleSubmit={handleSubmit}
+        label={label}
+        name={name}
+        value={value}
+      />
+    );
+  } else {
+    return <div onDoubleClick={toggleForm}>{value || toggleText}</div>;
+  }
+}
+
 export {
   NumberInput,
   NumberRangeWithToggle,
   TextAreaInputWithToggle,
   TextInput,
+  TextInputWithToggle,
 };

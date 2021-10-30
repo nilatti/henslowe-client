@@ -38,7 +38,9 @@ export default function TextUnitBreakdown() {
     <div>
       <div>
         <div>
-          <h2>{play.title}</h2>
+          <h2>
+            <Link to={`/plays/${play.id}`}>{play.title}</Link>
+          </h2>
           {play.canonical && (
             <p>
               <em> Canonical Version</em>

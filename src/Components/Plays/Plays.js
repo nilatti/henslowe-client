@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, Route, Switch, useHistory } from "react-router-dom";
+import CharactersBreakdown from "./Characters/CharactersBreakdown";
 import PlayWrapper from "./PlayWrapper";
 import PlaysList from "./PlaysList";
 
@@ -49,6 +50,14 @@ export default function Plays() {
           </h2>
           <hr />
           <Switch>
+            <Route
+              path="/plays/:playId/character_breakdown"
+              render={(props) => (
+                <PlayWrapper {...props}>
+                  <CharactersBreakdown />
+                </PlayWrapper>
+              )}
+            />
             <Route
               path="/plays/new"
               render={(props) => (

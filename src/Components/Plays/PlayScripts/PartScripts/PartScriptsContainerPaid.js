@@ -39,7 +39,9 @@ export default function PartScriptsContainerPaid() {
   }
   return (
     <>
-      <div>Get part scripts for {play.title}</div>
+      <div>
+        Get part scripts for <Link to={`/plays/${play.id}`}>{play.title}</Link>
+      </div>
       <PartScriptContainer actors={actors} play={play} />
     </>
   );

@@ -16,7 +16,9 @@ export default function WordCloudContainerPaid() {
 
   return (
     <>
-      <div>Make a wordcloud for {play.title}</div>
+      <div>
+        Make a wordcloud for <Link to={`/plays/${play.id}`}>{play.title}</Link>
+      </div>
       <WordCloudContainer play={play} />
     </>
   );
