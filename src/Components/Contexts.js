@@ -74,14 +74,10 @@ const TheaterAuthStateProvider = TheaterAuthContext.Provider;
 function TheaterAuthProvider({ theaterId, children }) {
   const { me } = useMeState();
   const [role, setRole] = useState("visitor");
-  useEffect(() => {
-    if (me.jobs) {
-      let userRole = getUserRoleForTheater(me, theaterId);
-      setRole(userRole);
-    } else {
-      setRole("visitor");
-    }
-  });
+  useEffect(async () => {
+    let userRole = await getUserRoleForTheater(me, theaterId);
+    setRole(userRole);
+  }, []);
   return (
     <TheaterAuthStateProvider value={{ role }}>
       {children}

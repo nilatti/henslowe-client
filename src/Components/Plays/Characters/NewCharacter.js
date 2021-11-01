@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styled from "styled-components";
+import { AddNewTabStyle } from "../BreakdownStyles";
 import { Button } from "../../Button";
 import { Form, FormGroupInline } from "../../Form";
 import LoadingModal from "../../LoadingModal";
@@ -11,13 +11,6 @@ import {
 } from "../../../utils/hardcodedConstants";
 import { firstLetterUpcase } from "../../../utils/stringUtils";
 
-const NewCharacterStyles = styled.div`
-  padding: 25px;
-  h3 {
-    text-align: center;
-    padding: 10px 0;
-  }
-`;
 export default function NewCharacter({ setKey }) {
   const { addNewCharacter, play } = usePlayState();
   const { inputs, handleChange, resetForm } = useForm({
@@ -35,6 +28,7 @@ export default function NewCharacter({ setKey }) {
     setLoading(true);
     let newCharacterId = await addNewCharacter(inputs);
     setLoading(false);
+    resetForm();
     setKey(`character-${newCharacterId}`);
   }
 
@@ -45,7 +39,7 @@ export default function NewCharacter({ setKey }) {
     <LoadingModal displayText="Creating character" />;
   }
   return (
-    <NewCharacterStyles>
+    <AddNewTabStyle>
       <h3>Add New Character</h3>
 
       <Form noValidate onSubmit={(e) => handleSubmit(e)} width="100%">
@@ -157,6 +151,6 @@ export default function NewCharacter({ setKey }) {
           Cancel
         </Button>
       </Form>
-    </NewCharacterStyles>
+    </AddNewTabStyle>
   );
 }

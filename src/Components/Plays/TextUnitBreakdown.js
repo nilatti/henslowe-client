@@ -3,36 +3,41 @@ import { Tab, Tabs } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 import ActInfoTab from "./ActInfoTab";
+import NewTextItem from "./NewTextItem";
 import LoadingModal from "../LoadingModal";
 import { usePlayState } from "../../lib/playState";
 export default function TextUnitBreakdown() {
-  const { loading, loadPlay, play } = usePlayState();
+  const { acts, loading, loadPlay, play } = usePlayState();
+  const [actTabs, setActTabs] = useState([]);
+  const [lastAct, setLastAct] = useState();
 
   const [key, setKey] = useState();
-  let actTabs;
   function handleSelect(key) {
     setKey(key);
   }
   useEffect(() => {
     loadPlay();
-  }, []);
+    console.log(play);
+  }, [play]);
+
+  useEffect(() => {
+    if (acts.length) {
+      let workingActTabs = acts.map((act) => (
+        <Tab
+          eventKey={`act-${act.id}`}
+          key={`act-${act.id}`}
+          title={`Act ${act.number}`}
+        >
+          <ActInfoTab act={act} />
+        </Tab>
+      ));
+      setActTabs(workingActTabs);
+      setLastAct(acts[acts.length - 1]);
+    }
+  }, [JSON.stringify(acts)]);
 
   if (loading || !play.medium) {
     return <LoadingModal />;
-  }
-
-  if (play.acts) {
-    actTabs = play.acts.map((act) => (
-      <Tab
-        eventKey={`act-${act.id}`}
-        key={`act-${act.id}`}
-        title={`Act ${act.number}`}
-      >
-        <ActInfoTab act={act} />
-      </Tab>
-    ));
-  } else {
-    actTabs = <div>No acts found</div>;
   }
   return (
     <div>
@@ -62,6 +67,16 @@ export default function TextUnitBreakdown() {
       </div>
       <Tabs activeKey={key} onSelect={handleSelect} id="act-info-tabs">
         {actTabs}
+        <Tab eventKey={`new-act`} key={`new-act`} title={`Add New Act`}>
+          <NewTextItem
+            number={lastAct?.number + 1 || 0}
+            parentId={play.id}
+            parentType="play"
+            setKey={setKey}
+            startPage={lastAct?.end_page || 0}
+            type="act"
+          />
+        </Tab>
       </Tabs>
     </div>
   );

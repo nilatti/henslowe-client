@@ -4,14 +4,22 @@ import { FormGroup } from "../../Form";
 import { Typeahead } from "react-bootstrap-typeahead";
 import { usePlayState } from "../../../lib/playState";
 
-export default function CharacterSelect({ onBlur, selectedCharacter }) {
-  const { play } = usePlayState();
+export default function CharacterSelect({
+  characters,
+  onBlur,
+  selectedCharacter,
+}) {
+  const { charactersAll } = usePlayState();
+  let availableCharacters = characters || charactersAll;
   const [selected, setSelected] = useState(selectedCharacter);
-  if (!play.characters) {
+  if (!availableCharacters) {
     return <div>Loading characters!</div>;
   }
-  let characterOptions = play.characters.map((character) => {
-    return { id: character.id, name: character.name || "no name" };
+  let characterOptions = availableCharacters.map((character) => {
+    return {
+      id: character.id,
+      name: character.name || character.xml_id || "no name",
+    };
   });
 
   return (

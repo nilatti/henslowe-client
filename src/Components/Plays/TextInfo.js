@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   NumberInput,
@@ -23,8 +23,15 @@ const HeadingStyles = styled.div`
 const InfoDivStyles = styled.div`
   padding: 50px 25px;
 `;
-export default function TextInfo({ item, prettyName, type }) {
-  const { updatePlayTextItem } = usePlayState();
+
+export default function TextInfo({
+  item,
+  prettyName,
+  parentId,
+  parentType,
+  type,
+}) {
+  const { deletePlayTextItem, updatePlayTextItem } = usePlayState();
   const [numberFormOpen, setNumberFormOpen] = useState(false);
   const [pageNumberFormOpen, setPageNumberFormOpen] = useState(false);
   const [summaryFormOpen, setSummaryFormOpen] = useState(false);
@@ -32,13 +39,27 @@ export default function TextInfo({ item, prettyName, type }) {
     end_page: item.end_page || 0,
     id: item.id || null,
     number: item.number || 0,
+    [`${parentType}_id`]: parentId,
     start_page: item.start_page || 0,
     summary: item.summary || "",
   });
+
+  useEffect(() => {
+    inputs.end_page = item.end_page || 0;
+    inputs.id = item.id || null;
+    inputs.number = item.number || 0;
+    inputs[`${parentType}_id`] = parentId;
+    inputs.start_page = item.start_page || 0;
+    inputs.summary = item.summary || "";
+  }, [item]);
   function closeAllForms() {
     setNumberFormOpen(false);
     setPageNumberFormOpen(false);
     setSummaryFormOpen(false);
+  }
+
+  function deleteItem() {
+    deletePlayTextItem(item.id, type);
   }
 
   function handleSubmit(e) {
@@ -116,6 +137,10 @@ export default function TextInfo({ item, prettyName, type }) {
           startName="start_page"
           startValue={inputs.start_page}
         />
+        <span className="right floated trash icon" onClick={deleteItem}>
+          <i className="fas fa-trash-alt"></i> Delete this{" "}
+          {firstLetterUpcase(type)}
+        </span>
       </div>
     </InfoDivStyles>
   );

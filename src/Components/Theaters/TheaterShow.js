@@ -19,6 +19,7 @@ export default function TheaterShow({
 }) {
   console.log(theater);
   const { role } = useTheaterAuthState();
+  console.log(role);
   const [key, setKey] = useState();
   const [jobs, setJobs] = useState(theater.jobs);
 
@@ -97,7 +98,7 @@ export default function TheaterShow({
           </a>
         </p>
       )}
-      {role === "theater_admin" && (
+      {role === "admin" && (
         <span>
           <span className="right floated edit icon" onClick={onEditClick}>
             <i className="fas fa-pencil-alt"></i>
@@ -111,7 +112,7 @@ export default function TheaterShow({
         </span>
       )}
       <h2>Spaces</h2>
-      {role === "theater_admin" && (
+      {role === "admin" && (
         <SpaceAgreementFormForTheatersToggle
           theater={theater}
           isOpen={false}

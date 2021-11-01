@@ -1,6 +1,8 @@
 import styled from "styled-components";
+import { useEffect, useState } from "react";
 import OnStageShow from "./OnStageShow";
-import { usePlayState } from "../../../lib/playState";
+import NewOnStageForm from "./NewOnStageForm";
+import { Button } from "../../Button";
 
 const OnStageListStyles = styled.ul`
   li:nth-child(even) {
@@ -8,50 +10,40 @@ const OnStageListStyles = styled.ul`
   }
 `;
 
-export default function OnStagesList({ actId, frenchScene, sceneId }) {
-  let onStages = <div>No onstage characters</div>;
-  if (frenchScene.on_stages.length) {
-    let orderedOnStages = _.orderBy(frenchScene.on_stages, "character.name");
-    onStages = orderedOnStages.map((onStage) => (
-      <li key={onStage.id}>
-        <OnStageShow
-          actId={actId}
-          frenchSceneId={frenchScene.id}
-          onStage={onStage}
-          sceneId={sceneId}
-        />
-      </li>
-    ));
+export default function OnStagesList({ frenchScene }) {
+  const [newFormOpen, setNewFormOpen] = useState(false);
+  const [onStages, setOnStages] = useState([]);
+
+  useEffect(() => {
+    if (frenchScene.on_stages?.length) {
+      let orderedOnStages = _.orderBy(frenchScene.on_stages, "character.name");
+      let onStagesLIs = orderedOnStages.map((onStage) => (
+        <li key={onStage.id}>
+          <OnStageShow onStage={onStage} />
+        </li>
+      ));
+      setOnStages(onStagesLIs);
+    }
+  }, [JSON.stringify(frenchScene)]);
+
+  function toggleNewForm() {
+    setNewFormOpen(!newFormOpen);
   }
+
   return (
     <div>
       <h3>On Stages</h3>
-      <OnStageListStyles>{onStages}</OnStageListStyles>
+      <OnStageListStyles>
+        {onStages}
+        {newFormOpen ? (
+          <NewOnStageForm
+            frenchScene={frenchScene}
+            onFormClose={toggleNewForm}
+          />
+        ) : (
+          <Button onClick={toggleNewForm}>Add New Onstage</Button>
+        )}
+      </OnStageListStyles>
     </div>
   );
 }
-
-//     return (
-//       <div>
-//         <h3>On Stages</h3>
-//         <p>
-//           <em>Click to edit</em>
-//         </p>
-//         <ul>{onStages}</ul>
-//         {this.state.newOnStageFormOpen ? (
-//           <NewOnStageForm
-//             actId={this.props.actId}
-//             characters={this.props.play.characters}
-//             frenchSceneId={this.props.frenchSceneId}
-//             onFormClose={this.toggleForm}
-//             onFormSubmit={this.props.handleOnStageCreateFormSubmit}
-//             play={this.props.play}
-//             sceneId={this.props.sceneId}
-//           />
-//         ) : (
-//           <Button onClick={this.toggleForm}>Add New</Button>
-//         )}
-//       </div>
-//     );
-//   }
-// }

@@ -5,6 +5,7 @@ import uuid from "react-uuid";
 import { Button } from "../../Button";
 import CharacterSelect from "../Characters/CharacterSelect";
 import LineEditForm from "./LineEditForm";
+import { usePlayState } from "../../../lib/playState";
 
 var Diff = require("diff");
 
@@ -185,3 +186,5 @@ export default function LineShow({
     </LineShowStyles>
   );
 }
+
+//tktkt some provision for character groups
