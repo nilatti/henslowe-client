@@ -1,31 +1,63 @@
-import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import styled from "styled-components";
+import { getItem, updateServerItem } from "../../api/crud";
 import { Tab, Tabs } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 import { Button } from "../Button";
+import LoadingModal from "../LoadingModal";
+
+import TheaterProfileForAdmin from "./TheaterProfileForAdmin";
+import TheaterProfileForVisitor from "./TheaterProfileForVisitor";
 import JobsList from "../Jobs/ProductionJobsList";
+
 import { deleteItem } from "../../api/crud";
 import ProductionInfoTab from "../Productions/ProductionInfoTab";
-import SpaceAgreementFormForTheatersToggle from "../SpaceAgreements/SpaceAgreementFormForTheatersToggle";
+import SpaceAgreementFormForTheaters from "../SpaceAgreements/SpaceAgreementFormForTheaters";
 import SpaceInfoTab from "../Spaces/SpaceInfoTab";
 import { useTheaterAuthState } from "../Contexts";
 
-export default function TheaterShow({
-  onDeleteClick,
-  onEditClick,
-  onFormSubmit,
-  theater,
-}) {
-  console.log(theater);
-  const { role } = useTheaterAuthState();
-  console.log(role);
-  const [key, setKey] = useState();
-  const [jobs, setJobs] = useState(theater.jobs);
-
-  function handleDeleteClick() {
-    onDeleteClick(theater.id);
+const TheaterProfile = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  text-align: center;
+  div {
+    padding: 15px 0;
   }
+  h2 {
+    display: flex;
+    justify-content: center;
+    padding: 0 5px;
+    div {
+      font-size: 0.8em;
+    }
+  }
+`;
+export default function TheaterShow() {
+  const { theaterId } = useParams();
+  const { role } = useTheaterAuthState();
+
+  const [key, setKey] = useState();
+  const [loading, setLoading] = useState(false);
+
+  const [theater, setTheater] = useState();
+
+  useEffect(async () => {
+    setLoading(true);
+    let response = await getItem(theaterId, "theater");
+    if (response.status >= 400) {
+      console.log("error!");
+      setErrors((errors) => [...errors, "Error fetching theater"]);
+    } else {
+      setTheater(response.data);
+    }
+    setLoading(false);
+  }, []);
+
+  // function handleDeleteClick() {
+  //   onDeleteClick(theater.id);
+  // }
 
   function handleSelect(key) {
     setKey(key);
@@ -36,9 +68,22 @@ export default function TheaterShow({
     if (response.status >= 400) {
       console.log("error deleting job");
     } else {
-      newJobs = jobs.filter((job) => job.id != jobId);
-      setJobs(newJobs);
+      newJobs = theater.jobs.filter((job) => job.id != jobId);
+      setTheater({ ...theater, jobs: newJobs });
     }
+  }
+
+  async function updateTheater(theater) {
+    let response = await updateServerItem(theater, "theater");
+    if (response.status >= 400) {
+      console.log("error updating theater");
+    } else {
+      setTheater(response.data);
+    }
+  }
+
+  if (loading || !theater) {
+    return <LoadingModal displayText="Loading theater" />;
   }
 
   let productionTabs;
@@ -75,54 +120,27 @@ export default function TheaterShow({
   }
 
   return (
-    <div>
-      <h2>{theater.name}</h2>
-      {theater.mission_statement && (
-        <p>
-          <em>{theater.mission_statement}</em>
-        </p>
-      )}
-      {theater.street_address && (
-        <p>
-          {theater.street_address}
-          <br />
-          {theater.city}, {theater.state} {theater.zip}
-          <br />
-        </p>
-      )}
-      {theater.phone_number && <p>{theater.phone_number}</p>}
-      {theater.website && (
-        <p>
-          <a href={"http://" + theater.website} target="_blank">
-            {theater.website}
-          </a>
-        </p>
-      )}
-      {role === "admin" && (
-        <span>
-          <span className="right floated edit icon" onClick={onEditClick}>
-            <i className="fas fa-pencil-alt"></i>
-          </span>
-          <span
-            className="right floated trash icon"
-            onClick={handleDeleteClick}
-          >
-            <i className="fas fa-trash-alt"></i>
-          </span>
-        </span>
-      )}
-      <h2>Spaces</h2>
-      {role === "admin" && (
-        <SpaceAgreementFormForTheatersToggle
+    <TheaterProfile>
+      {role === "admin" ? (
+        <TheaterProfileForAdmin
           theater={theater}
-          isOpen={false}
-          onFormSubmit={onFormSubmit}
+          updateTheater={updateTheater}
         />
+      ) : (
+        <TheaterProfileForVisitor theater={theater} />
       )}
-      <Tabs activeKey={key} onSelect={handleSelect} id="space-info-tabs">
-        {spaceTabs}
-      </Tabs>
-
+      <div>
+        <h2>Spaces</h2>
+        {role === "admin" && (
+          <SpaceAgreementFormForTheaters
+            theater={theater}
+            onFormSubmit={updateTheater}
+          />
+        )}
+        <Tabs activeKey={key} onSelect={handleSelect} id="space-info-tabs">
+          {spaceTabs}
+        </Tabs>
+      </div>
       <h2>Productions</h2>
       {role === "admin" && (
         <div>
@@ -135,8 +153,12 @@ export default function TheaterShow({
         {productionTabs}
       </Tabs>
       <h2>People</h2>
-      <JobsList handleDeleteJob={handleDeleteJob} jobs={jobs} role={role} />
-    </div>
+      <JobsList
+        handleDeleteJob={handleDeleteJob}
+        jobs={theater.jobs}
+        role={role}
+      />
+    </TheaterProfile>
   );
 }
 
@@ -145,9 +167,3 @@ export default function TheaterShow({
 // onFormSubmit,
 // production,
 // role,
-
-TheaterShow.propTypes = {
-  theater: PropTypes.object.isRequired,
-  onDeleteClick: PropTypes.func.isRequired,
-  onEditClick: PropTypes.func.isRequired,
-};

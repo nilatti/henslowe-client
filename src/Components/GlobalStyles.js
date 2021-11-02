@@ -80,6 +80,7 @@ export const GlobalStyles = createGlobalStyle`
   .rbt-token {
     background-color: var(--color-light);
     color: var(--color-dark);
+    padding: 15px;
   }
   .rbt-token .rbt-token-remove-button {
     right: -65px;

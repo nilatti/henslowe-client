@@ -18,7 +18,6 @@ export default function Productions() {
       console.log("Error creating Production");
     } else {
       history.push(`/productions/${response.data.id}`);
-      // window.location.reload();
     }
   }
 
@@ -28,7 +27,6 @@ export default function Productions() {
       console.log("Error deleting Production");
     } else {
       history.push("/productions");
-      // window.location.reload();
     }
   }
   function handleCreateFormSubmit(production) {

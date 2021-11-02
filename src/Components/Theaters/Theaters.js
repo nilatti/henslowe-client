@@ -3,7 +3,7 @@ import { Link, Route, Switch, useHistory } from "react-router-dom";
 import { createItem, deleteItem, updateServerItem } from "../../api/crud";
 import { getTheaterNames } from "../../api/theaters";
 import TheatersList from "./TheatersList";
-import EditableTheater from "./EditableTheater";
+import TheaterWrapper from "./TheaterWrapper";
 import NewTheater from "./NewTheater";
 import ErrorMessages from "../ErrorMessages";
 
@@ -78,7 +78,7 @@ export default function Theaters() {
         <Route
           path={`/theaters/:theaterId`}
           render={(props) => (
-            <EditableTheater
+            <TheaterWrapper
               {...props}
               onDeleteClick={handleDeleteClick}
               onFormSubmit={handleEditFormSubmit}

@@ -100,3 +100,10 @@ export const DefaultTable = styled.table`
     background-color: var(--color-background);
   }
 `;
+
+export const InfoTabStyles = styled.div`
+  padding: 25px 0;
+  div {
+    padding: 7px 0;
+  }
+`;

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import info from "./Images/info_icon.png";
 
 const ToolTipStyles = styled.div``;
 const InfoBox = styled.div`
@@ -22,7 +23,7 @@ export default function ToolTip({ children, icon }) {
   return (
     <ToolTipStyles>
       <img
-        src={icon}
+        src={icon || info}
         onMouseEnter={handleMouseEvent}
         onMouseLeave={handleMouseEvent}
       />

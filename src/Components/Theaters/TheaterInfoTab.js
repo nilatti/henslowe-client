@@ -1,39 +1,36 @@
-import PropTypes from 'prop-types'
-import React, {
-  Component
-} from 'react'
+import { Link } from "react-router-dom";
+import { InfoTabStyles } from "../Styled";
 
-import {
-  Col,
-  Row,
-} from 'react-bootstrap'
-
-import {
-  Link
-} from 'react-router-dom'
-// import SpaceSubcomponent from './SpaceSubcomponent.js'
-
-class TheaterInfoTab extends Component {
-  render() {
-    return (
-      <Row>
-        <Col md={12} className="theater-profile">
-          <h2><Link to={`/theaters/${this.props.theater.id}`}>{this.props.theater.name}</Link></h2>
-          <p><em>{this.props.theater.mission_statement}</em></p>
-          <p>
-          {this.props.theater.street_address}<br />
-          {this.props.theater.city}, {this.props.theater.state}  {this.props.theater.zip}<br />
-          {this.props.theater.phone_number}<br />
-          <a href={'http://' + this.props.theater.website} target="_blank">{this.props.theater.website}</a>
-          </p>
-          </Col>
-          </Row>
-    )
-  }
+export default function TheaterInfoTab({ theater }) {
+  return (
+    <InfoTabStyles>
+      <h2>
+        <Link to={`/theaters/${theater.id}`}>{theater.name}</Link>
+      </h2>
+      {!!theater.mission_statement && (
+        <div>
+          <em>{theater.mission_statement}</em>
+        </div>
+      )}
+      <div>
+        {!!theater.street_address && (
+          <span>
+            {theater.street_address}
+            <br />
+          </span>
+        )}
+        {!!theater.city && <span>{theater.city}, </span>}
+        {!!theater.state && <span>{theater.state} </span>}
+        {!!theater.zip && <span>{theater.zip}</span>}
+      </div>
+      {!!theater.phone_number && <div>{theater.phone_number}</div>}
+      {!!theater.website && (
+        <div>
+          <a href={"http://" + theater.website} target="_blank">
+            {theater.website}
+          </a>
+        </div>
+      )}
+    </InfoTabStyles>
+  );
 }
-
-TheaterInfoTab.propTypes = {
-  theater: PropTypes.object.isRequired,
-}
-
-export default TheaterInfoTab

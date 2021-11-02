@@ -1,7 +1,7 @@
 import { Button } from "./Button";
 import { Form, FormGroupInline } from "./Form";
 import { US_STATES_ARRAY } from "../utils/hardcodedConstants";
-
+import { formatPhoneNumber } from "../utils/stringUtils";
 function AddressInput({ handleChange, city, state, street_address, zip }) {
   const states = US_STATES_ARRAY.map((us_state) => (
     <option key={us_state.abbr} value={us_state.abbr}>
@@ -48,6 +48,44 @@ function AddressInput({ handleChange, city, state, street_address, zip }) {
       </FormGroupInline>
     </>
   );
+}
+
+function AddressInputWithToggle({
+  city,
+  formOpen,
+  handleChange,
+  handleFormClose,
+  handleSubmit,
+  toggleForm,
+  toggleText,
+  state,
+  street_address,
+  zip,
+}) {
+  if (formOpen) {
+    return (
+      <Form noValidate onSubmit={(e) => handleSubmit(e)} width="85%">
+        <AddressInput
+          city={city}
+          handleChange={handleChange}
+          state={state}
+          street_address={street_address}
+          zip={zip}
+        />
+        <FormButtonGroup cancelFunction={handleFormClose} />
+      </Form>
+    );
+  } else if (street_address) {
+    return (
+      <div onDoubleClick={toggleForm}>
+        {street_address}
+        <br />
+        {city}, {state} {zip}
+      </div>
+    );
+  } else {
+    <div onDoubleClick={toggleForm}>{toggleText}</div>;
+  }
 }
 
 function FormButtonGroup({ cancelLabel, submitLabel, cancelFunction }) {
@@ -190,6 +228,53 @@ function NumberRangeWithToggle({
   );
 }
 
+function TelephoneInput({ handleChange, label, name, value }) {
+  return (
+    <FormGroupInline>
+      <label>{label}</label>
+      <input
+        type="tel"
+        id={name}
+        name={name}
+        onChange={handleChange}
+        value={value}
+      />
+    </FormGroupInline>
+  );
+}
+
+function TelephoneInputWithToggle({
+  formOpen,
+  handleChange,
+  handleFormClose,
+  handleSubmit,
+  label,
+  name,
+  toggleForm,
+  toggleText,
+  value,
+}) {
+  if (formOpen) {
+    return (
+      <Form noValidate onSubmit={(e) => handleSubmit(e)} width="85%">
+        <TelephoneInput
+          handleChange={handleChange}
+          label={label}
+          name={name}
+          value={value}
+        />
+        <FormButtonGroup cancelFunction={handleFormClose} />
+      </Form>
+    );
+  } else {
+    return (
+      <div onDoubleClick={toggleForm}>
+        {formatPhoneNumber(value) || toggleText}
+      </div>
+    );
+  }
+}
+
 function TextAreaInputWithToggle({
   formOpen,
   handleChange,
@@ -254,7 +339,73 @@ function TextInputWithToggle({
 }) {
   if (formOpen) {
     return (
-      <TextInput
+      <Form noValidate onSubmit={(e) => handleSubmit(e)} width="85%">
+        <TextInput
+          handleChange={handleChange}
+          handleFormClose={handleFormClose}
+          handleSubmit={handleSubmit}
+          label={label}
+          name={name}
+          value={value}
+        />
+        <FormButtonGroup cancelFunction={handleFormClose} />
+      </Form>
+    );
+  } else {
+    return <div onDoubleClick={toggleForm}>{value || toggleText}</div>;
+  }
+}
+
+function UrlInput({ handleChange, label, name, value }) {
+  return (
+    <FormGroupInline>
+      <label>{label}</label>
+      <input
+        type="url"
+        id={name}
+        name={name}
+        onChange={handleChange}
+        value={value}
+      />
+    </FormGroupInline>
+  );
+}
+
+function UrlInputAsForm({
+  handleChange,
+  handleFormClose,
+  handleSubmit,
+  label,
+  name,
+  value,
+}) {
+  return (
+    <Form noValidate onSubmit={(e) => handleSubmit(e)} width="85%">
+      <UrlInput
+        handleChange={handleChange}
+        label={label}
+        name={name}
+        value={value}
+      />
+      <FormButtonGroup cancelFunction={handleFormClose} />
+    </Form>
+  );
+}
+
+function UrlInputWithToggle({
+  formOpen,
+  handleChange,
+  handleFormClose,
+  handleSubmit,
+  label,
+  name,
+  toggleForm,
+  toggleText,
+  value,
+}) {
+  if (formOpen) {
+    return (
+      <UrlInputAsForm
         handleChange={handleChange}
         handleFormClose={handleFormClose}
         handleSubmit={handleSubmit}
@@ -264,17 +415,31 @@ function TextInputWithToggle({
       />
     );
   } else {
-    return <div onDoubleClick={toggleForm}>{value || toggleText}</div>;
+    return (
+      <div onDoubleClick={toggleForm}>
+        {(
+          <a href={"http://" + value} target="_blank">
+            {value}
+          </a>
+        ) || toggleText}
+      </div>
+    );
   }
 }
 
 export {
   AddressInput,
+  AddressInputWithToggle,
   FormButtonGroup,
   NumberInput,
   NumberRange,
   NumberRangeWithToggle,
+  TelephoneInput,
+  TelephoneInputWithToggle,
   TextAreaInputWithToggle,
   TextInput,
   TextInputWithToggle,
+  UrlInput,
+  UrlInputAsForm,
+  UrlInputWithToggle,
 };
