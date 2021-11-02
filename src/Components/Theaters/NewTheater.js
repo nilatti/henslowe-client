@@ -1,6 +1,5 @@
 import { useHistory } from "react-router-dom";
 import { AddressInput, FormButtonGroup } from "../Inputs";
-import { Button } from "../Button";
 import { Form, FormGroupInline } from "../Form";
 import { useForm } from "../../hooks/environmentUtils";
 

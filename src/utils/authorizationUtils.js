@@ -190,7 +190,6 @@ export async function getUserRoleForTheater(user, theaterId) {
 }
 
 export async function getUserRoleForProduction(user, productionId) {
-  console.log(user);
   if (getSuperAdminRole(user)) {
     return "admin";
   }
@@ -231,13 +230,20 @@ export async function getUserRoleForProduction(user, productionId) {
 }
 
 //currently allowing permissions for people who are admins at partner theaters because we don't have admin roles for spaces or jobs for spaces yet
-export function getUserRoleForSpace(user, space) {
-  if (!space.theaters) return;
-  let theaters = space.theaters;
-  let role = "";
-  if (!theaters.length && getSuperAdminRole(user)) {
-    role = "theater_admin";
+export async function getUserRoleForSpace(user, spaceId) {
+  if (getSuperAdminRole(user)) {
+    return "theater_admin";
   }
+  spaceId = Number(spaceId);
+  let response = await getItem(spaceId, "space");
+  let theaters;
+  if (response.status >= 400) {
+    console.log("error getting space");
+  } else {
+    theaters = response.data.theaters;
+  }
+  if (!theaters.length) return;
+  let role = "";
   theaters.forEach((theater) => {
     if (
       getUserRoleForTheater(user, theater.id) === "admin" ||

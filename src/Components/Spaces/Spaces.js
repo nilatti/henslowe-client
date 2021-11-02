@@ -4,7 +4,7 @@ import { createItem, deleteItem, updateServerItem } from "../../api/crud";
 
 import { getSpaceNames } from "../../api/spaces";
 import SpacesList from "./SpacesList";
-import EditableSpace from "./EditableSpace";
+import SpaceWrapper from "./SpaceWrapper";
 import NewSpace from "./NewSpace";
 import ErrorMessages from "../ErrorMessages";
 
@@ -79,7 +79,7 @@ export default function Spaces() {
         <Route
           path={`/spaces/:spaceId`}
           render={(props) => (
-            <EditableSpace
+            <SpaceWrapper
               {...props}
               onDeleteClick={handleDeleteClick}
               onFormSubmit={handleEditFormSubmit}

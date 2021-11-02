@@ -79,5 +79,5 @@ export default function SpaceAgreementFormForTheaters({
       </Form>
     );
   }
-  return <Button onClick={toggleFormOpen}>Add Space</Button>;
+  return <Button onClick={toggleFormOpen}>Add or Remove Space</Button>;
 }

@@ -75,16 +75,22 @@ function AddressInputWithToggle({
         <FormButtonGroup cancelFunction={handleFormClose} />
       </Form>
     );
-  } else if (street_address) {
+  } else if (street_address || city || state || zip) {
     return (
       <div onDoubleClick={toggleForm}>
-        {street_address}
-        <br />
-        {city}, {state} {zip}
+        {street_address && (
+          <span>
+            {street_address}
+            <br />
+          </span>
+        )}
+        {city && <span>{city}, </span>}
+        {state && <span>{state} </span>}
+        {zip && <span>{zip}</span>}
       </div>
     );
   } else {
-    <div onDoubleClick={toggleForm}>{toggleText}</div>;
+    return <div onDoubleClick={toggleForm}>{toggleText}</div>;
   }
 }
 
@@ -418,9 +424,12 @@ function UrlInputWithToggle({
     return (
       <div onDoubleClick={toggleForm}>
         {(
-          <a href={"http://" + value} target="_blank">
-            {value}
-          </a>
+          <>
+            <a href={"http://" + value} target="_blank">
+              {value}
+            </a>{" "}
+            (click to edit)
+          </>
         ) || toggleText}
       </div>
     );

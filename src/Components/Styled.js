@@ -107,3 +107,20 @@ export const InfoTabStyles = styled.div`
     padding: 7px 0;
   }
 `;
+
+export const Profile = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  text-align: center;
+  div {
+    padding: 15px 0;
+  }
+  h2 {
+    display: flex;
+    justify-content: center;
+    padding: 0 5px;
+    div {
+      font-size: 0.8em;
+    }
+  }
+`;

@@ -40,21 +40,16 @@ export { ProductionAuthProvider, useProductionAuthState };
 const SpaceAuthContext = createContext();
 const SpaceAuthStateProvider = SpaceAuthContext.Provider;
 
-function SpaceAuthProvider({ space, children }) {
+function SpaceAuthProvider({ spaceId, children }) {
   const { me } = useMeState();
-  const [roles, setRoles] = useState(["visitor"]);
-  useEffect(() => {
-    if (me.jobs) {
-      let userRole = getUserRoleForSpace(me, space);
-      setRoles([userRole]);
-    } else {
-      setRoles(["visitor"]);
-    }
+  const [role, setRole] = useState("visitor");
+  useEffect(async () => {
+    let userRole = await getUserRoleForSpace(me, spaceId);
+    console.log(userRole);
+    setRole(userRole);
   }, []);
   return (
-    <SpaceAuthStateProvider value={{ roles }}>
-      {children}
-    </SpaceAuthStateProvider>
+    <SpaceAuthStateProvider value={{ role }}>{children}</SpaceAuthStateProvider>
   );
 }
 

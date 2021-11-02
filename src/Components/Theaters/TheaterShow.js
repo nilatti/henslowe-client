@@ -17,23 +17,7 @@ import ProductionInfoTab from "../Productions/ProductionInfoTab";
 import SpaceAgreementFormForTheaters from "../SpaceAgreements/SpaceAgreementFormForTheaters";
 import SpaceInfoTab from "../Spaces/SpaceInfoTab";
 import { useTheaterAuthState } from "../Contexts";
-
-const TheaterProfile = styled.div`
-  display: flex;
-  flex-flow: column nowrap;
-  text-align: center;
-  div {
-    padding: 15px 0;
-  }
-  h2 {
-    display: flex;
-    justify-content: center;
-    padding: 0 5px;
-    div {
-      font-size: 0.8em;
-    }
-  }
-`;
+import { Profile } from "../Styled";
 export default function TheaterShow() {
   const { theaterId } = useParams();
   const { role } = useTheaterAuthState();
@@ -120,7 +104,7 @@ export default function TheaterShow() {
   }
 
   return (
-    <TheaterProfile>
+    <Profile>
       {role === "admin" ? (
         <TheaterProfileForAdmin
           theater={theater}
@@ -140,25 +124,32 @@ export default function TheaterShow() {
         <Tabs activeKey={key} onSelect={handleSelect} id="space-info-tabs">
           {spaceTabs}
         </Tabs>
+        <hr />
       </div>
-      <h2>Productions</h2>
-      {role === "admin" && (
-        <div>
-          <Link to={`/productions/new?theaterId=${theater.id}`}>
-            <Button>Add new production</Button>
-          </Link>
-        </div>
-      )}
-      <Tabs activeKey={key} onSelect={handleSelect} id="production-info-tabs">
-        {productionTabs}
-      </Tabs>
-      <h2>People</h2>
-      <JobsList
-        handleDeleteJob={handleDeleteJob}
-        jobs={theater.jobs}
-        role={role}
-      />
-    </TheaterProfile>
+      <div>
+        <h2>Productions</h2>
+        {role === "admin" && (
+          <div>
+            <Link to={`/productions/new?theaterId=${theater.id}`}>
+              <Button>Add new production</Button>
+            </Link>
+          </div>
+        )}
+        <Tabs activeKey={key} onSelect={handleSelect} id="production-info-tabs">
+          {productionTabs}
+        </Tabs>
+        <hr />
+      </div>
+      <div>
+        <h2>People</h2>
+        <JobsList
+          handleDeleteJob={handleDeleteJob}
+          jobs={theater.jobs}
+          role={role}
+        />
+        <hr />
+      </div>
+    </Profile>
   );
 }
 

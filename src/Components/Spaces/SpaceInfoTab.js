@@ -1,40 +1,38 @@
-import PropTypes from 'prop-types'
-import React, {
-  Component
-} from 'react'
+import { Link } from "react-router-dom";
+import { InfoTabStyles } from "../Styled";
 
-import {
-  Col,
-  Row,
-} from 'react-bootstrap'
-import {
-  Link
-} from 'react-router-dom'
-
-class SpaceInfoTab extends Component {
-  render() {
-    return (
-      <Col md={12}>
-      <Row>
-        <Col md={12} className="space-profile">
-          <h2><Link to={`/spaces/${this.props.space.id}`}>{this.props.space.name}</Link></h2>
-          <p><em>{this.props.space.mission_statement}</em></p>
-          <p>
-          {this.props.space.street_address}<br />
-          {this.props.space.city}, {this.props.space.state}  {this.props.space.zip}<br />
-          {this.props.phone_number}<br />
-          <a href={'http://' + this.props.space.website} target="_blank">{this.props.space.website}</a>
-          </p>
-        </Col>
-      </Row>
-      <hr />
-      </Col>
-    )
-  }
+export default function SpaceInfoTab({ space }) {
+  return (
+    <InfoTabStyles>
+      <h2>
+        <Link to={`/spaces/${space.id}`}>{space.name}</Link>
+      </h2>
+      {!!space.mission_statement && (
+        <div>
+          <em>{space.mission_statement}</em>
+        </div>
+      )}
+      {!!space.street_address && !!space.city && !!space.state && space.zip && (
+        <div>
+          {!!space.street_address && (
+            <span>
+              {space.street_address}
+              <br />
+            </span>
+          )}
+          {!!space.city && <span>{space.city}, </span>}
+          {!!space.state && <span>{space.state} </span>}
+          {!!space.zip && <span>{space.zip}</span>}
+        </div>
+      )}
+      {!!space.phone_number && <div>{space.phone_number}</div>}
+      {!!space.website && (
+        <div>
+          <a href={"http://" + space.website} target="_blank">
+            {space.website}
+          </a>
+        </div>
+      )}
+    </InfoTabStyles>
+  );
 }
-
-SpaceInfoTab.propTypes = {
-  space: PropTypes.object.isRequired,
-}
-
-export default SpaceInfoTab
