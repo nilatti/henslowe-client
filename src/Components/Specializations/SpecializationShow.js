@@ -1,53 +1,53 @@
-import PropTypes from "prop-types";
-import { Col, Row, Tab, Tabs } from "react-bootstrap";
-import React, { Component } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import SpecializationProfileForAdmin from "./SpecializationProfileForAdmin";
+import SpecializationProfileForVisitor from "./SpecializationProfileForVisitor";
+import LoadingModal from "../LoadingModal";
+import { useSuperAuthState } from "../Contexts";
+import SpecializationJobsList from "../Jobs/SpeciailzationJobsList";
+import { Profile } from "../Styled";
+import { getItem, updateServerItem } from "../../api/crud";
 
-import JobsList from "../Jobs/ProductionJobsList";
+export default function SpecializationShow({ onDeleteClick }) {
+  const { role } = useSuperAuthState();
+  const { specializationId } = useParams();
+  const [loading, setLoading] = useState(false);
+  const [specialization, setSpecialization] = useState();
+  useEffect(async () => {
+    setLoading(true);
+    let response = await getItem(specializationId, "specialization");
+    if (response.status >= 400) {
+      console.log("error getting specialization");
+    } else {
+      setSpecialization(response.data);
+    }
+    setLoading(false);
+  }, []);
 
-class SpecializationShow extends Component {
-  constructor(props, context) {
-    super(props, context);
+  async function updateSpecialization(specialization) {
+    let response = await updateServerItem(specialization, "specialization");
+    if (response.status >= 400) {
+      console.log("error updating specialization");
+    } else {
+      setSpecialization(response.data);
+    }
   }
 
-  handleDeleteClick = () => {
-    this.props.onDeleteClick(this.props.specialization.id);
-  };
-
-  render() {
-    return (
-      <Col md={12}>
-        <Row>
-          <Col md={12} className="specialization-profile">
-            <h2>{this.props.specialization.title}</h2>
-            <p>
-              <em>{this.props.specialization.description}</em>
-            </p>
-            <span
-              className="right floated edit icon"
-              onClick={this.props.onEditClick}
-            >
-              <i className="fas fa-pencil-alt"></i>
-            </span>
-            <span
-              className="right floated trash icon"
-              onClick={this.handleDeleteClick}
-            >
-              <i className="fas fa-trash-alt"></i>
-            </span>
-          </Col>
-        </Row>
-        <Row>
-          <JobsList specialization_id={this.props.specialization.id} />
-        </Row>
-      </Col>
-    );
+  if (loading || !specialization) {
+    return <LoadingModal displayText="loading specialization" />;
   }
+  return (
+    <Profile>
+      {role === "superadmin" ? (
+        <SpecializationProfileForAdmin
+          onDeleteClick={onDeleteClick}
+          specialization={specialization}
+          updateSpecialization={updateSpecialization}
+        />
+      ) : (
+        <SpecializationProfileForVisitor specialization={specialization} />
+      )}
+      <SpecializationJobsList jobs={specialization.jobs} />
+    </Profile>
+  );
 }
-
-SpecializationShow.propTypes = {
-  specialization: PropTypes.object.isRequired,
-  onDeleteClick: PropTypes.func.isRequired,
-  onEditClick: PropTypes.func.isRequired,
-};
-
-export default SpecializationShow;

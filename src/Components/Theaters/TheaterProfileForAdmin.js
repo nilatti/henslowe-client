@@ -1,13 +1,15 @@
 import { useState } from "react";
+import { useHistory } from "react-router";
 import ToolTip from "../ToolTip";
 import {
   AddressInputWithToggle,
   TelephoneInputWithToggle,
-  TextInput,
+  TextInputAsForm,
   TextAreaInputWithToggle,
   UrlInputWithToggle,
 } from "../Inputs";
 import { useForm } from "../../hooks/environmentUtils";
+import { deleteItem } from "../../api/crud";
 
 export default function TheaterProfileForAdmin({ theater, updateTheater }) {
   const [addressForm, setAddressForm] = useState(false);
@@ -60,11 +62,20 @@ export default function TheaterProfileForAdmin({ theater, updateTheater }) {
     setUrlForm(!urlForm);
   }
 
+  async function handleDelete(theaterId) {
+    let response = await deleteItem(theaterId, "theater");
+    if (response.status >= 400) {
+      console.log("error deleting theater");
+    } else {
+      history.push("/theaters");
+    }
+  }
+
   return (
     <div>
       <div>
         {nameForm ? (
-          <TextInput
+          <TextInputAsForm
             handleChange={handleChange}
             handleFormClose={toggleNameForm}
             handleSubmit={handleSubmit}
@@ -73,14 +84,22 @@ export default function TheaterProfileForAdmin({ theater, updateTheater }) {
             value={inputs.name}
           />
         ) : (
-          <h2 onDoubleClick={toggleNameForm}>
-            {theater.name}
-            <ToolTip>
-              <div>
-                <em>Double-click most of this to edit</em>
-              </div>
-            </ToolTip>
-          </h2>
+          <>
+            <h2 onDoubleClick={toggleNameForm}>
+              {theater.name}
+              <ToolTip>
+                <div>
+                  <em>Double-click most of this to edit</em>
+                </div>
+              </ToolTip>
+            </h2>
+            <span
+              className="right floated trash icon"
+              onClick={() => handleDelete(theater.id)}
+            >
+              <i className="fas fa-trash-alt"></i>
+            </span>
+          </>
         )}
       </div>
 

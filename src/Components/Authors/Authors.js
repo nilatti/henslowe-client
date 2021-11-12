@@ -1,82 +1,87 @@
-import React, {
-  Component
-} from 'react'
-import {
-  Col,
-  Row
-} from 'react-bootstrap'
-import {
-  Link,
-  Route,
-  Switch
-} from 'react-router-dom'
+import { useState } from "react";
+import { Link, Route, Switch, useHistory } from "react-router-dom";
+import { createItem, deleteItem, updateServerItem } from "../../api/crud";
 
-import {
-  createAuthor,
-  deleteAuthor
-} from '../../api/authors'
-import AuthorsList from './AuthorsList'
-import EditableAuthor from './EditableAuthor'
-import NewAuthor from './NewAuthor'
+import AuthorsList from "./AuthorsList";
+import AuthorWrapper from "./AuthorWrapper";
+import NewAuthor from "./NewAuthor";
+import ErrorMessages from "../ErrorMessages";
 
-class Authors extends Component {
+export default function Authors() {
+  const history = useHistory();
+  const [authors, setAuthors] = useState([]);
+  const [errors, setErrors] = useState([]);
 
-  async createAuthor(author) {
-    const response = await createAuthor(author)
+  async function handleCreateFormSubmit(newAuthor) {
+    const response = await createItem(newAuthor, "author");
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error creating author'
-      })
+      setErrors((errors) => [...errors, "Error fetching authors"]);
     } else {
-      this.props.history.push(`/authors/${response.data.id}`)
-      window.location.reload();
+      let newAuthors = (authors) => [...authors, newAuthor];
+      setAuthors(newAuthors);
+      history.push(`/authors/${response.data.id}`);
     }
   }
 
-  async deleteAuthor(authorId) {
-    const response = await deleteAuthor(authorId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error deleting author'
-      })
+  async function handleDeleteClick(authorId) {
+    const response = await deleteItem(authorId, "author");
+    if (response.status >= 404) {
+      setErrors((errors) => [...errors, "Error fetching authors"]);
     } else {
-      this.props.history.push('/authors')
-      window.location.reload();
+      let newAuthors = authors.filter((author) => author.id != authorId);
+      setAuthors(newAuthors);
+      history.push("/authors");
+      history.go();
     }
   }
 
-  handleCreateFormSubmit = (author) => {
-    this.createAuthor(author)
-  }
-  handleDeleteClick = (authorId) => {
-    this.deleteAuthor(authorId)
+  async function handleEditFormSubmit(newAuthor) {
+    const response = await updateServerItem(newAuthor, "author");
+    if (response.status >= 400) {
+      setErrors((errors) => [...errors, "Error updating author"]);
+    } else {
+      let newAuthors = authors.map((author) => {
+        if (author.id != newAuthor.id) {
+          return author;
+        } else {
+          return response.data;
+        }
+      });
+      setAuthors(newAuthors);
+      history.push(`/authors/${response.data.id}`);
+      history.go();
+    }
   }
 
-  render() {
-    return (
-      <Row>
-        <Col md={12} >
-          <div id="authors">
-            <h2><Link to='/authors'>Authors</Link></h2>
-            <hr />
-              <Switch>
-              <Route path='/authors/new' render={(props) => <NewAuthor {...props} onFormSubmit={this.handleCreateFormSubmit}/> } />
-              <Route
-                path={`/authors/:authorId`}
-                render={(props) => (
-                  <EditableAuthor
-                    {...props}
-                    onDeleteClick={this.handleDeleteClick}
-                  />
-                )}
-              />
-              <Route path='/authors/' component={AuthorsList} />
-              </Switch>
-          </div>
-        </Col>
-      </Row>
-    )
-  }
+  return (
+    <div id="authors">
+      <h2>
+        <Link to="/authors">Authors</Link>
+      </h2>
+      <ErrorMessages errors={errors} />
+      <hr />
+      <Switch>
+        <Route
+          path="/authors/new"
+          render={(props) => (
+            <NewAuthor {...props} onFormSubmit={handleCreateFormSubmit} />
+          )}
+        />
+        <Route
+          path={`/authors/:authorId`}
+          render={(props) => (
+            <AuthorWrapper
+              {...props}
+              onDeleteClick={handleDeleteClick}
+              onFormSubmit={handleEditFormSubmit}
+            />
+          )}
+        />
+        <Route
+          path={"/authors/"}
+          render={(props) => <AuthorsList {...props} />}
+        />
+      </Switch>
+    </div>
+  );
 }
-
-export default Authors

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Tab, Tabs } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import TheaterInfoTab from "../Theaters/TheaterInfoTab";
 import { useSpaceAuthState } from "../Contexts";
 import LoadingModal from "../LoadingModal";
@@ -10,14 +9,12 @@ import ConflictsList from "../Conflicts/ConflictsList";
 import { Profile } from "../Styled";
 import SpaceProfileForAdmin from "./SpaceProfileForAdmin";
 import SpaceProfileForVisitor from "./SpaceProfileForVisitor";
-
 import SpaceAgreementFormForSpaces from "../SpaceAgreements/SpaceAgreementFormForSpaces";
-
 import { SPACE_CONFLICT_REASONS } from "../../utils/hardcodedConstants";
 import { getItem, updateServerItem } from "../../api/crud";
+
 export default function SpaceShow() {
   const { role } = useSpaceAuthState();
-  console.log("role", role);
   const { spaceId } = useParams();
   const [key, setKey] = useState();
   const [loading, setLoading] = useState(false);

@@ -1,47 +1,90 @@
-import PropTypes from 'prop-types';
+import { useHistory } from "react-router";
+import { Form, FormGroupInline } from "../Form";
+import { StartEndDatePair } from "../../utils/formUtils";
+import { FormButtonGroup, TextInput } from "../Inputs";
+import { useForm } from "../../hooks/environmentUtils";
+import { USER_GENDER_DESCRIPTORS } from "../../utils/hardcodedConstants";
+import { firstLetterUpcase } from "../../utils/stringUtils";
 
-import React, {
-  Component
-} from 'react'
+export default function NewAuthor({ onFormSubmit }) {
+  const { inputs, handleChange } = useForm({
+    birthdate: "",
+    deathdate: "",
+    first_name: "",
+    gender: "",
+    last_name: "",
+    middle_name: "",
+    nationality: "",
+  });
 
-import {
-  Col,
-  Row
-} from 'react-bootstrap'
+  const history = useHistory();
 
-import AuthorForm from './AuthorForm'
-
-class NewAuthor extends Component {
-
-  handleFormClose = () => {
-    this.setState({
-      isOpen: false
-    })
+  function onFormClose() {
+    history.push("/authors");
   }
-  handleFormSubmit = (author) => {
-    this.handleFormClose()
-    this.props.onFormSubmit(author)
+
+  function handleSubmit(event) {
+    console.log(inputs);
+    event.preventDefault();
+    onFormSubmit(inputs);
   }
 
-  render() {
-    return (
-      <Row>
-        <Col md={12} >
-          <div id="new-author-form">
-            <AuthorForm
-            onFormSubmit={this.handleFormSubmit}
-            onFormClose={this.handleFormClose}
-             />
-          </div>
-        </Col>
-      </Row>
-    )
-  }
+  return (
+    <Form noValidate onSubmit={(e) => handleSubmit(e)} width="100%">
+      <TextInput
+        handleChange={handleChange}
+        label="First Name"
+        name="first_name"
+        value={inputs.first_name}
+      />
+      <TextInput
+        handleChange={handleChange}
+        label="Middle Name"
+        name="middle_name"
+        value={inputs.middle_name}
+      />
+      <TextInput
+        handleChange={handleChange}
+        label="Last Name"
+        name="last_name"
+        value={inputs.last_name}
+      />
+      <StartEndDatePair
+        endDate=""
+        endLabel="Death Date"
+        endName="deathdate"
+        handleChange={handleChange}
+        startDate=""
+        startLabel="Birth Date"
+        startName="birthdate"
+      />
+      <fieldset>
+        <FormGroupInline>
+          <label>Gender:</label>
+          <select name="gender" onChange={handleChange} value={inputs.gender}>
+            <option></option>
+            {USER_GENDER_DESCRIPTORS.map((gender) => (
+              <option
+                key={gender}
+                checked={inputs.gender === gender}
+                id={gender}
+                label={firstLetterUpcase(gender)}
+                name="gender"
+                onChange={handleChange}
+                type="radio"
+                value={gender}
+              />
+            ))}
+          </select>
+        </FormGroupInline>
+      </fieldset>
+      <TextInput
+        handleChange={handleChange}
+        label="Nationality"
+        name="nationality"
+        value={inputs.nationality}
+      />
+      <FormButtonGroup cancelFunction={onFormClose} />
+    </Form>
+  );
 }
-
-NewAuthor.propTypes = {
-  onFormSubmit: PropTypes.func.isRequired,
-}
-
-
-export default NewAuthor

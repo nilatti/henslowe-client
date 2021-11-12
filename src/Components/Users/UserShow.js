@@ -1,6 +1,5 @@
 import Moment from "react-moment";
-import PropTypes from "prop-types";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { useMeState } from "../../lib/meState";
 import { useUserAuthState } from "../Contexts";
@@ -16,6 +15,7 @@ import { USER_CONFLICT_REASONS } from "../../utils/hardcodedConstants";
 export default function UserShow({ onDeleteClick, onEditClick, user }) {
   const { me } = useMeState();
   const { roles } = useUserAuthState();
+  console.log(user);
 
   function handleDeleteClick() {
     onDeleteClick(user.id);
@@ -176,7 +176,7 @@ export default function UserShow({ onDeleteClick, onEditClick, user }) {
           <strong>Timezone:</strong> {user.timezone}
         </div>
       )}
-      {roles.includes("self") && (
+      {overlap(roles, ["self", "superadmin"]) && (
         <div>
           <span className="right floated edit icon" onClick={onEditClick}>
             <i className="fas fa-pencil-alt"></i>
@@ -211,9 +211,3 @@ export default function UserShow({ onDeleteClick, onEditClick, user }) {
     </div>
   );
 }
-
-UserShow.propTypes = {
-  onDeleteClick: PropTypes.func.isRequired,
-  onEditClick: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
-};

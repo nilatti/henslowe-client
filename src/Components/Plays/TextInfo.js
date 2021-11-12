@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {
   NumberInput,
   NumberRangeWithToggle,
-  TextInput,
+  TextInputAsForm,
   TextAreaInputWithToggle,
 } from "../Inputs";
 import ToolTip from "../ToolTip";
@@ -102,7 +102,7 @@ export default function TextInfo({
           </HeadingStyles>
         )}
         {numberFormOpen && type == "french scene" && (
-          <TextInput
+          <TextInputAsForm
             handleChange={handleChange}
             handleFormClose={toggleNumberForm}
             handleSubmit={handleSubmit}

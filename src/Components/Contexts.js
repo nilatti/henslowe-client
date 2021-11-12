@@ -11,6 +11,28 @@ import {
   getUserRoleForTheater,
 } from "../utils/authorizationUtils";
 
+const SuperAuthContext = createContext();
+const SuperAuthStateProvider = SuperAuthContext.Provider;
+function SuperAuthProvider({ children }) {
+  const { me } = useMeState();
+  const [role, setRole] = useState("visitor");
+  useEffect(() => {
+    if (getSuperAdminRole(me)) {
+      setRole("superadmin");
+    }
+  }, []);
+  return (
+    <SuperAuthStateProvider value={{ role }}>{children}</SuperAuthStateProvider>
+  );
+}
+
+function useSuperAuthState() {
+  const all = useContext(SuperAuthContext);
+  return all;
+}
+
+export { SuperAuthProvider, useSuperAuthState };
+
 //production auth provider
 const ProductionAuthContext = createContext();
 const ProductionAuthStateProvider = ProductionAuthContext.Provider;

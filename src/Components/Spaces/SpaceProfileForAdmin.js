@@ -1,15 +1,18 @@
 import { useState } from "react";
+import { useHistory } from "react-router";
 import ToolTip from "../ToolTip";
 import {
   AddressInputWithToggle,
   TelephoneInputWithToggle,
-  TextInput,
+  TextInputAsForm,
   TextAreaInputWithToggle,
   UrlInputWithToggle,
 } from "../Inputs";
 import { useForm } from "../../hooks/environmentUtils";
+import { deleteItem } from "../../api/crud";
 
 export default function SpaceProfileForAdmin({ space, updateSpace }) {
+  const history = useHistory();
   const [addressForm, setAddressForm] = useState(false);
   const [missionForm, setMissionForm] = useState(false);
   const [nameForm, setNameForm] = useState(false);
@@ -60,11 +63,19 @@ export default function SpaceProfileForAdmin({ space, updateSpace }) {
     setUrlForm(!urlForm);
   }
 
+  async function handleDelete(spaceId) {
+    let response = await deleteItem(spaceId, "space");
+    if (response.status >= 400) {
+      console.log("error deleting space");
+    } else {
+      history.push("/spaces");
+    }
+  }
   return (
     <div>
       <div>
         {nameForm ? (
-          <TextInput
+          <TextInputAsForm
             handleChange={handleChange}
             handleFormClose={toggleNameForm}
             handleSubmit={handleSubmit}
@@ -73,14 +84,22 @@ export default function SpaceProfileForAdmin({ space, updateSpace }) {
             value={inputs.name}
           />
         ) : (
-          <h2 onDoubleClick={toggleNameForm}>
-            {space.name}
-            <ToolTip>
-              <div>
-                <em>Double-click most of this to edit</em>
-              </div>
-            </ToolTip>
-          </h2>
+          <>
+            <h2 onDoubleClick={toggleNameForm}>
+              {space.name}
+              <ToolTip>
+                <div>
+                  <em>Double-click most of this to edit</em>
+                </div>
+              </ToolTip>
+            </h2>
+            <span
+              className="right floated trash icon"
+              onClick={() => handleDelete(space.id)}
+            >
+              <i className="fas fa-trash-alt"></i>
+            </span>
+          </>
         )}
       </div>
 

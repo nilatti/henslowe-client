@@ -2,7 +2,9 @@ import { useState } from "react";
 import styled from "styled-components";
 import info from "./Images/info_icon.png";
 
-const ToolTipStyles = styled.div``;
+const ToolTipStyles = styled.div`
+  font-size: 16px;
+`;
 const InfoBox = styled.div`
   width: 250px;
   background-color: var(--color-med);

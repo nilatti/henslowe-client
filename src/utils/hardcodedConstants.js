@@ -266,3 +266,11 @@ export const USER_CONFLICT_REASONS = [
   "rehearsal",
   "work",
 ];
+export const USER_GENDER_DESCRIPTORS = [
+  "cis male",
+  "cis female",
+  "nonbinary/gender fluid/agender",
+  "trans male",
+  "trans female",
+  "unknown",
+];

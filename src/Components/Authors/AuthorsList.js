@@ -1,50 +1,45 @@
-import React, {
-  Component
-} from 'react'
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { getItems } from "../../api/crud";
+import LoadingModal from "../LoadingModal";
 
-import {
-  Link
-} from 'react-router-dom'
+export default function AuthorsList() {
+  const [authors, setAuthors] = useState([]);
+  const [authorsLIs, setAuthorsLIs] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-import {
-  getAuthorNames
-} from '../../api/authors'
-
-class AuthorsList extends Component {
-  state = {
-    authors: [],
-  }
-
-  componentDidMount() {
-    this.loadAuthorsFromServer()
-  }
-
-  async loadAuthorsFromServer() {
-    const response = await getAuthorNames()
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error fetching authors'
-      })
-    } else {
-      this.setState({
-        authors: response.data
-      })
+  useEffect(() => {
+    if (authors.length) {
+      let authorItems = authors.map((author) => (
+        <li key={author.id}>
+          {" "}
+          <Link to={`/authors/${author.id}`}>
+            {author.first_name} {author.last_name}
+          </Link>
+        </li>
+      ));
+      setAuthorsLIs(authorItems);
     }
-  }
+  }, [JSON.stringify(authors)]);
 
-  render() {
-    let authors = this.state.authors.map(author =>
-      <li key={author.id}> <Link to={`/authors/${author.id}`}>{author.first_name} {author.last_name}</Link></li>
-    )
-    return (
-      <div>
-        <ul>
-          {authors}
-        </ul>
-        <Link to='/authors/new'>Add New</Link>
-      </div>
-    )
+  useEffect(async () => {
+    setLoading(true);
+    const response = await getItems("author");
+    if (response.status >= 400) {
+      setErrors((errors) => [...errors, "Error fetching authors"]);
+    } else {
+      setAuthors(response.data);
+    }
+    setLoading(false);
+  }, []);
+
+  if (loading || !authors.length) {
+    return <LoadingModal displayText="Loading authors" />;
   }
+  return (
+    <div>
+      <ul>{authorsLIs}</ul>
+      <Link to="/authors/new">Add New</Link>
+    </div>
+  );
 }
-
-export default AuthorsList

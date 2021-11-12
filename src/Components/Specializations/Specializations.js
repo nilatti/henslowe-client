@@ -1,82 +1,110 @@
-import React, {
-  Component
-} from 'react'
-import {
-  Col,
-  Row
-} from 'react-bootstrap'
-import {
-  Link,
-  Route,
-  Switch
-} from 'react-router-dom'
+import { useEffect, useState } from "react";
+import { Link, Route, Switch, useHistory } from "react-router-dom";
+import { createItem, deleteItem, updateServerItem } from "../../api/crud";
 
-import {
-  createSpecialization,
-  deleteSpecialization
-} from '../../api/specializations'
-import SpecializationsList from './SpecializationsList'
-import EditableSpecialization from './EditableSpecialization'
-import NewSpecialization from './NewSpecialization'
+import { getItems } from "../../api/crud";
+import SpecializationsList from "./SpecializationsList";
+import SpecializationWrapper from "./SpecializationWrapper";
+import NewSpecialization from "./NewSpecialization";
+import ErrorMessages from "../ErrorMessages";
 
-class Specializations extends Component {
+export default function Specializations() {
+  const history = useHistory();
+  const [specializations, setSpecializations] = useState([]);
+  const [errors, setErrors] = useState([]);
 
-  async createSpecialization(specialization) {
-    const response = await createSpecialization(specialization)
+  useEffect(async () => {
+    const response = await getItems("specialization");
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error creating Specialization'
-      })
+      setErrors((errors) => [...errors, "Error fetching specializations"]);
     } else {
-      this.props.history.push(`/specializations/${response.data.id}`)
-      window.location.reload();
+      setSpecializations(response.data);
+    }
+  }, []);
+
+  async function handleCreateFormSubmit(newSpecialization) {
+    const response = await createItem(newSpecialization, "specialization");
+    if (response.status >= 400) {
+      setErrors((errors) => [...errors, "Error fetching specializations"]);
+    } else {
+      let newSpecializations = (specializations) => [
+        ...specializations,
+        response.data,
+      ];
+      setSpecializations(newSpecializations);
+      history.push(`/specializations/${response.data.id}`);
     }
   }
 
-  async deleteSpecialization(specializationId) {
-    const response = await deleteSpecialization(specializationId)
-    if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error deleting Specialization'
-      })
+  async function handleDeleteClick(specializationId) {
+    const response = await deleteItem(specializationId, "specialization");
+    if (response.status >= 404) {
+      setErrors((errors) => [...errors, "Error fetching specializations"]);
     } else {
-      this.props.history.push('/specializations')
-      window.location.reload();
+      let newSpecializations = specializations.filter(
+        (specialization) => specialization.id != specializationId
+      );
+      setSpecializations(newSpecializations);
+      history.push("/specializations");
+      history.go();
     }
   }
 
-  handleCreateFormSubmit = (specialization) => {
-    this.createSpecialization(specialization)
-  }
-  handleDeleteClick = (specializationId) => {
-    this.deleteSpecialization(specializationId)
+  async function handleEditFormSubmit(newSpecialization) {
+    const response = await updateServerItem(
+      newSpecialization,
+      "specialization"
+    );
+    if (response.status >= 400) {
+      setErrors((errors) => [...errors, "Error updating specialization"]);
+    } else {
+      let newSpecializations = specializations.map((specialization) => {
+        if (specialization.id != newSpecialization.id) {
+          return specialization;
+        } else {
+          return response.data;
+        }
+      });
+      setSpecializations(newSpecializations);
+      history.push(`/specializations/${response.data.id}`);
+      history.go();
+    }
   }
 
-  render() {
-    return (
-      <Row>
-        <Col md={12} >
-          <div id="specializations">
-            <h2><Link to='/specializations'>Specializations</Link></h2>
-            <hr />
-              <Switch>
-              <Route path='/specializations/new' render={(props) => <NewSpecialization {...props} onFormSubmit={this.handleCreateFormSubmit}/> } />
-              <Route
-                path={`/specializations/:specializationId`}
-                render={(props) => (
-                  <EditableSpecialization
-                    {...props}
-                    onDeleteClick={this.handleDeleteClick}
-                  />
-                )}
-              />
-              <Route path='/specializations/' component={SpecializationsList} />
-              </Switch>
-          </div>
-        </Col>
-      </Row>
-    )
-  }
+  return (
+    <div id="specializations">
+      <h2>
+        <Link to="/specializations">Specializations</Link>
+      </h2>
+      <ErrorMessages errors={errors} />
+      <hr />
+      <Switch>
+        <Route
+          path="/specializations/new"
+          render={(props) => (
+            <NewSpecialization
+              {...props}
+              onFormSubmit={handleCreateFormSubmit}
+            />
+          )}
+        />
+        <Route
+          path={`/specializations/:specializationId`}
+          render={(props) => (
+            <SpecializationWrapper
+              {...props}
+              onDeleteClick={handleDeleteClick}
+              onFormSubmit={handleEditFormSubmit}
+            />
+          )}
+        />
+        <Route
+          path={"/specializations/"}
+          render={(props) => (
+            <SpecializationsList {...props} specializations={specializations} />
+          )}
+        />
+      </Switch>
+    </div>
+  );
 }
-
-export default Specializations

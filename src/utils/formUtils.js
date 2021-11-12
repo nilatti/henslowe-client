@@ -1,6 +1,8 @@
+import { css } from "jquery";
 import { useState } from "react";
 import { Form } from "react-bootstrap";
 import Datetime from "react-datetime"; //updated!
+import { couldStartTrivia } from "typescript";
 
 import { isAfterDate, isAfterTime } from "../utils/dateTimeUtils";
 
@@ -18,43 +20,50 @@ function handleDateTimeChange(time, name, handleChange) {
   };
   handleChange(event);
 }
-export function StartEndDatePair({ endDate, handleChange, startDate }) {
-  if (typeof endDate == "string") {
-    endDate = new Date(endDate);
-  }
-  if (typeof startDate == "string") {
-    startDate = new Date(startDate);
-  }
+export function StartEndDatePair({
+  endDate,
+  endLabel,
+  endName,
+  handleChange,
+  startDate,
+  startLabel,
+  startName,
+}) {
   const [tempStartDate, setTempStartDate] = useState(startDate);
 
-  function handleStartDateChange(date, handleChange) {
+  function handleStartDateChange(date, startName, handleChange) {
     //this is a hacky workaround that keeps the end time after the start time.
     setTempStartDate(date);
-    handleDateTimeChange(date, "start_date", handleChange);
+    handleDateTimeChange(date, startName, handleChange);
   }
+
+  endName = endName || "end_date";
+  startName = startName || "start_date";
   return (
     <>
       <Form.Group controlId="start_date">
-        <Form.Label>From</Form.Label>
+        <Form.Label>{startLabel || "From"}</Form.Label>
         <Datetime
-          timeFormat={false}
           format={"MM/DD/YYYY"}
-          onChange={(date) => handleStartDateChange(date, handleChange)}
+          name={startName || "startDate"}
+          onChange={(date) =>
+            handleStartDateChange(date, startName, handleChange)
+          }
           required
+          timeFormat={false}
           value={startDate}
         />
       </Form.Group>
       <Form.Group controlId="end_date">
-        <Form.Label>To</Form.Label>
+        <Form.Label>{endLabel || "To"}</Form.Label>
         <Datetime
-          isValidDate={(current) => isAfterDate(tempStartDate, current)}
-          timeFormat={false}
+          name={endName || "endDate"}
           format={"MM/DD/YYYY"}
-          onChange={(date) =>
-            handleDateTimeChange(date, "end_date", handleChange)
-          }
+          isValidDate={(current) => isAfterDate(tempStartDate, current)}
+          onChange={(date) => handleDateTimeChange(date, endName, handleChange)}
           required
-          value={endDate}
+          timeFormat={false}
+          value={endDate || ""}
         />
       </Form.Group>
     </>

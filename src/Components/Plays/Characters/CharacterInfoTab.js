@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Button } from "../../Button";
 import {
   TextAreaInputWithToggle,
-  TextInput,
+  TextInputAsForm,
   TextInputWithToggle,
 } from "../../Inputs";
 import ToolTip from "../../ToolTip";
@@ -102,7 +102,7 @@ export default function CharacterInfoTab({ character }) {
     <InfoDivStyles>
       <div>
         {nameFormOpen ? (
-          <TextInput
+          <TextInputAsForm
             handleChange={handleChange}
             handleFormClose={toggleNameForm}
             handleSubmit={handleSubmit}

@@ -2,6 +2,11 @@ import { Button } from "./Button";
 import { Form, FormGroupInline } from "./Form";
 import { US_STATES_ARRAY } from "../utils/hardcodedConstants";
 import { formatPhoneNumber } from "../utils/stringUtils";
+import { StartEndDatePair } from "../utils/formUtils";
+//Input = just the input
+//as form = input wrapped in a form
+//with toggle = form with a toggle switch
+
 function AddressInput({ handleChange, city, state, street_address, zip }) {
   const states = US_STATES_ARRAY.map((us_state) => (
     <option key={us_state.abbr} value={us_state.abbr}>
@@ -234,6 +239,67 @@ function NumberRangeWithToggle({
   );
 }
 
+function StartEndDatePairAsForm({
+  endDate,
+  endLabel,
+  endName,
+  handleChange,
+  handleFormClose,
+  handleSubmit,
+  startDate,
+  startLabel,
+  startName,
+}) {
+  return (
+    <Form noValidate onSubmit={(e) => handleSubmit(e)} width="85%">
+      <StartEndDatePair
+        endDate={endDate}
+        endLabel={endLabel}
+        endName={endName}
+        handleChange={handleChange}
+        startDate={startDate}
+        startLabel={startLabel}
+        startName={startName}
+      />
+      <FormButtonGroup cancelFunction={handleFormClose} />
+    </Form>
+  );
+}
+
+function StartEndDatePairWithToggle({
+  endDate,
+  endLabel,
+  endName,
+  formOpen,
+  handleChange,
+  handleFormClose,
+  handleSubmit,
+  startDate,
+  startLabel,
+  startName,
+  toggleForm,
+  toggleText,
+}) {
+  if (formOpen) {
+    return (
+      <StartEndDatePairAsForm
+        endDate={endDate}
+        endLabel={endLabel}
+        endName={endName}
+        handleChange={handleChange}
+        handleFormClose={handleFormClose}
+        handleSubmit={handleSubmit}
+        startDate={startDate}
+        startLabel={startLabel}
+        startName={startName}
+      />
+    );
+  } else {
+    let dateRange = startDate.length ? `${startDate} - ${endDate}` : toggleText;
+    return <div onDoubleClick={toggleForm}>{dateRange}</div>;
+  }
+}
+
 function TelephoneInput({ handleChange, label, name, value }) {
   return (
     <FormGroupInline>
@@ -313,7 +379,16 @@ function TextAreaInputWithToggle({
   }
 }
 
-function TextInput({
+function TextInput({ handleChange, label, name, value }) {
+  return (
+    <FormGroupInline>
+      <label htmlFor={name}>{label}</label>
+      <input id={name} name={name} onChange={handleChange} value={value} />
+    </FormGroupInline>
+  );
+}
+
+function TextInputAsForm({
   handleChange,
   handleFormClose,
   handleSubmit,
@@ -323,10 +398,14 @@ function TextInput({
 }) {
   return (
     <Form noValidate onSubmit={(e) => handleSubmit(e)} width="85%">
-      <FormGroupInline>
-        <label htmlFor={name}>{label}</label>
-        <input id={name} name={name} onChange={handleChange} value={value} />
-      </FormGroupInline>
+      <TextInput
+        handleChange={handleChange}
+        handleFormClose={handleFormClose}
+        handleSubmit={handleSubmit}
+        label={label}
+        name={name}
+        value={value}
+      />
       <FormButtonGroup cancelFunction={handleFormClose} />
     </Form>
   );
@@ -345,17 +424,14 @@ function TextInputWithToggle({
 }) {
   if (formOpen) {
     return (
-      <Form noValidate onSubmit={(e) => handleSubmit(e)} width="85%">
-        <TextInput
-          handleChange={handleChange}
-          handleFormClose={handleFormClose}
-          handleSubmit={handleSubmit}
-          label={label}
-          name={name}
-          value={value}
-        />
-        <FormButtonGroup cancelFunction={handleFormClose} />
-      </Form>
+      <TextInputAsForm
+        handleChange={handleChange}
+        handleFormClose={handleFormClose}
+        handleSubmit={handleSubmit}
+        label={label}
+        name={name}
+        value={value}
+      />
     );
   } else {
     return <div onDoubleClick={toggleForm}>{value || toggleText}</div>;
@@ -443,10 +519,13 @@ export {
   NumberInput,
   NumberRange,
   NumberRangeWithToggle,
+  StartEndDatePairAsForm,
+  StartEndDatePairWithToggle,
   TelephoneInput,
   TelephoneInputWithToggle,
   TextAreaInputWithToggle,
   TextInput,
+  TextInputAsForm,
   TextInputWithToggle,
   UrlInput,
   UrlInputAsForm,

@@ -1,4 +1,4 @@
-import AddressForm from "../AddressForm";
+import { AddressInput, TelephoneInput } from "../Inputs";
 import PropTypes from "prop-types";
 import { Button } from "../Button";
 import { Form, FormGroupInline } from "../Form";
@@ -24,6 +24,7 @@ export default function UserForm({ onFormClose, onFormSubmit, user }) {
     phone_number: user?.phone_number || "",
     preferred_name: user?.preferred_name || "",
     program_name: user?.program_name || "",
+    street_address: user?.street_address || "",
     state: user?.state || "",
     timezone: user?.timezone || "",
     website: user?.website || "",
@@ -122,20 +123,15 @@ export default function UserForm({ onFormClose, onFormSubmit, user }) {
           value={inputs.website}
         />
       </FormGroupInline>
-      <FormGroupInline>
-        <label>Phone Number</label>
-        <input
-          name="phone_number"
-          onChange={handleChange}
-          placeholder="phone number"
-          required
-          type="tel"
-          value={inputs.phone_number}
-        />
-      </FormGroupInline>
-      <AddressForm
+      <TelephoneInput
+        label="Phone number"
+        name="phone_number"
+        handleChange={handleChange}
+        value={inputs.phone_number}
+      />
+      <AddressInput
         city={inputs.city}
-        onChange={handleChange}
+        handleChange={handleChange}
         state={inputs.state}
         street_address={inputs.street_address}
         zip={inputs.zip}

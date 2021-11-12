@@ -1,104 +1,79 @@
-import PropTypes from 'prop-types';
-import {
-  Row,
-  Col
-} from 'react-bootstrap'
-import React, {
-  Component
-} from 'react'
-
-import {
-  createPlay
-} from '../../api/plays'
-
-import PlayFormToggle from '../Plays/PlayFormToggle'
-import PlaysSubComponent from '../Plays/PlaysSubComponent'
-
-class AuthorShow extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      author: this.props.author,
-      plays: this.props.author.plays,
-      playFormOpen: false,
-    }
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import styled from "styled-components";
+import AuthorProfileForAdmin from "./AuthorProfileForAdmin";
+import AuthorProfileForVisitor from "./AuthorProfileForVisitor";
+import LoadingModal from "../LoadingModal";
+import { useSuperAuthState } from "../Contexts";
+import { Profile } from "../Styled";
+import PlaysSubComponent from "../Plays/PlaysSubComponent";
+import { getItem, updateServerItem } from "../../api/crud";
+const AuthorStyles = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  .profile {
+    display: flex;
+    flex: 1;
   }
+  .plays {
+    display: flex;
+    flex: 1;
+    flex-flow: column;
+  }
+`;
+export default function AuthorShow({ onDeleteClick }) {
+  const { role } = useSuperAuthState();
+  const { authorId } = useParams();
+  const [loading, setLoading] = useState(false);
+  const [author, setAuthor] = useState();
 
-  async createPlay(play) {
-    const response = await createPlay(play)
+  useEffect(async () => {
+    setLoading(true);
+    let response = await getItem(authorId, "author");
     if (response.status >= 400) {
-      this.setState({
-        errorStatus: 'Error creating play'
-      })
+      console.log("error getting author");
     } else {
-      this.setState({
-        plays: [...this.state.plays, response.data]
-      })
+      setAuthor(response.data);
+    }
+    setLoading(false);
+  }, []);
+
+  async function updateAuthor(author) {
+    let response = await updateServerItem(author, "author");
+    if (response.status >= 400) {
+      console.log("error updating author");
+    } else {
+      setAuthor(response.data);
     }
   }
 
-  handleCreateFormSubmit = (play) => {
-    this.createPlay(play)
+  if (loading || !author) {
+    return <LoadingModal displayText="loading author" />;
+  }
+  let dates = author.birthdate;
+  if (author.deathdate != null) {
+    dates = dates.concat(" to " + author.deathdate);
   }
 
-  handleDeleteClick = () => {
-    this.props.onDeleteClick(this.props.author.id)
-  }
-
-  render() {
-    let dates = this.state.author.birthdate //tk
-    if (this.state.author.deathdate != null) {
-      dates = dates.concat(" to " + this.state.author.deathdate)
-    }
-
-    return (
-      <Col md={12}>
-      <Row>
-        <Col md={3} className="author-profile">
-          <h3>
-            {this.state.author.first_name} {this.state.author.middle_name} {this.state.author.last_name}
-          </h3>
-          <p>
-            {dates}<br />
-            {this.state.author.nationality}
-          </p>
-          <span
-            className='right floated edit icon'
-            onClick={this.props.onEditClick}
-          >
-            <i className="fas fa-pencil-alt"></i>
-          </span>
-          <span
-            className='right floated trash icon'
-            onClick={this.handleDeleteClick}
-          >
-            <i className="fas fa-trash-alt"></i>
-          </span>
-        </Col>
-        <Col md={9}>
-          <h2>Plays by {this.state.author.last_name}</h2>
-          <PlaysSubComponent
-            author_id={this.state.author.id}
-            plays={this.state.plays}
+  return (
+    <AuthorStyles>
+      <Profile className="profile">
+        {role === "superadmin" ? (
+          <AuthorProfileForAdmin
+            dates={dates}
+            onDeleteClick={onDeleteClick}
+            author={author}
+            updateAuthor={updateAuthor}
           />
-          <PlayFormToggle
-            author_id={this.state.author.id}
-            onFormSubmit={this.handleCreateFormSubmit}
-            isOnAuthorPage={true}
-            isOpen={this.state.playFormOpen}
-          />
-        </Col>
-      </Row>
-      <hr />
-      </Col>
-    )
-  }
+        ) : (
+          <AuthorProfileForVisitor dates={dates} author={author} />
+        )}
+      </Profile>
+      <div className="plays">
+        <h2>Plays by {author.last_name}</h2>
+        <PlaysSubComponent author_id={author.id} plays={author.plays} />
+        {role === "superadmin" && <div>Play form toggle tktk</div>}
+      </div>
+    </AuthorStyles>
+  );
 }
-
-AuthorShow.propTypes = {
-  author: PropTypes.object.isRequired,
-  onDeleteClick: PropTypes.func.isRequired,
-  onEditClick: PropTypes.func.isRequired,
-}
-
-export default AuthorShow
