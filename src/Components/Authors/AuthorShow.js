@@ -4,10 +4,12 @@ import styled from "styled-components";
 import AuthorProfileForAdmin from "./AuthorProfileForAdmin";
 import AuthorProfileForVisitor from "./AuthorProfileForVisitor";
 import LoadingModal from "../LoadingModal";
+import { Button } from "../Button";
 import { useSuperAuthState } from "../Contexts";
 import { Profile } from "../Styled";
+import NewPlay from "../Plays/NewPlay";
 import PlaysSubComponent from "../Plays/PlaysSubComponent";
-import { getItem, updateServerItem } from "../../api/crud";
+import { createItem, getItem, updateServerItem } from "../../api/crud";
 const AuthorStyles = styled.div`
   display: flex;
   flex-flow: row wrap;
@@ -26,6 +28,8 @@ export default function AuthorShow({ onDeleteClick }) {
   const { authorId } = useParams();
   const [loading, setLoading] = useState(false);
   const [author, setAuthor] = useState();
+  const [playForm, setPlayForm] = useState(false);
+  const [plays, setPlays] = useState([]);
 
   useEffect(async () => {
     setLoading(true);
@@ -34,10 +38,24 @@ export default function AuthorShow({ onDeleteClick }) {
       console.log("error getting author");
     } else {
       setAuthor(response.data);
+      setPlays(response.data.plays);
     }
     setLoading(false);
   }, []);
 
+  function togglePlayForm() {
+    setPlayForm(!playForm);
+  }
+
+  async function onPlaySubmit(play) {
+    let response = await createItem(play, "play");
+    if (response.status >= 400) {
+      console.log("error creating play");
+    } else {
+      setPlays([...plays, response.data]);
+    }
+    setPlayForm(false);
+  }
   async function updateAuthor(author) {
     let response = await updateServerItem(author, "author");
     if (response.status >= 400) {
@@ -71,8 +89,20 @@ export default function AuthorShow({ onDeleteClick }) {
       </Profile>
       <div className="plays">
         <h2>Plays by {author.last_name}</h2>
-        <PlaysSubComponent author_id={author.id} plays={author.plays} />
-        {role === "superadmin" && <div>Play form toggle tktk</div>}
+        <PlaysSubComponent author_id={author.id} plays={plays} />
+        {role === "superadmin" && (
+          <div>
+            {playForm ? (
+              <NewPlay
+                author={author}
+                onFormClose={togglePlayForm}
+                onFormSubmit={onPlaySubmit}
+              />
+            ) : (
+              <Button onClick={() => togglePlayForm()}>New Play</Button>
+            )}
+          </div>
+        )}
       </div>
     </AuthorStyles>
   );

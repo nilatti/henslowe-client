@@ -33,12 +33,12 @@ export default function Plays() {
       history.push("/plays");
     }
   }
+
+  function closeNewPlayForm() {
+    history.push("/plays");
+  }
   function handleCreateFormSubmit(play) {
     createPlay(play);
-  }
-
-  function handleDeleteClick(playId) {
-    deletePlay(playId);
   }
 
   return (
@@ -61,7 +61,11 @@ export default function Plays() {
             <Route
               path="/plays/new"
               render={(props) => (
-                <NewPlay {...props} onFormSubmit={handleCreateFormSubmit} />
+                <NewPlay
+                  {...props}
+                  onFormClose={closeNewPlayForm}
+                  onFormSubmit={handleCreateFormSubmit}
+                />
               )}
             />
             <Route
@@ -103,14 +107,14 @@ export default function Plays() {
               path={`/plays/:playId`}
               render={(props) => (
                 <PlayWrapper {...props}>
-                  <PlayShow />
+                  <PlayShow onDeleteClick={deletePlay} />
                 </PlayWrapper>
               )}
             />
             <Route
               path="/plays/"
               component={PlaysList}
-              onDeleteClick={handleDeleteClick}
+              onDeleteClick={deletePlay}
             />
           </Switch>
         </div>

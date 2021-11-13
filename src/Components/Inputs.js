@@ -1,3 +1,4 @@
+import parse from "html-react-parser";
 import { Button } from "./Button";
 import { Form, FormGroupInline } from "./Form";
 import { US_STATES_ARRAY } from "../utils/hardcodedConstants";
@@ -375,7 +376,11 @@ function TextAreaInputWithToggle({
       </Form>
     );
   } else {
-    return <div onDoubleClick={toggleForm}>{value || toggleText}</div>;
+    return (
+      <div onDoubleClick={toggleForm}>
+        {value.length ? parse(`${value}`) : toggleText}
+      </div>
+    );
   }
 }
 

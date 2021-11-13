@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useHistory } from "react-router";
 import { useForm } from "../../hooks/environmentUtils";
 import { Form, FormGroupInline } from "../Form";
 import {
@@ -12,11 +11,9 @@ import { USER_GENDER_DESCRIPTORS } from "../../utils/hardcodedConstants";
 import { firstLetterUpcase } from "../../utils/stringUtils";
 export default function AuthorProfileForAdmin({
   author,
-  dates,
   onDeleteClick,
   updateAuthor,
 }) {
-  const history = useHistory();
   const [dateForm, setDateForm] = useState(false);
   const [genderForm, setGenderForm] = useState(false);
   const [nameForm, setNameForm] = useState(false);
@@ -38,6 +35,7 @@ export default function AuthorProfileForAdmin({
     setGenderForm(false);
     setNameForm(false);
     setNationalityForm(false);
+    setPlayForm(false);
   }
 
   function handleDelete() {
@@ -60,6 +58,7 @@ export default function AuthorProfileForAdmin({
   function toggleNationalityForm() {
     setNationalityForm(!nationalityForm);
   }
+
   return (
     <div>
       {nameForm ? (

@@ -112,6 +112,7 @@ export const Profile = styled.div`
   display: flex;
   flex-flow: column nowrap;
   text-align: center;
+  align-items: center;
   div {
     padding: 15px 0;
   }

@@ -1,4 +1,3 @@
-import { useParams } from "react-router";
 import AuthorShow from "./AuthorShow";
 import { SuperAuthProvider } from "../Contexts";
 

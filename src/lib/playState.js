@@ -414,6 +414,15 @@ function PlayProvider({ children }) {
     }
   }
 
+  async function updatePlay(item) {
+    const response = await updateServerItem(item, "play");
+    if (response.status >= 400) {
+      console.log("error updating play");
+    } else {
+      setPlay(response.data);
+    }
+  }
+
   async function updatePlayTextItem(item, type) {
     const response = await updateServerItem(item, type);
     if (response.status >= 400) {
@@ -464,6 +473,7 @@ function PlayProvider({ children }) {
         unCutEntireText,
         updateCharacter,
         updateLine,
+        updatePlay,
         updatePlayTextItem,
       }}
     >
