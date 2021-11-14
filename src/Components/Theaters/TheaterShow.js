@@ -152,9 +152,3 @@ export default function TheaterShow() {
     </Profile>
   );
 }
-
-//handleDeleteJob,
-// jobs,
-// onFormSubmit,
-// production,
-// role,

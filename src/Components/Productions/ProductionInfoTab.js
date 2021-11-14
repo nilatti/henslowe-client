@@ -1,34 +1,17 @@
-import PropTypes from 'prop-types'
-import React, {
-  Component
-} from 'react'
+import { Link } from "react-router-dom";
 
-import {
-  Col,
-  Row,
-} from 'react-bootstrap'
-import {
-  Link
-} from 'react-router-dom'
-
-class ProductionInfoTab extends Component {
-  render() {
-    return (
-      <Col md={12}>
-      <Row>
-        <Col md={12} className="production-profile">
-          <h2><Link to={`/productions/${this.props.production.id}`}>{this.props.production.play ? this.props.production.play.title : 'A play'}</Link></h2>
-          <p>{this.props.production.start_date} - {this.props.production.end_date}</p>
-        </Col>
-      </Row>
+export default function ProductionInfoTab({ production }) {
+  return (
+    <div>
+      <h2>
+        <Link to={`/productions/${production.id}`}>
+          {production.play ? production.play.title : "A play"}
+        </Link>
+      </h2>
+      <p>
+        {production.start_date} - {production.end_date}
+      </p>
       <hr />
-      </Col>
-    )
-  }
+    </div>
+  );
 }
-
-ProductionInfoTab.propTypes = {
-  production: PropTypes.object.isRequired,
-}
-
-export default ProductionInfoTab

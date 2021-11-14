@@ -51,6 +51,9 @@ export default function CharacterInfoTab({ character }) {
     setNameFormOpen(false);
   }
 
+  function handleDeleteClick() {
+    deletePlayTextItem(item.id, type);
+  }
   function handleSubmit(e) {
     e.preventDefault();
     updateCharacter(inputs);
@@ -82,7 +85,7 @@ export default function CharacterInfoTab({ character }) {
   if (!showCut) {
     lines = _.filter(lines, function (o) {
       if (o.new_content && o.new_content.match(/\w/)) {
-        //get rid of new ocntent that is blank spaces
+        //get rid of new content that is blank spaces
         return o;
       } else if (!o.new_content) {
         return o; //or I guess if it doesn't have new content, return that?
@@ -90,12 +93,7 @@ export default function CharacterInfoTab({ character }) {
     });
   }
   lines = lines.map((line) => (
-    <CharacterLine
-      character={character}
-      key={line.id}
-      line={line}
-      showCut={showCut}
-    />
+    <CharacterLine key={line.id} line={line} showCut={showCut} />
   ));
 
   return (
@@ -163,14 +161,8 @@ export default function CharacterInfoTab({ character }) {
         )}
         <div>
           <span
-            className="right floated edit icon"
-            // onClick={this.props.handleEditClick}
-          >
-            <i className="fas fa-pencil-alt"></i>
-          </span>
-          <span
             className="right floated trash icon"
-            // onClick={this.handleDeleteClick}
+            onClick={handleDeleteClick}
           >
             <i className="fas fa-trash-alt"></i>
           </span>

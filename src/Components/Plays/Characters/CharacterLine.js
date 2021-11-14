@@ -1,14 +1,33 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-
-import { Col, Row } from "react-bootstrap";
-
+import { useEffect, useState } from "react";
 import uuid from "react-uuid";
-
 var Diff = require("diff");
+import { LineShowStylesNonEdit } from "../PlayScripts/ScriptStyles";
 
-class CharacterLine extends Component {
-  buildLineContentWithDiffs(diffArray) {
+export default function CharacterLine({ line, showCut }) {
+  const [formattedLine, setFormattedLine] = useState(line);
+
+  useEffect(() => {
+    let workingLine = line;
+    if (workingLine.new_content) {
+      workingLine.diffed_content = buildLineContentWithDiffs(
+        Diff.diffWordsWithSpace(
+          workingLine.original_content,
+          workingLine.new_content
+        )
+      );
+    }
+    workingLine.lineText = workingLine.original_content;
+    if (workingLine.diffed_content && showCut) {
+      workingLine.lineText = workingLine.diffed_content;
+    } else if (workingLine.new_content) {
+      workingLine.lineText = workingLine.new_content;
+    } else {
+      workingLine.lineText = workingLine.original_content;
+    }
+    setFormattedLine(workingLine);
+  }, [JSON.stringify(line), showCut]);
+
+  function buildLineContentWithDiffs(diffArray) {
     let diffArrayWithClasses = diffArray.map((item) => {
       if (item.removed === true) {
         return (
@@ -28,58 +47,29 @@ class CharacterLine extends Component {
     });
     return diffArrayWithClasses;
   }
-
-  render() {
-    let line = this.props.line;
-    if (line.new_content) {
-      line.diffed_content = this.buildLineContentWithDiffs(
-        Diff.diffWordsWithSpace(line.original_content, line.new_content)
-      );
-    }
-    let lineText;
-    if (line.diffed_content && this.props.showCut) {
-      lineText = line.diffed_content;
-    } else if (line.new_content) {
-      lineText = line.new_content;
-    } else {
-      lineText = line.original_content;
-    }
-    if (line.number && line.number.match(/^SD/)) {
-      return (
-        <Row className="script-cut-interface-row">
-          <Col md={2}>{line.number}</Col>
-          <Col md={10}>
-            <div id={line.number} className="stage-direction">
-              <div id={line.number} className="line">
-                {lineText}
-              </div>
-            </div>
-          </Col>
-        </Row>
-      );
-    }
+  if (formattedLine.number && formattedLine.number.match(/^SD/)) {
     return (
-      <Row className="script-cut-interface-row">
-        <Col md={2}>{line.number}</Col>
-        <Col md={2} className="character-name">
-          {this.props.character.last_name}
-        </Col>
-        <Col md={8}>
-          <div id={line.number} className="line">
-            {lineText}
+      <LineShowStylesNonEdit>
+        <div>{formatted.number}</div>
+        <div>
+          <div id={formatted.number} className="stage-direction">
+            <div id={formatted.number} className="line">
+              {formattedLine.lineText}
+            </div>
           </div>
-        </Col>
-      </Row>
+        </div>
+      </LineShowStylesNonEdit>
     );
   }
+  return (
+    <LineShowStylesNonEdit targetCharacter={true}>
+      <div>{formattedLine.number}</div>
+      <div></div>
+      <div>
+        <div id={formattedLine.number} className="line">
+          {formattedLine.lineText}
+        </div>
+      </div>
+    </LineShowStylesNonEdit>
+  );
 }
-
-CharacterLine.propTypes = {
-  character: PropTypes.object.isRequired,
-  line: PropTypes.object.isRequired,
-  showCut: PropTypes.bool.isRequired,
-};
-
-export default CharacterLine;
-
-//tktkt refactor to functional component

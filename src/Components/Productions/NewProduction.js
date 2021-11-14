@@ -7,10 +7,10 @@ import NewProductionForm from "./NewProductionForm";
 
 export default function NewProduction({ onFormSubmit }) {
   let query = useQuery();
+  let history = useHistory();
 
   function handleFormClose() {
-    let history = useHistory();
-    history.back();
+    history.goBack();
   }
 
   async function handleFormSubmit(production) {

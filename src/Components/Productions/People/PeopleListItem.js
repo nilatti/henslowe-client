@@ -1,8 +1,7 @@
 import _ from "lodash";
-import { Link } from "react-router-dom";
 
 import ActorTrack from "./ActorTrack";
-import { buildUserName, UserLink } from "../../../utils/actorUtils";
+import { UserLink } from "../../../utils/actorUtils";
 export default function PeopleListItem({ person }) {
   // toggleShowActorTrack = () => {
   //   this.setState({

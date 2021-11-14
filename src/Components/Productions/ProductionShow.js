@@ -100,7 +100,6 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
       </Modal>
     );
   }
-  console.log(role);
   return (
     <>
       <div>

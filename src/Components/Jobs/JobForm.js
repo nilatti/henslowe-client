@@ -198,7 +198,7 @@ export default function JobForm({
         onFormSubmit={handleUserFormSubmit}
         show={showNewUserModal}
       />
-      <Form noValidate onSubmit={(e) => processSubmit(e)}>
+      <Form noValidate onSubmit={(e) => processSubmit(e)} width="85%">
         <FormGroup>
           <label>User</label>
           <Button

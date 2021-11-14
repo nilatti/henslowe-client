@@ -148,6 +148,26 @@ function PlayProvider({ children }) {
     setPlay(updatedPlay);
   }
 
+  function removeLocalCharacter(characterId) {
+    let updatedPlay = { ...play };
+    let updatedCharacters = updatedPlay.characters.filter(
+      (c) => c.id != characterId
+    );
+    updatedPlay.characters = updatedCharacters;
+    setCharacters(updatedCharacters);
+    setPlay(updatedPlay);
+  }
+
+  function removeLocalCharacterGroup(characterGroupId) {
+    let updatedPlay = { ...play };
+    let updatedCharacterGroups = updatedPlay.character_groups.filter(
+      (cg) => cg.id != characterGroupId
+    );
+    updatedPlay.character_groups = updatedCharacterGroups;
+    setCharacterGroups(updatedCharacterGroups);
+    setPlay(updatedPlay);
+  }
+
   function removeLocalFrenchScene(frenchSceneId) {
     let removedFrenchScene = frenchScenes.find((fs) => fs.id === frenchSceneId);
     let updatedScene = scenes.find((s) => s.id === removedFrenchScene.scene_id);
@@ -327,6 +347,10 @@ function PlayProvider({ children }) {
         removeLocalScene(itemId);
       } else if (type === "french_scene") {
         removeLocalFrenchScene(itemId);
+      } else if (type === "character") {
+        removeLocalCharacter(characterId);
+      } else if (type === "character_group") {
+        removeLocalCharacterGroup(characterId);
       }
     }
   }
@@ -343,7 +367,7 @@ function PlayProvider({ children }) {
   }
 
   async function loadFullPlay() {
-    if (!lines.length) {
+    if (!lines.length || !play.full) {
       setLoading(true);
       const response = await getPlayScript(playId);
       if (response.status >= 400) {

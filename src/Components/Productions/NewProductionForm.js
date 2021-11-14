@@ -1,8 +1,7 @@
-import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { Button, Col, Form } from "react-bootstrap";
+import { Form, FormGroupInline } from "../Form";
 import { Typeahead } from "react-bootstrap-typeahead";
-import Datetime from "react-datetime"; //updated!
+import { FormButtonGroup } from "../Inputs";
 
 import { getTheaterNames } from "../../api/theaters";
 
@@ -17,7 +16,6 @@ export default function NewProductionForm({
   theaterId,
   playId,
 }) {
-  const [errorStatus, setErrorStatus] = useState("");
   const [plays, setPlays] = useState([]);
   const [selectedPlay, setSelectedPlay] = useState([]);
   const [selectedTheater, setSelectedTheater] = useState([]);
@@ -65,14 +63,9 @@ export default function NewProductionForm({
   });
 
   function handleSubmit(event) {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    } else {
-      processSubmit();
-      onFormClose();
-    }
+    event.preventDefault();
+    processSubmit();
+    onFormClose();
   }
 
   function processSubmit() {
@@ -93,62 +86,41 @@ export default function NewProductionForm({
     return <div>Loading theaters</div>;
   }
   return (
-    <Col md={{ span: 8, offset: 2 }}>
-      <Form
-        noValidate
-        onSubmit={(e) => handleSubmit(e)}
-        // validated={validated}
-      >
-        <Form.Group>
-          <Typeahead
-            value={selectedPlay}
-            id="play"
-            type="typeahead"
-            options={plays}
-            onChange={setSelectedPlay}
-            placeholder="Choose the play"
-            selected={selectedPlay}
-            disabled={!!playId}
-          />
-          <Form.Control.Feedback type="invalid">
-            Play is required
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group>
-          <Typeahead
-            id="theater"
-            disabled={!!theaterId}
-            options={theaters}
-            onChange={setSelectedTheater}
-            selected={selectedTheater}
-            placeholder="Choose the theater"
-            value={selectedTheater}
-          />
-          <Form.Control.Feedback type="invalid">
-            Theater is required
-          </Form.Control.Feedback>
-        </Form.Group>
-        <StartEndDatePair
-          endDate={inputs.end_date}
-          handleChange={handleChange}
-          startDate={inputs.start_date}
+    <Form
+      noValidate
+      onSubmit={(e) => handleSubmit(e)}
+      // validated={validated}
+      width="85%"
+    >
+      <FormGroupInline>
+        <Typeahead
+          value={selectedPlay}
+          id="play"
+          type="typeahead"
+          options={plays}
+          onChange={setSelectedPlay}
+          placeholder="Choose the play"
+          selected={selectedPlay}
+          disabled={!!playId}
         />
-        <Button type="submit" variant="primary" block>
-          Submit
-        </Button>
-        <Button type="button" onClick={onFormClose} block>
-          Cancel
-        </Button>
-      </Form>
-      <hr />
-    </Col>
+      </FormGroupInline>
+      <FormGroupInline>
+        <Typeahead
+          id="theater"
+          disabled={!!theaterId}
+          options={theaters}
+          onChange={setSelectedTheater}
+          selected={selectedTheater}
+          placeholder="Choose the theater"
+          value={selectedTheater}
+        />
+      </FormGroupInline>
+      <StartEndDatePair
+        endDate={inputs.end_date}
+        handleChange={handleChange}
+        startDate={inputs.start_date}
+      />
+      <FormButtonGroup cancelFunction={onFormClose} />
+    </Form>
   );
 }
-
-NewProductionForm.propTypes = {
-  onFormClose: PropTypes.func.isRequired,
-  onFormSubmit: PropTypes.func.isRequired,
-  playId: PropTypes.number,
-  production: PropTypes.object,
-  theaterId: PropTypes.number,
-};

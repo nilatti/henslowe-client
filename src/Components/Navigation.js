@@ -58,11 +58,6 @@ export default function Navigation() {
                       Specializations
                     </Nav.Link>
                   </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link href="/jobs" eventKey="9">
-                      Jobs
-                    </Nav.Link>
-                  </Nav.Item>
                 </>
               )}
               <Nav.Item>

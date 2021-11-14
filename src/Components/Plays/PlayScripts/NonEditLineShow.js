@@ -1,25 +1,12 @@
-import styled from "styled-components";
 import uuid from "react-uuid";
 
 var Diff = require("diff");
-
-const CharacterName = styled.div`
-  font-weight: bold;
-  padding-left: 10px;
-`;
-
-const LineNumber = styled.div``;
-const LineShowStyles = styled.div`
-  align-items: center;
-  background: var(--color-background);
-  display: grid;
-  grid-template-columns: [line-number] 10% [character-name] 25% [line-text] auto [end];
-  padding-top: ${(props) => (props.targetCharacter ? "10px" : "50px")};
-`;
-
-const Line = styled.div`
-  justify-self: start;
-`;
+import {
+  CharacterName,
+  Line,
+  LineNumber,
+  LineShowStylesNonEdit,
+} from "./ScriptStyles";
 
 export default function NonEditLineShow({
   index,
@@ -75,7 +62,7 @@ export default function NonEditLineShow({
   }
 
   return (
-    <LineShowStyles index={index} targetCharacter={targetCharacter}>
+    <LineShowStylesNonEdit index={index} targetCharacter={targetCharacter}>
       <LineNumber>{line.number}</LineNumber>
       <CharacterName>{characterComponent}</CharacterName>
 
@@ -85,6 +72,6 @@ export default function NonEditLineShow({
       >
         <span>{lineText}</span>
       </Line>
-    </LineShowStyles>
+    </LineShowStylesNonEdit>
   );
 }

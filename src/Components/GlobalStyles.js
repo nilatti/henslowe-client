@@ -73,6 +73,9 @@ export const GlobalStyles = createGlobalStyle`
     border-color: var(--color-light);
     box-shadow: 0 0 0 0.2rem var(--color-light-disabled);
   }
+  .rbt{
+    width: 100%;
+  }
   .rbt-input-multi.focus{
     border-color: var(--color-med);
     box-shadow: 0 0 0 0.2rem var(--color-light);  

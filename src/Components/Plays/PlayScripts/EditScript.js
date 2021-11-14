@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { EditAreaStyles, EditScriptStyles } from "./ScriptStyles";
 import TextEdit from "./TextEdit";
 import TextSelect from "./TextSelect";
 import { usePlayState } from "../../../lib/playState";
@@ -10,17 +11,6 @@ import {
   mergeTextFromFrenchScenes,
 } from "../../../utils/playScriptUtils";
 
-const EditAreaStyles = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-`;
-
-const EditScriptStyles = styled.div`
-  display: flex;
-  flex-flow: column nowrap;
-  padding-top: 40px;
-  text-align: center;
-`;
 export default function EditScript({ handleLineSubmit, linesPerMinute }) {
   const { getSelectedText, play, updateLine } = usePlayState();
   const [selectedText, setSelectedText] = useState({});

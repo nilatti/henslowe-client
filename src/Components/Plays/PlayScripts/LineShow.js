@@ -1,33 +1,18 @@
 import { useState } from "react";
-import styled from "styled-components";
 import uuid from "react-uuid";
 
 import { Button } from "../../Button";
 import CharacterSelect from "../Characters/CharacterSelect";
 import LineEditForm from "./LineEditForm";
-import { usePlayState } from "../../../lib/playState";
+import {
+  ButtonContainer,
+  CharacterName,
+  Line,
+  LineNumber,
+  LineShowStyles,
+} from "./ScriptStyles";
 
 var Diff = require("diff");
-
-const ButtonContainer = styled.div``;
-const CharacterName = styled.div`
-  font-weight: bold;
-  overflow-wrap: break-word;
-`;
-
-const LineNumber = styled.div``;
-const LineShowStyles = styled.div`
-  background: ${(props) =>
-    props.index % 2 === 0 ? "var(--color-light)" : "var(--color-background)"};
-
-  display: grid;
-  grid-template-columns: [line-number] 7% [character-name] 15% [line-text] auto [cut-buttons] 20% [end];
-  align-items: center;
-`;
-
-const Line = styled.div`
-  justify-self: start;
-`;
 
 export default function LineShow({
   handleLineSubmit,

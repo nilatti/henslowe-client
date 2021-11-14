@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { Switch, Route } from "react-router-dom";
 import Authors from "./Authors/Authors";
 import Dashboard from "./Dashboard/Dashboard";
-import Jobs from "./Jobs/Jobs";
 import Plays from "./Plays/Plays";
 
 import Productions from "./Productions/Productions";
@@ -30,7 +29,6 @@ export default function Main() {
         <Route path="/spaces" component={Spaces} />
         <Route path="/users" component={Users} />
         <Route path="/specializations" component={Specializations} />
-        <Route path="/jobs" component={Jobs} />
         <Route exact path="/" component={Dashboard} />
       </Switch>
     </MainStyle>

@@ -1,7 +1,4 @@
 import Moment from "react-moment";
-import { useState } from "react";
-
-import { useMeState } from "../../lib/meState";
 import { useUserAuthState } from "../Contexts";
 
 import UserJobsList from "../Jobs/UserJobsList";
@@ -13,7 +10,6 @@ import { ConflictStateProvider } from "../../lib/conflictState";
 import { USER_CONFLICT_REASONS } from "../../utils/hardcodedConstants";
 
 export default function UserShow({ onDeleteClick, onEditClick, user }) {
-  const { me } = useMeState();
   const { roles } = useUserAuthState();
   console.log(user);
 

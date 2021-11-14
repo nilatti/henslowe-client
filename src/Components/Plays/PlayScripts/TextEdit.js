@@ -1,13 +1,8 @@
 import { useState } from "react";
-import styled from "styled-components";
 import ScriptContainer from "./ScriptContainer";
 import { Button } from "../../Button";
 import { calculateRunTime } from "../../../utils/playScriptUtils";
-const TextEditStyles = styled.div`
-  border-left: 1px solid var(--color-light);
-  flex: 3 0 70%;
-  padding-left: 35px;
-`;
+import { TextEditStyles } from "./ScriptStyles";
 export default function TextEdit({
   handleLineSubmit,
   linesPerMinute,
