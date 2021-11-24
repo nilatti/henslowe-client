@@ -8,7 +8,14 @@ import { StartEndDatePair } from "../utils/formUtils";
 //as form = input wrapped in a form
 //with toggle = form with a toggle switch
 
-function AddressInput({ handleChange, city, state, street_address, zip }) {
+function AddressInput({
+  city,
+  handleChange,
+  label,
+  state,
+  street_address,
+  zip,
+}) {
   const states = US_STATES_ARRAY.map((us_state) => (
     <option key={us_state.abbr} value={us_state.abbr}>
       {us_state.name}
@@ -16,6 +23,7 @@ function AddressInput({ handleChange, city, state, street_address, zip }) {
   ));
   return (
     <>
+      <h3>{label || "Address"}</h3>
       <FormGroupInline>
         <label>Street Address</label>
         <input

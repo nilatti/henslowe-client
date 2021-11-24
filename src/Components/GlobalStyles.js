@@ -52,9 +52,13 @@ export const GlobalStyles = createGlobalStyle`
       text-decoration: none;
     }
 
+    h1, h2, h3, h4 {
+      color: var(--color-dark)
+    }
     h1 {
       text-align: center;
     }
+    
     hr {
       color: var(--color-light);
     }

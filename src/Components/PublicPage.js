@@ -18,7 +18,6 @@ const PublicContainer = styled.div`
 const PublicPage = () => {
   return (
     <PublicContainer>
-      <h2>Henslowe's Cloud</h2>
       <Navigation />
       <Main />
       <Footer />

@@ -16,7 +16,6 @@ const PrivateContainer = styled.div`
 const PrivatePage = () => {
   return (
     <PrivateContainer>
-      <h2>Henslowe's Cloud</h2>
       <Navigation />
       <Main />
       <Footer />
