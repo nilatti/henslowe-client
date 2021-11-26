@@ -1,24 +1,38 @@
 import ComingSoon from "./ComingSoon";
 import { Link } from "react-router-dom";
+import ToolTip from "../ToolTip";
+import { useMeState } from "../../lib/meState";
 export default function PricingIndividual() {
+  const { me } = useMeState();
   return (
     <div>
       <h2>Pricing for individuals</h2>
       <div>
         <h3>Do you need to pay at all?</h3>
         <div>
-          <h4>Without a paid subscription, you can:</h4>
+          <h4>Without an account, you can:</h4>
+          <ul>
+            <li>Try out cuts and doubling of plays*</li>
+            <li>Download your cut play script*</li>
+            <li>Calculate run times*</li>
+            <li>Download part scripts*</li>
+            <li>Make word clouds*</li>
+          </ul>
+          <h4>
+            With a free account{" "}
+            {!me.email && (
+              <ToolTip>
+                Just click the Google button at the top to register
+              </ToolTip>
+            )}
+            , you can do all of the above, and:
+          </h4>
           <ul>
             <li>Register for auditions</li>
             <li>Create and manage your profile and bio</li>
             <li>Update conflicts for your rehearsal team</li>
             <li>View rehearsal schedules</li>
             <li>Work many jobs at participating theaters</li>
-            <li>Try out cuts and doubling of plays*</li>
-            <li>Download your cut play script*</li>
-            <li>Calculate run times*</li>
-            <li>Download part scripts*</li>
-            <li>Make word clouds*</li>
           </ul>
         </div>
         <div>
@@ -32,7 +46,10 @@ export default function PricingIndividual() {
         </div>
       </div>
       <div>
-        <h4>A paid subscription allows individuals** to:</h4>
+        <h4>
+          A <Link to="/checkout">paid subscription</Link> allows individuals**
+          to:
+        </h4>
         <ul>
           <li>Work over time on a script cut*</li>
           <li>Create casting, rehearsal schedules, and doubling</li>
@@ -48,7 +65,7 @@ export default function PricingIndividual() {
         <div>
           <em>
             ** Do you have more than five people on your team? Consider our{" "}
-            <Link to="/pricing_institutional">institutional pricing</Link> to
+            <Link to="/pricing-institutional">institutional pricing</Link> to
             save some money!
           </em>
         </div>

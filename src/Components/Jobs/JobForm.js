@@ -17,6 +17,7 @@ import { StartEndDatePair } from "../../utils/formUtils";
 
 import NewUserModal from "../Users/NewUserModal";
 export default function JobForm({
+  includeProduction = true,
   job,
   onFormClose,
   onFormSubmit,
@@ -50,7 +51,7 @@ export default function JobForm({
     if (!production) {
       let response;
       if (theater) {
-        response = await getProductionsForTheater(theaterId);
+        response = await getProductionsForTheater(theater.id);
       } else {
         response = await getItems("production");
       }
@@ -236,25 +237,27 @@ export default function JobForm({
             placeholder="Choose the specialization"
           />
         </FormGroup>
-        <FormGroup>
-          <label>Production</label>
-          <div>
-            When the production is set, the theater will update to match.
-            <br />
-            The dates will also update but can be edited to match the duration
-            of the actual job.
-          </div>
-          <Typeahead
-            disabled={!!production}
-            id="production"
-            options={productions}
-            onChange={(selected) => {
-              setSelectedProduction(selected);
-            }}
-            selected={selectedProduction}
-            placeholder="Choose the production"
-          />
-        </FormGroup>
+        {includeProduction && (
+          <FormGroup>
+            <label>Production</label>
+            <div>
+              When the production is set, the theater will update to match.
+              <br />
+              The dates will also update but can be edited to match the duration
+              of the actual job.
+            </div>
+            <Typeahead
+              disabled={!!production}
+              id="production"
+              options={productions}
+              onChange={(selected) => {
+                setSelectedProduction(selected);
+              }}
+              selected={selectedProduction}
+              placeholder="Choose the production"
+            />
+          </FormGroup>
+        )}
 
         <FormGroup>
           <label>Theater</label>

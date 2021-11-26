@@ -101,10 +101,29 @@ export const DefaultTable = styled.table`
   }
 `;
 
+export const InfoBanner = styled.div`
+  background-color: var(--color-light-disabled);
+  border-radius: 5px;
+  font-style: italic;
+  padding: 10px;
+`;
+
 export const InfoTabStyles = styled.div`
   padding: 25px 0;
   div {
     padding: 7px 0;
+  }
+`;
+
+export const PageContent = styled.div`
+  margin-top: 75px;
+  width: 100%;
+  @media screen and (min-width: 600px) {
+    margin-top: 150px;
+    width: 85%;
+    h2 {
+      text-align: center;
+    }
   }
 `;
 
@@ -115,6 +134,7 @@ export const Profile = styled.div`
   align-items: center;
   div {
     padding: 15px 0;
+    width: 100%;
   }
   h2 {
     display: flex;

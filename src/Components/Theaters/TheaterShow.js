@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import styled from "styled-components";
-import { getItem, updateServerItem } from "../../api/crud";
+import {
+  createItemWithParent,
+  getItem,
+  updateServerItem,
+} from "../../api/crud";
 import { Tab, Tabs } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
@@ -10,7 +13,7 @@ import LoadingModal from "../LoadingModal";
 
 import TheaterProfileForAdmin from "./TheaterProfileForAdmin";
 import TheaterProfileForVisitor from "./TheaterProfileForVisitor";
-import JobsList from "../Jobs/ProductionJobsList";
+import TheaterJobsList from "../Jobs/TheaterJobsList";
 
 import { deleteItem } from "../../api/crud";
 import ProductionInfoTab from "../Productions/ProductionInfoTab";
@@ -45,6 +48,21 @@ export default function TheaterShow() {
 
   function handleSelect(key) {
     setKey(key);
+  }
+
+  async function handleCreateJob(job) {
+    const response = await createItemWithParent(
+      "theater",
+      theater.id,
+      "job",
+      job
+    );
+    if (response.status >= 400) {
+      console.log("error creating job");
+    } else {
+      let newJobs = [...theater.jobs, response.data];
+      setTheater({ ...theater, jobs: newJobs });
+    }
   }
 
   async function handleDeleteJob(jobId) {
@@ -142,10 +160,12 @@ export default function TheaterShow() {
       </div>
       <div>
         <h2>People</h2>
-        <JobsList
+        <TheaterJobsList
           handleDeleteJob={handleDeleteJob}
+          onFormSubmit={handleCreateJob}
           jobs={theater.jobs}
           role={role}
+          theater={theater}
         />
         <hr />
       </div>

@@ -1,8 +1,15 @@
-import PrivatePage from "./PrivatePage";
+import FreeAccountPage from "./FreeAccountPage";
+import FullAccessPage from "./FullAccessPage";
 import PublicPage from "./PublicPage";
 import { useMeState } from "../lib/meState";
 
 export default function MainApp() {
   const { me } = useMeState();
-  return <>{me?.email ? <PrivatePage /> : <PublicPage />}</>;
+  console.log(me.subscription_status);
+  if (me && me.subscription_status == "active") {
+    return <FullAccessPage />;
+  } else if (me && me.email) {
+    return <FreeAccountPage />;
+  }
+  return <PublicPage />;
 }

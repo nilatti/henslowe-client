@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { buildUserName } from "../utils/actorUtils";
+import { updateServerItem } from "../api/crud";
 const MeStateContext = createContext();
 const MeStateProvider = MeStateContext.Provider;
 
@@ -10,11 +11,16 @@ function MeProvider({ children }) {
   const [signingIn, setSigningIn] = useState(false);
 
   useEffect(() => {
+    if (me.subscription_end_date < Date.now()) {
+      setMe({ ...me, subscription_status: "expired" });
+    }
     if (!me.email && localStorage.getItem("user")) {
       setMe(JSON.parse(localStorage.getItem("user")));
     } else if (new Date(localStorage.getItem("token_expire")) > new Date()) {
       setMe(null);
       localStorage.clear();
+    } else {
+      localStorage.setItem("user", JSON.stringify(me));
     }
   }, []);
 
@@ -30,6 +36,15 @@ function MeProvider({ children }) {
     setMe(null);
   }
 
+  async function updateMe(newMe) {
+    let res = await updateServerItem(newMe, "user");
+    if (res.status >= 400) {
+      console.log("error updating user");
+    } else {
+      setMe(res.data);
+    }
+  }
+
   return (
     <MeStateProvider
       value={{
@@ -38,6 +53,7 @@ function MeProvider({ children }) {
         signingIn,
         setMe,
         setSigningIn,
+        updateMe,
       }}
     >
       {children}

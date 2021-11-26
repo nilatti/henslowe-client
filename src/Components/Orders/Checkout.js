@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import CheckoutForm from "./CheckoutForm";
 import Subscriptions from "./Subscriptions";
 
 const promise = loadStripe(
@@ -21,7 +19,6 @@ export default function Checkout({ orderId }) {
       <h1>Subscriptions</h1>
       <Elements stripe={promise}>
         <Subscriptions />
-        {/* <CheckoutForm /> */}
       </Elements>
     </div>
   );

@@ -1,27 +1,13 @@
-import styled from "styled-components";
+import { PageContent } from "./Styled";
+import PublicMain from "./PublicMain";
+import PublicNavigation from "./PublicNavigation";
 
-import Footer from "./Free/Footer";
-import Main from "./Free/Main";
-import Navigation from "./Free/Navigation";
-
-const PublicContainer = styled.div`
-  margin-top: 75px;
-  width: 100%;
-  @media screen and (min-width: 600px) {
-    margin-top: 300px;
-    width: 85%;
-    h2 {
-      text-align: center;
-    }
-  }
-`;
 const PublicPage = () => {
   return (
-    <PublicContainer>
-      <Navigation />
-      <Main />
-      <Footer />
-    </PublicContainer>
+    <PageContent>
+      <PublicNavigation />
+      <PublicMain />
+    </PageContent>
   );
 };
 

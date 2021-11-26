@@ -11,7 +11,6 @@ import { USER_CONFLICT_REASONS } from "../../utils/hardcodedConstants";
 
 export default function UserShow({ onDeleteClick, onEditClick, user }) {
   const { roles } = useUserAuthState();
-  console.log(user);
 
   function handleDeleteClick() {
     onDeleteClick(user.id);
@@ -20,6 +19,16 @@ export default function UserShow({ onDeleteClick, onEditClick, user }) {
   return (
     <div>
       <h2>{buildUserName(user)}</h2>
+      {overlap(roles, ["self", "superadmin"]) && (
+        <div>
+          <span className="right floated edit icon" onClick={onEditClick}>
+            <i className="fas fa-pencil-alt"></i>
+          </span>
+          <span className="right floated trash icon" onClick={onDeleteClick}>
+            <i className="fas fa-trash-alt"></i>
+          </span>
+        </div>
+      )}
       {user.email &&
         overlap(roles, [
           "current_theater_peer",
@@ -170,16 +179,6 @@ export default function UserShow({ onDeleteClick, onEditClick, user }) {
       {user.timezone && (
         <div>
           <strong>Timezone:</strong> {user.timezone}
-        </div>
-      )}
-      {overlap(roles, ["self", "superadmin"]) && (
-        <div>
-          <span className="right floated edit icon" onClick={onEditClick}>
-            <i className="fas fa-pencil-alt"></i>
-          </span>
-          <span className="right floated trash icon" onClick={onDeleteClick}>
-            <i className="fas fa-trash-alt"></i>
-          </span>
         </div>
       )}
       {overlap(roles, [

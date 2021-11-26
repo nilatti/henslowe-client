@@ -83,7 +83,7 @@ export default function SubscriptionCard({ subscription, type }) {
       </CardContent>
       <InfoButtonContainer>
         <InfoButton>
-          <Link to={`/pricing_${type}`}>Learn More</Link>
+          <Link to={`/pricing-${type}`}>Learn More</Link>
         </InfoButton>
 
         <InfoButton>

@@ -1,11 +1,12 @@
-import LoginHooks from "../LoginHooks";
-import styled from "styled-components";
 import { Nav, Navbar, Container } from "react-bootstrap";
-import PaypalButton from "../PaypalButton";
+import LogoutHooks from "./LogoutHooks";
+import { useMeState } from "../lib/meState";
 
-// The Header creates links that can be used to navigate
-// between routes.
-export default function Navigation() {
+import PaypalButton from "./PaypalButton";
+
+export default function FullAccessNavigation() {
+  const { me } = useMeState();
+
   return (
     <header>
       <Navbar collapseOnSelect fixed="top" expand="lg">
@@ -14,10 +15,12 @@ export default function Navigation() {
           <Container>
             <Nav className="customNav">
               <Nav.Item>
-                <Nav.Link href="/">Home</Nav.Link>
+                <Nav.Link href="/" eventKey="1">
+                  Dashboard
+                </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link href="/casting">Cast your play</Nav.Link>
+                <Nav.Link href="/casting">Cast a play</Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link href="/cut">Cut a play</Nav.Link>
@@ -31,7 +34,12 @@ export default function Navigation() {
               <Nav.Item>
                 <Nav.Link href="/part-scripts">Generate part scripts</Nav.Link>
               </Nav.Item>
-              <LoginHooks />
+              <Nav.Item>
+                <Nav.Link href="/account">Your Account</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <LogoutHooks />
+              </Nav.Item>
               <PaypalButton />
             </Nav>
           </Container>

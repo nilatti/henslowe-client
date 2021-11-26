@@ -167,27 +167,6 @@ export function getSuperAdminRole(user) {
     return false;
   }
 }
-export async function getUserRoleForTheater(user, theaterId) {
-  if (getSuperAdminRole(user)) return "admin";
-  theaterId = Number(theaterId);
-  let theaterJobs;
-  let theaterJobsResponse = await getJobs({
-    theater_id: theaterId,
-    user_id: user.id,
-  });
-  if (theaterJobsResponse >= 400) {
-    console.log("error getting theater job");
-  } else {
-    theaterJobs = theaterJobsResponse.data;
-  }
-  if (theaterJobs.length === 0) return "visitor";
-  let jobTitles = theaterJobs.map((job) => job.specialization?.title);
-  if (_.intersection(jobTitles, THEATER_ADMIN).length > 0) {
-    return "admin";
-  } else if (theaterJobs.length > 0) {
-    return "member";
-  }
-}
 
 export async function getUserRoleForProduction(user, productionId) {
   if (getSuperAdminRole(user)) {
@@ -204,7 +183,6 @@ export async function getUserRoleForProduction(user, productionId) {
   } else {
     productionJobs = productionJobsResponse.data;
   }
-  console.log(productionJobsResponse);
 
   let production = {}; //need the production bc need theater id
   let productionResponse = await getProductionSkeleton(productionId);
@@ -255,26 +233,28 @@ export async function getUserRoleForSpace(user, spaceId) {
   return role;
 }
 
-export function theatersWhereUserIsAdmin(user, theaters) {
-  let userAdminTheaters = [];
-  theaters.forEach((theater) => {
-    if (getUserRoleForTheater(user, theater.id) === "admin") {
-      userAdminTheaters.push(theater);
-    }
+export async function getUserRoleForTheater(user, theaterId) {
+  if (getSuperAdminRole(user)) console.log("super");
+  if (getSuperAdminRole(user)) return "admin";
+  theaterId = Number(theaterId);
+  let theaterJobs;
+  let theaterJobsResponse = await getJobs({
+    theater_id: theaterId,
+    user_id: user.id,
   });
-  return userAdminTheaters;
+  if (theaterJobsResponse >= 400) {
+    console.log("error getting theater job");
+  } else {
+    theaterJobs = theaterJobsResponse.data;
+  }
+  if (theaterJobs.length === 0) return "visitor";
+  let jobTitles = theaterJobs.map((job) => job.specialization?.title);
+  if (_.intersection(jobTitles, THEATER_ADMIN).length > 0) {
+    return "admin";
+  } else if (theaterJobs.length > 0) {
+    return "member";
+  }
 }
-
-export function theatersWhereUserIsMember(user, theaters) {
-  let userMemberTheaters = [];
-  theaters.forEach((theater) => {
-    if (getUserRoleForTheater(user, theater.id) === "member") {
-      userMemberTheaters.push(theater);
-    }
-  });
-  return userMemberTheaters;
-}
-
 export function productionsWhereUserIsAdmin(user, productions) {
   let userAdminProductions = [];
   productions.forEach((production) => {
@@ -293,4 +273,27 @@ export function productionsWhereUserIsMember(user, productions) {
     }
   });
   return userMemberProductions;
+}
+
+export async function theatersWhereUserIsAdmin(user, theaters) {
+  let userAdminTheaters = [];
+  const responseArray = await Promise.all(
+    theaters.map((theater) => getUserRoleForTheater(user, theater.id))
+  );
+  responseArray.forEach((role, index) => {
+    if (role === "admin") {
+      userAdminTheaters.push(theaters[index]);
+    }
+  });
+  return userAdminTheaters;
+}
+
+export function theatersWhereUserIsMember(user, theaters) {
+  let userMemberTheaters = [];
+  theaters.forEach((theater) => {
+    if (getUserRoleForTheater(user, theater.id) === "member") {
+      userMemberTheaters.push(theater);
+    }
+  });
+  return userMemberTheaters;
 }
