@@ -13,9 +13,8 @@ export default function PricingIndividual() {
           <h4>Without an account, you can:</h4>
           <ul>
             <li>Try out cuts and doubling of plays*</li>
-            <li>Download your cut play script*</li>
+            <li>Create part scripts*</li>
             <li>Calculate run times*</li>
-            <li>Download part scripts*</li>
             <li>Make word clouds*</li>
           </ul>
           <h4>
@@ -28,8 +27,14 @@ export default function PricingIndividual() {
             , you can do all of the above, and:
           </h4>
           <ul>
+            <li>
+              Save your script editing, doubling, or casting work (
+              <Link to="/folger">for a possibly limited time</Link>)
+            </li>
             <li>Register for auditions</li>
             <li>Create and manage your profile and bio</li>
+            <li>Download your cut play script*</li>
+            <li>Download part scripts*</li>
             <li>Update conflicts for your rehearsal team</li>
             <li>View rehearsal schedules</li>
             <li>Work many jobs at participating theaters</li>
@@ -38,7 +43,6 @@ export default function PricingIndividual() {
         <div>
           <h4>However, you cannot:</h4>
           <ul>
-            <li>Save your script editing, doubling, or casting work</li>
             <li>Schedule rehearsals</li>
             <li>Create or manage theaters, productions, or spaces</li>
             <li>Build a creative team to share your work</li>
@@ -47,12 +51,10 @@ export default function PricingIndividual() {
       </div>
       <div>
         <h4>
-          A <Link to="/checkout">paid subscription</Link> allows individuals**
-          to:
+          A <Link to="/subscriptions">paid subscription</Link> allows users to:
         </h4>
         <ul>
-          <li>Work over time on a script cut*</li>
-          <li>Create casting, rehearsal schedules, and doubling</li>
+          <li>Create real casting and doubling</li>
           <li>Build a creative team</li>
           <li>Create rehearsal schedules</li>
           <li>Create and manage productions, theaters, and spaces</li>
@@ -61,13 +63,6 @@ export default function PricingIndividual() {
       <div>
         <div>
           <em>* Public domain plays only.</em>
-        </div>
-        <div>
-          <em>
-            ** Do you have more than five people on your team? Consider our{" "}
-            <Link to="/pricing-institutional">institutional pricing</Link> to
-            save some money!
-          </em>
         </div>
       </div>
       <ComingSoon />

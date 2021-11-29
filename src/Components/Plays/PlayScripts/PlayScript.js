@@ -1,12 +1,8 @@
 //this is the container for play editing for PAID customers. It talks to the server
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
-
-import { usePlayState } from "../../../lib/playState";
-
-import LoadingModal from "../../LoadingModal";
-
 import EditScript from "./EditScript";
+import LoadingModal from "../../LoadingModal";
+import { usePlayState } from "../../../lib/playState";
 
 export default function PlayScript() {
   const { loadFullPlay, loading, play } = usePlayState();

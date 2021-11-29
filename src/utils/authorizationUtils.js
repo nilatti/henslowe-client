@@ -234,7 +234,6 @@ export async function getUserRoleForSpace(user, spaceId) {
 }
 
 export async function getUserRoleForTheater(user, theaterId) {
-  if (getSuperAdminRole(user)) console.log("super");
   if (getSuperAdminRole(user)) return "admin";
   theaterId = Number(theaterId);
   let theaterJobs;

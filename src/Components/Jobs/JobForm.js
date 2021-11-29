@@ -11,6 +11,7 @@ import { getProductionsForTheater } from "../../api/productions";
 import { getTheaterNames } from "../../api/theaters";
 
 import { useForm } from "../../hooks/environmentUtils";
+import { useMeState } from "../../lib/meState";
 
 import { buildUserName } from "../../utils/actorUtils";
 import { StartEndDatePair } from "../../utils/formUtils";
@@ -34,6 +35,7 @@ export default function JobForm({
     theater: job?.theater || production?.theater || theater || null,
     user: job?.user || user || null,
   });
+  const { me } = useMeState();
   const [clearNewUser, setClearNewUser] = useState(false);
   const [loading, setLoading] = useState(false);
   const [productions, setProductions] = useState([]);
@@ -121,10 +123,20 @@ export default function JobForm({
       if (response.status >= 400) {
         console.log("Error fetching users");
       } else {
-        var tempUsers = response.data.map((user) => ({
-          id: user.id,
-          label: String(buildUserName(user)),
-        }));
+        let tempUsers = [];
+        if (me.subscription_status == "active") {
+          tempUsers = response.data.map((user) => ({
+            id: user.id,
+            label: String(buildUserName(user)),
+          }));
+        } else {
+          let fakeUsers = response.data.filter((user) => user.fake);
+          tempUsers = fakeUsers.map((user) => ({
+            id: user.id,
+            label: String(buildUserName(user)),
+          }));
+        }
+
         setUsers(tempUsers);
       }
     } else {

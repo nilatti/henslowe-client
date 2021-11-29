@@ -24,7 +24,10 @@ export default function UserShow({ onDeleteClick, onEditClick, user }) {
           <span className="right floated edit icon" onClick={onEditClick}>
             <i className="fas fa-pencil-alt"></i>
           </span>
-          <span className="right floated trash icon" onClick={onDeleteClick}>
+          <span
+            className="right floated trash icon"
+            onClick={handleDeleteClick}
+          >
             <i className="fas fa-trash-alt"></i>
           </span>
         </div>
@@ -116,32 +119,16 @@ export default function UserShow({ onDeleteClick, onEditClick, user }) {
             <strong>Middle name:</strong> {user.middle_name}
           </div>
         )}
-      {user.preferred_name &&
-        overlap(roles, [
-          "current_theater_admin",
-          "current_production_admin",
-          "past_theater_admin",
-          "past_production_admin",
-          "self",
-          "superadmin",
-        ]) && (
-          <div>
-            <strong>Preferred name:</strong> {user.preferred_name}
-          </div>
-        )}
-      {user.last_name &&
-        overlap(roles, [
-          "current_theater_admin",
-          "current_production_admin",
-          "past_theater_admin",
-          "past_production_admin",
-          "self",
-          "superadmin",
-        ]) && (
-          <div>
-            <strong>Last name:</strong> {user.last_name}
-          </div>
-        )}
+      {user.preferred_name && (
+        <div>
+          <strong>Preferred name:</strong> {user.preferred_name}
+        </div>
+      )}
+      {user.last_name && (
+        <div>
+          <strong>Last name:</strong> {user.last_name}
+        </div>
+      )}
       {user.program_name && (
         <div>
           <strong>Name for programs:</strong> {user.program_name}

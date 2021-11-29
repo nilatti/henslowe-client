@@ -1,9 +1,10 @@
 import { Link, Switch, Route } from "react-router-dom";
 import { InfoBanner } from "./Styled";
 import Casting from "./Free/Casting";
-import Checkout from "./Orders/Checkout";
+import Subscriptions from "./Orders/Subscriptions";
 import CutPlays from "./Free/CutPlays";
 import Double from "./Free/Double";
+import FolgerSituation from "./Orders/FolgerSituation";
 import OrderSuccess from "./Orders/OrderSuccess";
 import PartScripts from "./Free/PartScripts";
 import PricingIndividual from "./Orders/PricingIndividual";
@@ -26,9 +27,10 @@ export default function PublicMain() {
       <Switch>
         <Route exact path="/" component={Welcome} />
         <Route exact path="/casting" component={Casting} />
-        <Route path="/checkout" component={Checkout} />
+        <Route path="/subscriptions" component={Subscriptions} />
         <Route exact path="/cut" component={CutPlays} />
         <Route exact path="/doubling" component={Double} />
+        <Route exact path="/folger" component={FolgerSituation} />
         <Route exact path="/part-scripts" component={PartScripts} />
         <Route path="/pricing-individual" component={PricingIndividual} />
         <Route path="/pricing-institutional" component={PricingInstitutional} />

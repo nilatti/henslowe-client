@@ -4,6 +4,7 @@ import _ from "lodash";
 import { getItems } from "../../api/crud";
 import LoadingModal from "../LoadingModal";
 import SubscriptionCard from "./SubscriptionCard";
+import { useMeState } from "../../lib/meState";
 
 const CardContainer = styled.div`
   align-items: center;
@@ -27,32 +28,31 @@ const SubscriptionsStyles = styled.div`
   }
 `;
 export default function Subscriptions() {
+  const { me } = useMeState();
   const [loading, setLoading] = useState(false);
   const [individualSubscriptions, setIndividualSubscriptions] = useState([]);
-  const [institutionalSubscriptions, setInstitutionalSubscriptions] = useState(
-    []
-  );
+
   useEffect(async () => {
-    setLoading(true);
-    let res = await getItems("subscription");
-    if (res.status >= 400) {
-      console.log("error getting subscriptions");
-    } else {
-      let tempSubscriptions = res.data;
-      let sortedSubscriptions = _.sortBy(tempSubscriptions, "name");
-      let tempIndividual = [];
-      let tempInstitutional = [];
-      sortedSubscriptions.map((subscription) => {
-        if (subscription.name.toLowerCase().includes("institution")) {
-          tempInstitutional.push(subscription);
-        } else {
-          tempIndividual.push(subscription);
-        }
-      });
-      setIndividualSubscriptions(tempIndividual);
-      setInstitutionalSubscriptions(tempInstitutional);
+    if (me?.email) {
+      setLoading(true);
+      let res = await getItems("subscription");
+      if (res.status >= 400) {
+        console.log("error getting subscriptions");
+      } else {
+        let tempSubscriptions = res.data;
+        let sortedSubscriptions = _.sortBy(tempSubscriptions, "name");
+        let tempIndividual = [];
+        sortedSubscriptions.map((subscription) => {
+          if (subscription.name.toLowerCase().includes("institution")) {
+            // tempInstitutional.push(subscription);
+          } else {
+            tempIndividual.push(subscription);
+          }
+        });
+        setIndividualSubscriptions(tempIndividual);
+      }
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
   //test data
   //   useEffect(() => {
@@ -90,6 +90,14 @@ export default function Subscriptions() {
   //     setInstitutionalSubscriptions(tempInstitutionalSubscriptions);
   //   }, []);
   if (loading) return <LoadingModal />;
+  if (!me.email) {
+    return (
+      <div>
+        Before you can sign up for a paid subscription, you need to set up your
+        login. It's easy! Just click that Google button at the top.
+      </div>
+    );
+  }
   let individualSubscriptionCards = individualSubscriptions.map(
     (subscription) => (
       <li>
@@ -101,23 +109,11 @@ export default function Subscriptions() {
       </li>
     )
   );
-  let institutionalSubscriptionCards = institutionalSubscriptions.map(
-    (subscription) => (
-      <li>
-        <SubscriptionCard
-          key={subscription.id}
-          subscription={subscription}
-          type="institutional"
-        />
-      </li>
-    )
-  );
+
   return (
     <SubscriptionsStyles>
-      <h3>Subscriptions for Individuals</h3>
+      <h2>Subscriptions</h2>
       <CardContainer>{individualSubscriptionCards}</CardContainer>
-      <h3>Subscriptions for Institutions</h3>
-      <CardContainer>{institutionalSubscriptionCards}</CardContainer>
     </SubscriptionsStyles>
   );
 }

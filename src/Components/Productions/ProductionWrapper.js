@@ -3,13 +3,11 @@ import ProductionShow from "./ProductionShow";
 import { ProductionAuthProvider } from "../Contexts";
 import { ProductionProvider } from "../../lib/productionState";
 
-export default function ProductionWrapper({}) {
+export default function ProductionWrapper({ children }) {
   const { productionId } = useParams();
   return (
     <ProductionAuthProvider productionId={productionId}>
-      <ProductionProvider>
-        <ProductionShow />
-      </ProductionProvider>
+      <ProductionProvider>{children}</ProductionProvider>
     </ProductionAuthProvider>
   );
 }

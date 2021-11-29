@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { forwardRef, useEffect, useRef, useState } from "react";
+import { useProductionAuthState } from "../../../Contexts";
 import uuid from "react-uuid";
 import styled from "styled-components";
 import { EditIcons } from "../../../Styled";
@@ -17,6 +18,7 @@ export default function RehearsalContentShow({
   handleEditClick,
   scenes,
 }) {
+  const { role } = useProductionAuthState();
   const [content, setContent] = useState([]);
   useEffect(() => {
     let content = rehearsalContent({
@@ -31,11 +33,13 @@ export default function RehearsalContentShow({
     <ContentShow>
       <h4>
         Planned Content:
-        <EditIcons>
-          <span className="right floated edit icon" onClick={handleEditClick}>
-            <i className="fas fa-pencil-alt"></i>
-          </span>
-        </EditIcons>
+        {role == "admin" && (
+          <EditIcons>
+            <span className="right floated edit icon" onClick={handleEditClick}>
+              <i className="fas fa-pencil-alt"></i>
+            </span>
+          </EditIcons>
+        )}
       </h4>
       <ul>{content}</ul>
     </ContentShow>

@@ -45,6 +45,7 @@ export function groupByTheater(jobs) {
         if (productionId >= 1) {
           let productionJobTitles = groupedByProduction[productionId].map(
             (productionJob) => {
+              console.log(productionJob);
               if (
                 productionJob.specialization.title === "Actor" &&
                 productionJob.character
@@ -68,7 +69,7 @@ export function groupByTheater(jobs) {
       if (nonProductionJobs) {
         productionsForTheater.unshift(nonProductionJobsForTheater);
       }
-      let theaterName = theaterGroup[0].theater.name;
+      let theaterName = theaterGroup[0]?.theater?.name;
       return (
         <li key={theaterId}>
           <Link to={`/theaters/${theaterId}`}>{theaterName}</Link>:{" "}

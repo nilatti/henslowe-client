@@ -12,6 +12,7 @@ const Content = styled.div`
 
 export default function EditableRehearsalContent({ rehearsal }) {
   const { updateRehearsal } = useProductionState();
+
   const [formOpen, setFormOpen] = useState(false);
   const thisRehearsal = useRef(null);
 

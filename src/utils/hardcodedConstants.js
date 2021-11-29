@@ -30,7 +30,12 @@ export const DAYS_OF_WEEK = [
   "friday",
   "saturday",
 ];
-export const PRODUCTION_ADMIN = ["Producer", "Director", "Stage Manager"];
+export const PRODUCTION_ADMIN = [
+  "Producer",
+  "Director",
+  "Stage Manager",
+  "Production Admin",
+];
 export const PRODUCTION_MEMBER = ["Actor"];
 export const SPACE_ADMIN = [];
 export const sequentialBackgrounds = [
@@ -55,6 +60,7 @@ export const THEATER_ADMIN = [
   "Executive Director",
   "Artistic Director",
   "Technical Director",
+  "Theater Admin",
 ];
 export const THEATER_MEMBER = ["Actor"];
 export const US_STATES_ARRAY = [

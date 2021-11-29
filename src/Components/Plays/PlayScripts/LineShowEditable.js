@@ -14,7 +14,7 @@ import {
 
 var Diff = require("diff");
 
-export default function LineShow({
+export default function LineShowEditable({
   handleLineSubmit,
   index,
   line,

@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Nav, Navbar, Container } from "react-bootstrap";
 import LogoutHooks from "./LogoutHooks";
-import { getTheaterNames } from "../api/theaters";
 import { useMeState } from "../lib/meState";
 import {
   getSuperAdminRole,
@@ -11,16 +10,6 @@ import {
 export default function FullAccessNavigation() {
   const { me } = useMeState();
   const superAdmin = getSuperAdminRole(me);
-  const [adminTheaters, setAdminTheaters] = useState([]);
-  useEffect(async () => {
-    let res = await getTheaterNames();
-    if (res.status >= 400) {
-      console.log("error getting theater names");
-    } else {
-      let tempAdminTheaters = await theatersWhereUserIsAdmin(me, res.data);
-      setAdminTheaters(tempAdminTheaters);
-    }
-  }, []);
 
   return (
     <header>
@@ -32,6 +21,11 @@ export default function FullAccessNavigation() {
               <Nav.Item>
                 <Nav.Link href="/" eventKey="1">
                   Dashboard
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/help" eventKey="10">
+                  Help
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
@@ -73,15 +67,10 @@ export default function FullAccessNavigation() {
                   </Nav.Item>
                 </>
               )}
-              {!!adminTheaters.length && (
-                <Nav.Item>
-                  <Nav.Link href="/institutional-account">
-                    Your Institution's Account
-                  </Nav.Link>
-                </Nav.Item>
-              )}
               <Nav.Item>
-                <Nav.Link href="/account">Your Account</Nav.Link>
+                <Nav.Link href="/account" eventKey="9">
+                  Your Account
+                </Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 Hi, {me?.name}

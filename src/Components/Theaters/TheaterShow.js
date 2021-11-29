@@ -20,8 +20,10 @@ import ProductionInfoTab from "../Productions/ProductionInfoTab";
 import SpaceAgreementFormForTheaters from "../SpaceAgreements/SpaceAgreementFormForTheaters";
 import SpaceInfoTab from "../Spaces/SpaceInfoTab";
 import { useTheaterAuthState } from "../Contexts";
+import { useMeState } from "../../lib/meState";
 import { Profile } from "../Styled";
 export default function TheaterShow() {
+  const { me } = useMeState();
   const { theaterId } = useParams();
   const { role } = useTheaterAuthState();
 
@@ -131,19 +133,21 @@ export default function TheaterShow() {
       ) : (
         <TheaterProfileForVisitor theater={theater} />
       )}
-      <div>
-        <h2>Spaces</h2>
-        {role === "admin" && (
-          <SpaceAgreementFormForTheaters
-            theater={theater}
-            onFormSubmit={updateTheater}
-          />
-        )}
-        <Tabs activeKey={key} onSelect={handleSelect} id="space-info-tabs">
-          {spaceTabs}
-        </Tabs>
-        <hr />
-      </div>
+      {!theater.fake && (
+        <div>
+          <h2>Spaces</h2>
+          {role === "admin" && (
+            <SpaceAgreementFormForTheaters
+              theater={theater}
+              onFormSubmit={updateTheater}
+            />
+          )}
+          <Tabs activeKey={key} onSelect={handleSelect} id="space-info-tabs">
+            {spaceTabs}
+          </Tabs>
+          <hr />
+        </div>
+      )}
       <div>
         <h2>Productions</h2>
         {role === "admin" && (
@@ -160,6 +164,18 @@ export default function TheaterShow() {
       </div>
       <div>
         <h2>People</h2>
+        {me?.subscription_status != "active" && (
+          <div>
+            <em>
+              Free accounts can only use fake people to cast and fill in jobs.
+              However, if you{" "}
+              <Link to="/subscriptions">upgrade to a paid account</Link>, it's
+              very easy to transfer all roles to a real user. In the mean time,
+              have fun, imagining Judi Dench and Gene Wilder starring as the
+              Macbeths.
+            </em>
+          </div>
+        )}
         <TheaterJobsList
           handleDeleteJob={handleDeleteJob}
           onFormSubmit={handleCreateJob}

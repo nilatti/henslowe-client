@@ -138,9 +138,11 @@ export const Profile = styled.div`
   }
   h2 {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     padding: 0 5px;
     div {
+      flex: 1;
       font-size: 0.8em;
     }
   }
