@@ -5,6 +5,7 @@ import styled from "styled-components";
 import EditableRehearsalContent from "./Content/EditableRehearsalContent";
 import EditableRehearsalPeople from "./People/EditableRehearsalPeople";
 import { useProductionState } from "../../../lib/productionState";
+import { useProductionAuthState } from "../../Contexts";
 import { unavailableUsers } from "../../../utils/rehearsalUtils";
 import { buildUserName } from "../../../utils/actorUtils";
 
@@ -38,6 +39,7 @@ const Space = styled.div``;
 
 export default function RehearsalShow({ handleEditClick, rehearsal }) {
   const { deleteRehearsal, notActors } = useProductionState();
+  const { role } = useProductionAuthState();
 
   let unavailableNotActors = unavailableUsers(notActors, rehearsal);
   return (
@@ -54,17 +56,19 @@ export default function RehearsalShow({ handleEditClick, rehearsal }) {
           <span></span>
         )}
       </Space>
-      <EditIcons>
-        <span className="right floated edit icon" onClick={handleEditClick}>
-          <i className="fas fa-pencil-alt"></i>
-        </span>
-        <span
-          className="right floated trash icon"
-          onClick={() => deleteRehearsal(rehearsal.id)}
-        >
-          <i className="fas fa-trash-alt"></i>
-        </span>
-      </EditIcons>
+      {role == "admin" && (
+        <EditIcons>
+          <span className="right floated edit icon" onClick={handleEditClick}>
+            <i className="fas fa-pencil-alt"></i>
+          </span>
+          <span
+            className="right floated trash icon"
+            onClick={() => deleteRehearsal(rehearsal.id)}
+          >
+            <i className="fas fa-trash-alt"></i>
+          </span>
+        </EditIcons>
+      )}
       <Notes>{rehearsal.notes && rehearsal.notes}</Notes>
       {unavailableNotActors.length > 0 && (
         <OtherUsersConflicts>

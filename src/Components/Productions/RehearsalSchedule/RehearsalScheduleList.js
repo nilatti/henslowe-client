@@ -10,6 +10,7 @@ import RehearsalFormToggle from "./RehearsalFormToggle";
 import RehearsalPatternCreatorToggle from "./RehearsalPatternCreatorToggle";
 import { Button } from "../../Button";
 import Modal from "../../Modal";
+import { useProductionAuthState } from "../../Contexts";
 import { Spinner } from "../../Loaders";
 import { useQuery } from "../../../hooks/environmentUtils";
 import { useProductionState } from "../../../lib/productionState";
@@ -35,6 +36,7 @@ const RehearsalScheduleListStyles = styled.div`
 
 export default function RehearsalScheduleList() {
   let query = useQuery();
+  const { role } = useProductionAuthState();
   const { loading, rehearsals, production } = useProductionState();
   const [thisWeekRehearsals, setThisWeekRehearsals] = useState([]);
   const [nextWeekRehearsals, setNextWeekRehearsals] = useState(false);
@@ -164,23 +166,29 @@ export default function RehearsalScheduleList() {
           {production.theater.name}
         </Link>
       </h2>
-      <div>
-        <span className="right floated edit icon" onClick={toggleAddRehearsal}>
-          <i className="fas fa-pencil-alt"></i> Edit rehearsal schedule
-        </span>
-      </div>
+      {role == "admin" && (
+        <div>
+          <span
+            className="right floated edit icon"
+            onClick={toggleAddRehearsal}
+          >
+            <i className="fas fa-pencil-alt"></i> Edit rehearsal schedule
+          </span>
+        </div>
+      )}
       <h3>
         {moment(startTime).format("MMM D, YYYY")}-
         {moment(endTime).format("MMM D, YYYY")}
       </h3>
-      <div>
-        //tktktk add role here--not everyone should be able to edit or add
-        rehearsals
-      </div>
-      <EditButtons show={addRehearsalsOpen}>
-        <RehearsalPatternCreatorToggle production={production} isOpen={false} />
-        <RehearsalFormToggle isOpen={false} production={production} />
-      </EditButtons>
+      {role == "admin" && (
+        <EditButtons show={addRehearsalsOpen}>
+          <RehearsalPatternCreatorToggle
+            production={production}
+            isOpen={false}
+          />
+          <RehearsalFormToggle isOpen={false} production={production} />
+        </EditButtons>
+      )}
       <Button onClick={updateDatesLast}>Last Week</Button>
       <Button
         onClick={updateDatesNext}

@@ -1,8 +1,12 @@
-import PrivatePage from "./PrivatePage";
+import FullAccessPage from "./FullAccessPage";
 import PublicPage from "./PublicPage";
 import { useMeState } from "../lib/meState";
 
 export default function MainApp() {
   const { me } = useMeState();
-  return <>{me?.email ? <PrivatePage /> : <PublicPage />}</>;
+  if (me?.email) {
+    return <FullAccessPage />;
+  } else {
+    return <PublicPage />;
+  }
 }

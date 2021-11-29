@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 // import uuid from "react-uuid";
 import styled from "styled-components";
+import { useProductionAuthState } from "../../../Contexts";
 import { buildUserName } from "../../../../utils/actorUtils";
 import { EditIcons } from "../../../Styled";
 
@@ -15,6 +16,7 @@ const PeopleShow = styled.div`
   align-items: center;
 `;
 export default function RehearsalPeopleShow({ handleEditClick, calledUsers }) {
+  const { role } = useProductionAuthState();
   const [people, setPeople] = useState([]);
   useEffect(() => {
     let peopleList = _.sortBy(calledUsers, ["first_name"]);
@@ -30,11 +32,13 @@ export default function RehearsalPeopleShow({ handleEditClick, calledUsers }) {
     <PeopleShow>
       <h4>
         People called:{" "}
-        <EditIcons>
-          <span className="right floated edit icon" onClick={handleEditClick}>
-            <i className="fas fa-pencil-alt"></i>
-          </span>
-        </EditIcons>
+        {role == "admin" && (
+          <EditIcons>
+            <span className="right floated edit icon" onClick={handleEditClick}>
+              <i className="fas fa-pencil-alt"></i>
+            </span>
+          </EditIcons>
+        )}
       </h4>
       <ul>{people}</ul>
     </PeopleShow>

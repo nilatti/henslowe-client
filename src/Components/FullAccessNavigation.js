@@ -1,14 +1,16 @@
+import { useEffect } from "react";
 import { Nav, Navbar, Container } from "react-bootstrap";
 import LogoutHooks from "./LogoutHooks";
 import { useMeState } from "../lib/meState";
-import { getSuperAdminRole } from "../utils/authorizationUtils";
+import {
+  getSuperAdminRole,
+  theatersWhereUserIsAdmin,
+} from "../utils/authorizationUtils";
 
-// The Header creates links that can be used to navigate
-// between routes.
-export default function Navigation() {
+export default function FullAccessNavigation() {
   const { me } = useMeState();
-
   const superAdmin = getSuperAdminRole(me);
+
   return (
     <header>
       <Navbar collapseOnSelect fixed="top" expand="lg">
@@ -19,6 +21,11 @@ export default function Navigation() {
               <Nav.Item>
                 <Nav.Link href="/" eventKey="1">
                   Dashboard
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/help" eventKey="10">
+                  Help
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
@@ -60,6 +67,11 @@ export default function Navigation() {
                   </Nav.Item>
                 </>
               )}
+              <Nav.Item>
+                <Nav.Link href="/account" eventKey="9">
+                  Your Account
+                </Nav.Link>
+              </Nav.Item>
               <Nav.Item>
                 Hi, {me?.name}
                 <LogoutHooks />

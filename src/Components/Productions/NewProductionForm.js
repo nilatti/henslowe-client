@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Form, FormGroupInline } from "../Form";
 import { Typeahead } from "react-bootstrap-typeahead";
 import { FormButtonGroup } from "../Inputs";
@@ -8,14 +9,13 @@ import { getTheaterNames } from "../../api/theaters";
 import { getPlayTitles } from "../../api/plays";
 
 import { useForm } from "../../hooks/environmentUtils";
+import { useMeState } from "../../lib/meState";
+import { theatersWhereUserIsAdmin } from "../../utils/authorizationUtils";
 import { StartEndDatePair } from "../../utils/formUtils";
 
-export default function NewProductionForm({
-  onFormClose,
-  onFormSubmit,
-  theaterId,
-  playId,
-}) {
+export default function NewProductionForm({ onFormSubmit, theaterId, playId }) {
+  let history = useHistory();
+  const { me } = useMeState();
   const [plays, setPlays] = useState([]);
   const [selectedPlay, setSelectedPlay] = useState([]);
   const [selectedTheater, setSelectedTheater] = useState([]);
@@ -27,7 +27,8 @@ export default function NewProductionForm({
     if (response.status >= 400) {
       setErrorStatus("Error fetching theaters");
     } else {
-      const theaters = response.data.map((theater) => ({
+      let possibleTheaters = await theatersWhereUserIsAdmin(me, response.data);
+      const theaters = possibleTheaters.map((theater) => ({
         id: theater.id,
         label: String(theater.name),
       }));
@@ -68,6 +69,10 @@ export default function NewProductionForm({
     onFormClose();
   }
 
+  function onFormClose() {
+    history.goBack();
+  }
+
   function processSubmit() {
     onFormSubmit(
       {
@@ -104,6 +109,13 @@ export default function NewProductionForm({
           disabled={!!playId}
         />
       </FormGroupInline>
+      <em>
+        Don't see a play you're looking for?{" "}
+        <a href="mailto:henslowescloud@gmail.com">Shoot us an email.</a> We can
+        only provide play text tools for public domain plays, but we can
+        manually add charts and tracks for other plays. Please contact us, and
+        we'll set you right up.
+      </em>
       <FormGroupInline>
         <Typeahead
           id="theater"

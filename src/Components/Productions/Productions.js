@@ -1,15 +1,19 @@
 import { useState } from "react";
 import { Link, Route, Switch, useHistory } from "react-router-dom";
+
 import DoublingCharts from "./DoublingCharts";
 import ProductionWrapper from "./ProductionWrapper";
+import ProductionShow from "./ProductionShow";
 import ProductionsList from "./ProductionsList";
 import ProductionRehearsalSchedule from "./RehearsalSchedule/ProductionRehearsalSchedule";
 import SetDesignDashboard from "./SetDesign/SetDesignDashboard";
 
-import NewProduction from "./NewProduction";
+import NewProductionForm from "./NewProductionForm";
 import { createItem, deleteItem } from "../../api/crud";
+import { useQuery } from "../../hooks/environmentUtils";
 export default function Productions() {
   const history = useHistory();
+  let query = useQuery();
   const [errors, setErrors] = useState([]);
 
   async function createProduction(production) {
@@ -49,8 +53,9 @@ export default function Productions() {
             <Route
               path="/productions/new"
               render={(props) => (
-                <NewProduction
-                  {...props}
+                <NewProductionForm
+                  playId={parseInt(query.get("playId"))}
+                  theaterId={parseInt(query.get("theaterId"))}
                   onFormSubmit={handleCreateFormSubmit}
                 />
               )}
@@ -60,15 +65,24 @@ export default function Productions() {
               path={`/productions/:productionId/doubling_charts/`}
               component={DoublingCharts}
             />
-            <Route path={`/productions/:productionId/rehearsal_schedule`}>
-              <ProductionRehearsalSchedule />
-            </Route>
+            <Route
+              path={`/productions/:productionId/rehearsal-schedule`}
+              render={(props) => (
+                <ProductionWrapper {...props}>
+                  <ProductionRehearsalSchedule />
+                </ProductionWrapper>
+              )}
+            />
             <Route path={`/productions/:productionId/set`}>
               <SetDesignDashboard />
             </Route>
             <Route
               path={`/productions/:productionId`}
-              render={(props) => <ProductionWrapper {...props} />}
+              render={(props) => (
+                <ProductionWrapper {...props}>
+                  <ProductionShow />
+                </ProductionWrapper>
+              )}
             />
             <Route
               path="/productions/"

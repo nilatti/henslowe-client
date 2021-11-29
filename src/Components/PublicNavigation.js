@@ -1,11 +1,8 @@
-import LoginHooks from "../LoginHooks";
-import styled from "styled-components";
 import { Nav, Navbar, Container } from "react-bootstrap";
-import PaypalButton from "../PaypalButton";
+import LoginHooks from "./LoginHooks";
+import PaypalButton from "./PaypalButton";
 
-// The Header creates links that can be used to navigate
-// between routes.
-export default function Navigation() {
+export default function PublicNavigation() {
   return (
     <header>
       <Navbar collapseOnSelect fixed="top" expand="lg">

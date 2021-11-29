@@ -19,6 +19,7 @@ import { useProductionState } from "../../lib/productionState";
 import { formatDateForRails } from "../../utils/dateTimeUtils";
 import { StartEndDatePair } from "../../utils/formUtils";
 import { upcomingRehearsalsList } from "../../utils/rehearsalUtils";
+import { getProduction } from "../../api/productions";
 
 const ProductionProfile = styled.div`
   text-align: center;
@@ -58,14 +59,17 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
 
   //check if the play is ready for interaction
   useInterval(async () => {
-    let productionCopyCompleteData = await getProductionCopyComplete(
-      production.play?.id
-    );
-    setProductionCopyComplete(
-      productionCopyCompleteData.data.production_copy_complete
-    );
-    if (productionCopyComplete) {
-      setPollingInterval(null);
+    let productionHasPlay = await getProduction(production.id);
+    if (productionHasPlay.data.play?.id) {
+      let productionCopyCompleteData = await getProductionCopyComplete(
+        production.play?.id
+      );
+      setProductionCopyComplete(
+        productionCopyCompleteData.data.production_copy_complete
+      );
+      if (productionCopyComplete) {
+        setPollingInterval(null);
+      }
     }
   }, pollingInterval);
 
@@ -159,7 +163,7 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
       {productionCopyComplete && (
         <div>
           <div>
-            {production.lines_per_minute > 0 && linesPerMinuteFormOpen ? (
+            {linesPerMinuteFormOpen ? (
               <Form noValidate onSubmit={(e) => handleSubmit(e)} width="65%">
                 <FormGroupInline>
                   <label htmlFor="lines_per_minute">Lines Per Minute:</label>
@@ -188,7 +192,7 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
         </div>
       )}
       <hr />
-      {!!rehearsals.length && (
+      {!!rehearsals.length ? (
         <div>
           <h3>Upcoming Rehearsals</h3>
           <div>
@@ -206,12 +210,18 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
               <tbody>{upcomingRehearsalsList(rehearsals)}</tbody>
             </DefaultTable>
             <p>
-              <Link to={`${url}/rehearsal_schedule`}>
+              <Link to={`/productions/${production.id}/rehearsal-schedule`}>
                 <Button>View Full Rehearsal Schedule</Button>
               </Link>
             </p>
           </div>
         </div>
+      ) : (
+        <p>
+          <Link to={`/productions/${production.id}/rehearsal-schedule`}>
+            <Button>View Full Rehearsal Schedule</Button>
+          </Link>
+        </p>
       )}
       <hr />
       <div>

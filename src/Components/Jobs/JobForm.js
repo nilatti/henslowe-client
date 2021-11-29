@@ -11,12 +11,14 @@ import { getProductionsForTheater } from "../../api/productions";
 import { getTheaterNames } from "../../api/theaters";
 
 import { useForm } from "../../hooks/environmentUtils";
+import { useMeState } from "../../lib/meState";
 
 import { buildUserName } from "../../utils/actorUtils";
 import { StartEndDatePair } from "../../utils/formUtils";
 
 import NewUserModal from "../Users/NewUserModal";
 export default function JobForm({
+  includeProduction = true,
   job,
   onFormClose,
   onFormSubmit,
@@ -33,6 +35,7 @@ export default function JobForm({
     theater: job?.theater || production?.theater || theater || null,
     user: job?.user || user || null,
   });
+  const { me } = useMeState();
   const [clearNewUser, setClearNewUser] = useState(false);
   const [loading, setLoading] = useState(false);
   const [productions, setProductions] = useState([]);
@@ -50,7 +53,7 @@ export default function JobForm({
     if (!production) {
       let response;
       if (theater) {
-        response = await getProductionsForTheater(theaterId);
+        response = await getProductionsForTheater(theater.id);
       } else {
         response = await getItems("production");
       }
@@ -120,10 +123,20 @@ export default function JobForm({
       if (response.status >= 400) {
         console.log("Error fetching users");
       } else {
-        var tempUsers = response.data.map((user) => ({
-          id: user.id,
-          label: String(buildUserName(user)),
-        }));
+        let tempUsers = [];
+        if (me.subscription_status == "active") {
+          tempUsers = response.data.map((user) => ({
+            id: user.id,
+            label: String(buildUserName(user)),
+          }));
+        } else {
+          let fakeUsers = response.data.filter((user) => user.fake);
+          tempUsers = fakeUsers.map((user) => ({
+            id: user.id,
+            label: String(buildUserName(user)),
+          }));
+        }
+
         setUsers(tempUsers);
       }
     } else {
@@ -236,25 +249,27 @@ export default function JobForm({
             placeholder="Choose the specialization"
           />
         </FormGroup>
-        <FormGroup>
-          <label>Production</label>
-          <div>
-            When the production is set, the theater will update to match.
-            <br />
-            The dates will also update but can be edited to match the duration
-            of the actual job.
-          </div>
-          <Typeahead
-            disabled={!!production}
-            id="production"
-            options={productions}
-            onChange={(selected) => {
-              setSelectedProduction(selected);
-            }}
-            selected={selectedProduction}
-            placeholder="Choose the production"
-          />
-        </FormGroup>
+        {includeProduction && (
+          <FormGroup>
+            <label>Production</label>
+            <div>
+              When the production is set, the theater will update to match.
+              <br />
+              The dates will also update but can be edited to match the duration
+              of the actual job.
+            </div>
+            <Typeahead
+              disabled={!!production}
+              id="production"
+              options={productions}
+              onChange={(selected) => {
+                setSelectedProduction(selected);
+              }}
+              selected={selectedProduction}
+              placeholder="Choose the production"
+            />
+          </FormGroup>
+        )}
 
         <FormGroup>
           <label>Theater</label>

@@ -39,11 +39,13 @@ const ProductionAuthStateProvider = ProductionAuthContext.Provider;
 
 function ProductionAuthProvider({ productionId, children }) {
   const { me } = useMeState();
-  const [role, setRole] = useState("visitor");
+  const [role, setRole] = useState("unset");
   useEffect(async () => {
-    let userRole = await getUserRoleForProduction(me, productionId);
-    setRole(userRole);
-  }, []);
+    if (productionId) {
+      let userRole = await getUserRoleForProduction(me, productionId);
+      setRole(userRole);
+    }
+  }, [productionId]);
   return (
     <ProductionAuthStateProvider value={{ role }}>
       {children}
@@ -64,12 +66,13 @@ const SpaceAuthStateProvider = SpaceAuthContext.Provider;
 
 function SpaceAuthProvider({ spaceId, children }) {
   const { me } = useMeState();
-  const [role, setRole] = useState("visitor");
+  const [role, setRole] = useState("unset");
   useEffect(async () => {
-    let userRole = await getUserRoleForSpace(me, spaceId);
-    console.log(userRole);
-    setRole(userRole);
-  }, []);
+    if (spaceId) {
+      let userRole = await getUserRoleForSpace(me, spaceId);
+      setRole(userRole);
+    }
+  }, [spaceId]);
   return (
     <SpaceAuthStateProvider value={{ role }}>{children}</SpaceAuthStateProvider>
   );
@@ -90,11 +93,13 @@ const TheaterAuthStateProvider = TheaterAuthContext.Provider;
 
 function TheaterAuthProvider({ theaterId, children }) {
   const { me } = useMeState();
-  const [role, setRole] = useState("visitor");
+  const [role, setRole] = useState("unset");
   useEffect(async () => {
-    let userRole = await getUserRoleForTheater(me, theaterId);
-    setRole(userRole);
-  }, []);
+    if (theaterId) {
+      let userRole = await getUserRoleForTheater(me, theaterId);
+      setRole(userRole);
+    }
+  }, [theaterId]);
   return (
     <TheaterAuthStateProvider value={{ role }}>
       {children}
@@ -115,7 +120,7 @@ const UserAuthStateProvider = UserAuthContext.Provider;
 
 function UserAuthProvider({ user, children }) {
   const { me } = useMeState();
-  const [roles, setRoles] = useState(["visitor"]);
+  const [roles, setRoles] = useState(["unset"]);
   useEffect(() => {
     if (me) {
       if (getSuperAdminRole(me)) {

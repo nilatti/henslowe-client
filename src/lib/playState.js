@@ -51,7 +51,7 @@ function PlayProvider({ children }) {
       });
       setCharactersAll(flaggedCharacters.concat(flaggedCharacterGroups));
     }
-  }, [JSON.stringify(play.acts), play.characters, play.character_groups]);
+  }, [play.acts, play.characters, play.character_groups]);
 
   useEffect(() => {
     if (acts.length) {
@@ -59,7 +59,7 @@ function PlayProvider({ children }) {
       play.acts.map((act) => (allScenes = allScenes.concat(act.scenes)));
       setScenes(allScenes);
     }
-  }, [JSON.stringify(acts)]);
+  }, [acts]);
 
   useEffect(() => {
     if (scenes.length) {

@@ -61,7 +61,6 @@ function ProductionProvider({ children }) {
 
   //set rehearsals
   useEffect(() => {
-    console.log(62);
     let sortedRehearsals = _.sortBy(production.rehearsals, "start_time");
     let datedRehearsals = sortedRehearsals.map((rehearsal) => {
       return {
@@ -69,7 +68,6 @@ function ProductionProvider({ children }) {
         date: moment(rehearsal.start_time).format("YYYY-MM-DD"),
       };
     });
-    console.log(datedRehearsals);
     setRehearsals(datedRehearsals);
   }, [JSON.stringify(production.rehearsals?.length)]);
 

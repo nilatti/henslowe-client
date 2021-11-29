@@ -91,7 +91,6 @@ export default function PartScriptSelector({
     );
   });
 
-  ///tktktktk might need to make this receive a prop to link to casting--this links to free casting.
   return (
     <>
       <h3>Select Characters (optional)</h3>
@@ -103,9 +102,8 @@ export default function PartScriptSelector({
       {!!actorsSelector.length && <SelectGroup>{actorsSelector}</SelectGroup>}
       {!actorsSelector.length && play.free && (
         <div>
-          You don't have any actors cast.{" "}
-          <Link to="/doubling">Go to cast some people</Link> and then come back
-          here.
+          You don't have any actors cast. Go to cast some people and then come
+          back here.
         </div>
       )}
       <Button onClick={submitSelection}>Generate Part Scripts</Button>

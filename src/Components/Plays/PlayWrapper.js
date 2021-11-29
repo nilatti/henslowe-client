@@ -1,10 +1,18 @@
-import { SuperAuthProvider } from "../Contexts";
-import { PlayProvider } from "../../lib/playState";
-
+import { PlayProvider, usePlayState } from "../../lib/playState";
+import { ProductionAuthProvider } from "../Contexts";
 export default function PlayWrapper({ children }) {
   return (
-    <SuperAuthProvider>
-      <PlayProvider>{children}</PlayProvider>
-    </SuperAuthProvider>
+    <PlayProvider>
+      <InnerWrapper>{children}</InnerWrapper>
+    </PlayProvider>
+  );
+}
+
+function InnerWrapper({ children }) {
+  const { play } = usePlayState();
+  return (
+    <ProductionAuthProvider productionId={play.production_id}>
+      {children}
+    </ProductionAuthProvider>
   );
 }

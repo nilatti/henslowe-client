@@ -39,7 +39,7 @@ export default function LoginHooks() {
   return (
     <GoogleLogin
       clientId={clientId}
-      buttonText="Log in with Google"
+      buttonText="Log in or sign up with Google"
       onSuccess={handleLogin}
       onFailure={() => handleFailure}
       cookiePolicy={"single_host_origin"}

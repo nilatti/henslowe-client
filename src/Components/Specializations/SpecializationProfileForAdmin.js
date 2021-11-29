@@ -50,9 +50,9 @@ export default function SpecializationProfileForAdmin({
           value={inputs.title}
         />
       ) : (
-        <>
+        <div>
           <h2 onDoubleClick={toggleNameForm}>
-            {specialization.title}
+            <div>{specialization.title}</div>
             <ToolTip>
               <div>
                 <em>Double-click most of this to edit</em>
@@ -65,7 +65,7 @@ export default function SpecializationProfileForAdmin({
           >
             <i className="fas fa-trash-alt"></i>
           </span>
-        </>
+        </div>
       )}
       <TextAreaInputWithToggle
         formOpen={descriptionForm}

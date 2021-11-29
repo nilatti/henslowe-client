@@ -133,67 +133,65 @@ export default function RehearsalPatternCreator({ production, cancel }) {
           minutes and refresh this page.
         </strong>
       </Explainer>
-      <Form onSubmit={handleSubmit}>
-        <fieldset>
-          <label>Rehearsal start and end dates:</label>
-          <StartEndDatePair
-            endTime={inputs.end_date}
-            startTime={inputs.start_date}
-            handleChange={handleChange}
+      <Form onSubmit={handleSubmit} width="85%">
+        <label>Rehearsal start and end dates:</label>
+        <StartEndDatePair
+          endTime={inputs.end_date}
+          startTime={inputs.start_date}
+          handleChange={handleChange}
+        />
+        <FormGroup>
+          <label>We rehearse every</label>
+          {weekDays}
+        </FormGroup>
+        <StartEndTimePair
+          endTime={inputs.end_time}
+          start_time={inputs.start_time}
+          handleChange={handleChange}
+        />
+        <FormGroup>
+          <label>Time rehearsing per block</label>
+          <input
+            name="timeBetweenBreaks"
+            placeholder="length work time between blocks"
+            onChange={handleChange}
+            value={inputs.timeBetweenBreaks}
           />
-          <FormGroup>
-            <label>We rehearse every</label>
-            {weekDays}
-          </FormGroup>
-          <StartEndTimePair
-            endTime={inputs.end_time}
-            start_time={inputs.start_time}
-            handleChange={handleChange}
+        </FormGroup>
+        <FormGroup>
+          <label>Length of breaks</label>
+          <input
+            name="breakLength"
+            placeholder="length of breaks"
+            onChange={handleChange}
+            value={inputs.breakLength}
           />
-          <FormGroup>
-            <label>Time rehearsing per block</label>
-            <input
-              name="timeBetweenBreaks"
-              placeholder="length work time between blocks"
-              onChange={handleChange}
-              value={inputs.timeBetweenBreaks}
-            />
-          </FormGroup>
-          <FormGroup>
-            <label>Length of breaks</label>
-            <input
-              name="breakLength"
-              placeholder="length of breaks"
-              onChange={handleChange}
-              value={inputs.breakLength}
-            />
-          </FormGroup>
-          <FormGroup>
-            <label>Total length of block (break + rehearsal)</label>
-            <input
-              disabled
-              name="blockLength"
-              placeholder="length of rehearsal blocks"
-              onChange={handleChange}
-              value={
-                parseInt(inputs.timeBetweenBreaks) +
-                  parseInt(inputs.breakLength) || 0
-              }
-            />
-          </FormGroup>
-          <p>
-            Is there anyone who should automatically be called to rehearsals,
-            like a director or stage manager?
-          </p>
-          <PeopleCheckboxes
-            onChange={updateCheckedContent}
-            users={defaultUsers}
+        </FormGroup>
+        <FormGroup>
+          <label>Total length of block (break + rehearsal)</label>
+          <input
+            disabled
+            name="blockLength"
+            placeholder="length of rehearsal blocks"
+            onChange={handleChange}
+            value={
+              parseInt(inputs.timeBetweenBreaks) +
+                parseInt(inputs.breakLength) || 0
+            }
           />
-          <Button type="submit">Submit</Button>
-          <Button type="button" onClick={() => cancel(false)} block>
-            Cancel
-          </Button>
-        </fieldset>
+        </FormGroup>
+        <p>
+          Is there anyone who should automatically be called to rehearsals, like
+          a director or stage manager?
+        </p>
+        <PeopleCheckboxes
+          onChange={updateCheckedContent}
+          users={defaultUsers}
+        />
+        <Button type="submit">Submit</Button>
+        <Button type="button" onClick={() => cancel(false)} block>
+          Cancel
+        </Button>
       </Form>
       <hr />
     </RehearsalPatternCreatorStyles>

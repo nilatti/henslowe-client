@@ -188,9 +188,9 @@ export default function PlayProfileForAdmin({
               Character breakdown
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link to={`/`}>Character chart</Link>
-          </li>
+          </li> */}
           <li>
             <Link to={`/plays/${play.id}/playscript`}>Edit script</Link>
           </li>
@@ -200,9 +200,9 @@ export default function PlayProfileForAdmin({
           <li>
             <Link to={`/plays/${play.id}/part_scripts`}>Make part scripts</Link>
           </li>
-          <li>
+          {/* <li>
             <Link to={`/`}>Download entire script</Link>
-          </li>
+          </li> */}
         </ul>
       </div>
     </>

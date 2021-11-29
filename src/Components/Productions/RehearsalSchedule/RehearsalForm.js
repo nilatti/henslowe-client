@@ -19,10 +19,10 @@ export default function RehearsalForm({
   rehearsal,
 }) {
   const { inputs, handleChange } = useForm({
-    end_time: rehearsal.end_time || new Date(),
-    notes: rehearsal.notes || "",
-    start_time: rehearsal.start_time || new Date(),
-    title: rehearsal.title || "",
+    end_time: rehearsal?.end_time || new Date(),
+    notes: rehearsal?.notes || "",
+    start_time: rehearsal?.start_time || new Date(),
+    title: rehearsal?.title || "",
   });
 
   const { productionId } = useProductionState();
@@ -58,41 +58,40 @@ export default function RehearsalForm({
     <RehearsalFormStyles>
       <h2>New Rehearsal</h2>
       <Form
+        width="85%"
         noValidate
         onSubmit={(e) => handleSubmit(e)}
         // validated={validated}
       >
-        <fieldset>
-          <StartEndDateTimePair
-            endTime={inputs.end_time}
-            startTime={inputs.start_time}
-            handleChange={handleChange}
+        <StartEndDateTimePair
+          endTime={inputs.end_time}
+          startTime={inputs.start_time}
+          handleChange={handleChange}
+        />
+        <FormGroup>
+          <label htmlFor="title">Title:</label>
+          <input
+            id="title"
+            name="title"
+            onChange={handleChange}
+            value={inputs.title}
           />
-          <FormGroup>
-            <label htmlFor="title">Title:</label>
-            <input
-              id="title"
-              name="title"
-              onChange={handleChange}
-              value={inputs.title}
-            />
-          </FormGroup>
-          <FormGroup>
-            <label htmlFor="notes">Notes:</label>
-            <input
-              id="notes"
-              as="textarea"
-              name="notes"
-              onChange={handleChange}
-              rows="3"
-              value={inputs.notes}
-            />
-          </FormGroup>
-          <Button type="submit">Submit</Button>
-          <Button type="button" onClick={onFormClose}>
-            Cancel
-          </Button>
-        </fieldset>
+        </FormGroup>
+        <FormGroup>
+          <label htmlFor="notes">Notes:</label>
+          <input
+            id="notes"
+            as="textarea"
+            name="notes"
+            onChange={handleChange}
+            rows="3"
+            value={inputs.notes}
+          />
+        </FormGroup>
+        <Button type="submit">Submit</Button>
+        <Button type="button" onClick={onFormClose}>
+          Cancel
+        </Button>
       </Form>
       <hr />
     </RehearsalFormStyles>

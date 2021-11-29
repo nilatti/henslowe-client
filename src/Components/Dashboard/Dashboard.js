@@ -112,10 +112,10 @@ export default function Dashboard() {
       <hr />
       <div>
         <h4>Rehearsal schedule</h4>
-        {productions.length &&
+        {!!productions.length &&
           productions.map((production) => (
             <em key={production.id}>
-              <Link to={`/productions/${production.id}/rehearsal_schedule`}>
+              <Link to={`/productions/${production.id}/rehearsal-schedule`}>
                 Full rehearsal schedule for {production.play?.title}
               </Link>
             </em>
