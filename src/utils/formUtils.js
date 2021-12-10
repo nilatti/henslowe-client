@@ -1,8 +1,6 @@
-import { css } from "jquery";
 import { useState } from "react";
 import { Form } from "react-bootstrap";
 import Datetime from "react-datetime"; //updated!
-import { couldStartTrivia } from "typescript";
 
 import { isAfterDate, isAfterTime } from "../utils/dateTimeUtils";
 
