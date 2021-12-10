@@ -1,5 +1,5 @@
 import axios from "axios";
-export const baseUrl = "http://api.henslowescloud.com/api";
+export const baseUrl = process.env.REACT_APP_API_ROOT;
 console.log(baseUrl);
 export default axios.create({
   baseURL: baseUrl,

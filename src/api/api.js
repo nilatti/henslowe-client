@@ -1,7 +1,12 @@
-import axios from 'axios';
-
+import axios from "axios";
+export const baseUrl = process.env.REACT_APP_API_ROOT;
+console.log(baseUrl);
+axios.defaults.withCredentials = true;
 export default axios.create({
-  baseURL: `https://henslowescloud.com/api/`,
-  // baseURL: 'http://localhost:3001/api',
-  headers: {"Authorization" : `${window.localStorage.getItem('token')}`}
+  baseURL: baseUrl,
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Credentials": true,
+    "Content-Type": "application/json",
+  },
 });
