@@ -98,6 +98,7 @@ async function getPlaySkeleton(playId) {
 }
 
 async function getPlayTitles() {
+  console.log(API);
   return API.request(`plays/play_titles`);
 }
 
