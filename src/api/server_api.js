@@ -1,5 +1,6 @@
 import axios from "axios";
 export const baseUrl = "http://api.henslowescloud.com/api";
+console.log(3, baseUrl);
 export default axios.create({
   baseURL: baseUrl,
   headers: {

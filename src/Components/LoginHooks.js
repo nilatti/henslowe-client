@@ -5,6 +5,8 @@ import { useMeState } from "../lib/meState";
 export default function LoginHooks() {
   const history = useHistory();
   const { setMe } = useMeState();
+  console.log(process.env);
+  console.log(process.env.REACT_APP_GOOGLE_CLIENT_KEY);
   const clientId = process.env.REACT_APP_GOOGLE_CLIENT_KEY;
   const handleLogin = async (googleData) => {
     const res = await fetch(
