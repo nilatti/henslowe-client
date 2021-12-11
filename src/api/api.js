@@ -1,5 +1,5 @@
 import axios from "axios";
-export const baseUrl = `https://${process.env.REACT_APP_API_ROOT}/api`;
+export const baseUrl = `${process.env.REACT_APP_API_ROOT}/api`;
 axios.defaults.withCredentials = true;
 export default axios.create({
   baseURL: baseUrl,

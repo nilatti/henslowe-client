@@ -8,13 +8,13 @@ export default function LoginHooks() {
   const clientId = process.env.REACT_APP_GOOGLE_CLIENT_KEY;
   const handleLogin = async (googleData) => {
     const res = await fetch(
-      `https://${process.env.REACT_APP_API_ROOT}/auth/google_oauth2/callback`,
+      `${process.env.REACT_APP_API_ROOT}/auth/google_oauth2/callback`,
       {
         method: "POST",
         body: JSON.stringify({
           code: googleData.code,
           grant_type: "authorization_code",
-          redirect_uri: `https://${process.env.REACT_APP_API_ROOT}`,
+          redirect_uri: `${process.env.REACT_APP_API_ROOT}`,
         }),
         headers: {
           "Content-Type": "application/json",
