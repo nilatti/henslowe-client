@@ -42,7 +42,7 @@
     "syllable": "4.1.0",
     "typescript": "3.9.7"
   },
-  "proxy": "http://api.henslowescloud.com",
+  "proxy": "https://api.henslowescloud.com",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

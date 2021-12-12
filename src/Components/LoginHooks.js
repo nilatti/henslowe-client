@@ -7,23 +7,20 @@ export default function LoginHooks() {
   const { setMe } = useMeState();
   const clientId = process.env.REACT_APP_GOOGLE_CLIENT_KEY;
   const handleLogin = async (googleData) => {
-    const res = await fetch(
-      `${process.env.REACT_APP_API_ROOT}/auth/google_oauth2/callback`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          code: googleData.code,
-          grant_type: "authorization_code",
-          redirect_uri: `${process.env.REACT_APP_API_ROOT}`,
-        }),
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true,
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      }
-    );
+    const res = await fetch(`/auth/google_oauth2/callback`, {
+      method: "POST",
+      body: JSON.stringify({
+        code: googleData.code,
+        grant_type: "authorization_code",
+        redirect_uri: `${process.env.REACT_APP_API_ROOT}`,
+      }),
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
     const data = await res.json();
     let tokenExpire = new Date();
     tokenExpire = tokenExpire.setDate(tokenExpire.getDate() + 250);
