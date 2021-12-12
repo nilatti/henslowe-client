@@ -17,6 +17,8 @@ export default function LoginHooks() {
           redirect_uri: `${process.env.REACT_APP_API_ROOT}`,
         }),
         headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": true,
           "Content-Type": "application/json",
         },
         credentials: "include",
