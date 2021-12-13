@@ -10,7 +10,7 @@ const API = axios.create({
 });
 
 async function requestLogin(googleData) {
-  return API.post(
+  return API.put(
     "/auth/google_oauth2/callback",
     JSON.stringify({
       code: googleData.code,
