@@ -45,7 +45,6 @@ export function groupByTheater(jobs) {
         if (productionId >= 1) {
           let productionJobTitles = groupedByProduction[productionId].map(
             (productionJob) => {
-              console.log(productionJob);
               if (
                 productionJob.specialization.title === "Actor" &&
                 productionJob.character

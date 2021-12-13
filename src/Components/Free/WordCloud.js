@@ -1,6 +1,6 @@
 //this is the container for doubling for UNPAID customers. It talks to the play state provider
 import SelectPlay from "./SelectPlay";
-import WordCloudPresenter from "../Plays/PlayScripts/WordClouds/WordCloudContainer";
+import WordCloudContainer from "../Plays/PlayScripts/WordClouds/WordCloudContainer";
 import { Button } from "../Button";
 import { Spinner } from "../Loaders";
 import Modal from "../Modal";
@@ -32,7 +32,7 @@ export default function WordCloud() {
     <>
       <div>Make a wordcloud for {play.title}</div>
       <Button onClick={clearPlay}>Select a different play</Button>
-      <WordCloudPresenter play={play} />
+      <WordCloudContainer play={play} />
     </>
   );
 }

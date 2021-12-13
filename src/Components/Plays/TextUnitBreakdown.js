@@ -17,7 +17,6 @@ export default function TextUnitBreakdown() {
   }
   useEffect(() => {
     loadPlay();
-    console.log(play);
   }, [play]);
 
   useEffect(() => {

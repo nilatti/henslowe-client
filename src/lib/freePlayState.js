@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { getPlaySkeleton, getPlayScript } from "../api/plays";
-import { mergeTextFromFrenchScenes } from "../utils/playScriptUtils";
+import {
+  determineTypeOfLine,
+  mergeTextFromFrenchScenes,
+} from "../utils/playScriptUtils";
 import _ from "lodash";
-import { inspect } from "util";
-import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 const PlayStateContext = createContext();
 const PlayStateProvider = PlayStateContext.Provider;
 
@@ -28,6 +29,14 @@ function PlayProvider({ children }) {
     JSON.parse(sessionStorage.getItem("play_skeleton")) || {}
   );
   const [loading, setLoading] = useState(false);
+  const [acts, setActs] = useState([]);
+  const [charactersAll, setCharactersAll] = useState([]);
+  const [characters, setCharacters] = useState([]);
+  const [characterGroups, setCharacterGroups] = useState([]);
+  const [frenchScenes, setFrenchScenes] = useState([]);
+  const [lines, setLines] = useState([]);
+  const [onStages, setOnStages] = useState([]);
+  const [scenes, setScenes] = useState([]);
 
   useEffect(() => {
     sessionStorage.setItem("fake_actors", JSON.stringify(fakeActors));
@@ -100,6 +109,60 @@ function PlayProvider({ children }) {
     }
   }, [JSON.stringify(fakeActors)]);
 
+  useEffect(() => {
+    if (play.acts) {
+      setActs(play.acts);
+    }
+    if (play.characters) {
+      setCharacters(play.characters);
+    }
+    if (play.character_groups) {
+      setCharacterGroups(play.character_groups);
+    }
+    if (play.characters && play.character_groups) {
+      let flaggedCharacters = play.characters.map((c) => {
+        return { ...c, type: "character" };
+      });
+      let flaggedCharacterGroups = play.character_groups.map((c) => {
+        return { ...c, type: "character_group" };
+      });
+      setCharactersAll(flaggedCharacters.concat(flaggedCharacterGroups));
+    }
+  }, [play.acts, play.characters, play.character_groups]);
+
+  useEffect(() => {
+    if (acts.length) {
+      let allScenes = [];
+      play.acts.map((act) => (allScenes = allScenes.concat(act.scenes)));
+      setScenes(allScenes);
+    }
+  }, [acts]);
+
+  useEffect(() => {
+    if (scenes.length) {
+      let allFrenchScenes = [];
+      scenes.map(
+        (scene) =>
+          (allFrenchScenes = allFrenchScenes.concat(scene.french_scenes))
+      );
+      setFrenchScenes(allFrenchScenes);
+    }
+  }, [scenes]);
+
+  useEffect(() => {
+    let allLines = [];
+    frenchScenes.map(
+      (frenchScene) => (allLines = allLines.concat(frenchScene.lines))
+    );
+    setLines(allLines);
+
+    let allOnStages = [];
+    frenchScenes.map(
+      (frenchScene) => (allOnStages = allOnStages.concat(frenchScene.on_stages))
+    );
+    setOnStages(allOnStages);
+  }, [frenchScenes]);
+
   function buildCastings(characters) {
     return characters.map((character) => {
       return { character_id: character.id, character: character };
@@ -140,7 +203,9 @@ function PlayProvider({ children }) {
     setCastings(updatedCastings);
     sessionStorage.setItem("castings", JSON.stringify(updatedCastings));
   }
-  function updateLine(line, type) {
+
+  function updateLine(line) {
+    let type = determineTypeOfLine(line);
     let newLine = { ...line };
     delete newLine.diffed_content;
     let indicators =
@@ -227,13 +292,40 @@ function PlayProvider({ children }) {
     setLoading(false);
   }
 
+  function getSelectedText(textMenuKey, textUnit) {
+    let response = {};
+    if (textUnit === "play") {
+      response = play;
+    } else if (textUnit === "act") {
+      response = acts.find((act) => act.id == textMenuKey);
+    } else if (textUnit === "scene") {
+      let textUnitId = textMenuKey.match(/\/(\d+)/)[1];
+      response = scenes.find((scene) => scene.id == textUnitId);
+    } else if (textUnit === "frenchScene") {
+      let textUnitId = textMenuKey.match(/\/(\d+)/g)[1];
+      textUnitId = textUnitId.replace("/", "");
+      response = frenchScenes.find(
+        (frenchScene) => frenchScene.id == textUnitId
+      );
+    }
+    return { ...response, textUnit };
+  }
+
   return (
     <PlayStateProvider
       value={{
+        acts,
         castings,
+        charactersAll,
+        characters,
+        characterGroups,
+        determineTypeOfLine,
         fakeActors,
+
         fakeActorsArray,
+        frenchScenes,
         getPlay,
+        getSelectedText,
         loading,
         play,
         playSkeleton,

@@ -40,7 +40,6 @@ export default function AuditionersList({
       "user.gender",
       "user.last_name",
     ]);
-    console.log(hideCast);
     let hideAlreadyCast = hideCast
       ? sortedJobs.filter((job) => !actorIds.includes(job.user.id))
       : sortedJobs;

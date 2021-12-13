@@ -1,39 +1,28 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { EditAreaStyles, EditScriptStyles } from "./ScriptStyles";
+import {
+  EditAreaStyles,
+  EditScriptStyles,
+} from "../Plays/PlayScripts/ScriptStyles";
 import TextEdit from "./TextEdit";
-import TextSelect from "./TextSelect";
-import { usePlayState } from "../../../lib/playState";
+import TextSelect from "../Plays/PlayScripts/TextSelect";
+import { usePlayState } from "../../lib/freePlayState";
 import {
   determineTypeOfLine,
   getFrenchScenesFromAct,
   getFrenchScenesFromPlay,
   mergeTextFromFrenchScenes,
-} from "../../../utils/playScriptUtils";
+} from "../../utils/playScriptUtils";
 
 export default function EditScript({ linesPerMinute }) {
-  const { getSelectedText, play, updateLine } = usePlayState();
+  const { determineTypeOfLine, getSelectedText, play, updateLine } =
+    usePlayState();
   const [selectedText, setSelectedText] = useState({});
   const [text, setText] = useState({});
   const [textUnit, setTextUnit] = useState();
 
-  function handleLineSubmit(line) {
-    updateLine(line);
-    let type = determineTypeOfLine(line);
-    let oldLines = text[`${type}s`];
-    let newLines = oldLines.map((oldLine) => {
-      if (oldLine.id === line.id) {
-        return line;
-      } else {
-        return oldLine;
-      }
-    });
-    let newLinesObj = { ...text };
-    newLinesObj[`${type}s`] = newLines;
-    setText(newLinesObj);
-  }
-
   function loadText(textMenuKey) {
+    ///extract this from here and pull text directly from play state, I think
     let textUnit = "";
     let slashes = textMenuKey.match(/\//g)?.length;
     let isPlay = textMenuKey.match(/play/);
@@ -65,21 +54,27 @@ export default function EditScript({ linesPerMinute }) {
     setText(text);
   }
 
+  function handleLineSubmit(line) {
+    updateLine(line);
+    let type = determineTypeOfLine(line);
+    let oldLines = text[`${type}s`];
+    let newLines = oldLines.map((oldLine) => {
+      if (oldLine.id === line.id) {
+        return line;
+      } else {
+        return oldLine;
+      }
+    });
+    let newLinesObj = { ...text };
+    newLinesObj[`${type}s`] = newLines;
+    setText(newLinesObj);
+  }
+
   return (
     <EditScriptStyles>
       <h2>
         <Link to={`/plays/${play.id}`}>{play.title}</Link>
       </h2>
-
-      <div className="instructions">
-        To edit text, double-click on it.
-        {play.canonical ? (
-          <p>This text is the master text of the play. Edit with caution!</p>
-        ) : (
-          <span></span>
-        )}
-      </div>
-
       <EditAreaStyles>
         <TextSelect play={play} loadText={loadText} />
         <TextEdit

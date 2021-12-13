@@ -24,7 +24,6 @@ export default function NewAuthor({ onFormSubmit }) {
   }
 
   function handleSubmit(event) {
-    console.log(inputs);
     event.preventDefault();
     onFormSubmit(inputs);
   }

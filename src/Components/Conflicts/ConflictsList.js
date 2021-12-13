@@ -51,7 +51,6 @@ export default function ConflictsList({ current = false }) {
   } else if (roles && roles.includes("superadmin")) {
     localRole = "admin";
   }
-  console.log("local role", localRole, roles);
   const history = useHistory();
 
   async function createConflict(conflict, parentId, parentType) {

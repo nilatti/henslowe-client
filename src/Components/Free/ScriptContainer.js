@@ -1,12 +1,9 @@
 import _ from "lodash";
 import LineShowEditable from "./LineShowEditable";
-import LineShowRead from "./LineShowRead";
 
-import { sortLines } from "../../../utils/playScriptUtils";
-import { useProductionAuthState } from "../../Contexts";
+import { sortLines } from "../../utils/playScriptUtils";
 
 export default function ScriptContainer({ handleLineSubmit, showCut, text }) {
-  const { role } = useProductionAuthState();
   function orderText() {
     let bucket = text.lines
       .concat(text.stage_directions)
@@ -36,28 +33,17 @@ export default function ScriptContainer({ handleLineSubmit, showCut, text }) {
       } else {
         showCharacter = false;
       }
-      if (role == "admin") {
-        return (
-          <LineShowEditable
-            key={index}
-            index={index}
-            line={line}
-            handleLineSubmit={handleLineSubmit}
-            showCharacter={showCharacter}
-            showCut={showCut}
-          />
-        );
-      } else {
-        return (
-          <LineShowRead
-            key={index}
-            index={index}
-            line={line}
-            showCharacter={showCharacter}
-            showCut={showCut}
-          />
-        );
-      }
+
+      return (
+        <LineShowEditable
+          key={index}
+          index={index}
+          line={line}
+          handleLineSubmit={handleLineSubmit}
+          showCharacter={showCharacter}
+          showCut={showCut}
+        />
+      );
     });
     return <div>{lineItems}</div>;
   }

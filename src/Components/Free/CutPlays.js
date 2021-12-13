@@ -7,7 +7,7 @@ import { Spinner } from "../Loaders";
 import Modal from "../Modal";
 
 import SelectPlay from "./SelectPlay";
-import EditScript from "../Plays/PlayScripts/EditScript";
+import EditScript from "./EditScript";
 
 export default function CutPlays() {
   const { characters, loading, play, playSkeleton, setPlay, updateLine } =
@@ -39,10 +39,6 @@ export default function CutPlays() {
 
   function handleChange(e) {
     setLinesPerMinute(e.target.value);
-  }
-
-  function handleLineSubmit(line, type) {
-    updateLine(line, type);
   }
 
   if (!play?.id) {
@@ -77,9 +73,8 @@ export default function CutPlays() {
         </FormGroupInline>
       </Form>
       <EditScript
-        characters={play.characters}
+        characters={characters}
         getSelectedText={getSelectedText}
-        handleLineSubmit={handleLineSubmit}
         linesPerMinute={linesPerMinute}
         playSkeleton={playSkeleton}
         selectedText={selectedText}
