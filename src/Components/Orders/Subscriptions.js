@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import _ from "lodash";
+import { getSubscriptionsForUser } from "../../api/stripe";
 import { getItems } from "../../api/crud";
 import LoadingModal from "../LoadingModal";
 import SubscriptionCard from "./SubscriptionCard";
 import { useMeState } from "../../lib/meState";
+import { Link } from "react-router-dom";
 
 const CardContainer = styled.div`
   align-items: center;
@@ -31,25 +33,35 @@ export default function Subscriptions() {
   const { me } = useMeState();
   const [loading, setLoading] = useState(false);
   const [individualSubscriptions, setIndividualSubscriptions] = useState([]);
+  const [alreadySubscribed, setAlreadySubscribed] = useState(false);
 
   useEffect(async () => {
     if (me?.email) {
       setLoading(true);
-      let res = await getItems("subscription");
-      if (res.status >= 400) {
+      let userSubscriptions = await getSubscriptionsForUser(me.id);
+      if (userSubscriptions.status >= 400) {
         console.log("error getting subscriptions");
       } else {
-        let tempSubscriptions = res.data;
-        let sortedSubscriptions = _.sortBy(tempSubscriptions, "name");
-        let tempIndividual = [];
-        sortedSubscriptions.map((subscription) => {
-          if (subscription.name.toLowerCase().includes("institution")) {
-            // tempInstitutional.push(subscription);
+        if (userSubscriptions.data.length) {
+          setAlreadySubscribed(true);
+        } else {
+          let res = await getItems("subscription");
+          if (res.status >= 400) {
+            console.log("error getting subscriptions");
           } else {
-            tempIndividual.push(subscription);
+            let tempSubscriptions = res.data;
+            let sortedSubscriptions = _.sortBy(tempSubscriptions, "name");
+            let tempIndividual = [];
+            sortedSubscriptions.map((subscription) => {
+              if (subscription.name.toLowerCase().includes("institution")) {
+                // tempInstitutional.push(subscription);
+              } else {
+                tempIndividual.push(subscription);
+              }
+            });
+            setIndividualSubscriptions(tempIndividual);
           }
-        });
-        setIndividualSubscriptions(tempIndividual);
+        }
       }
       setLoading(false);
     }
@@ -100,7 +112,7 @@ export default function Subscriptions() {
   }
   let individualSubscriptionCards = individualSubscriptions.map(
     (subscription) => (
-      <li>
+      <li key={subscription.id}>
         <SubscriptionCard
           key={subscription.id}
           subscription={subscription}
@@ -113,7 +125,14 @@ export default function Subscriptions() {
   return (
     <SubscriptionsStyles>
       <h2>Subscriptions</h2>
-      <CardContainer>{individualSubscriptionCards}</CardContainer>
+      {alreadySubscribed ? (
+        <div>
+          You already are subscribed. See your{" "}
+          <Link to="/account">account page</Link> for details.
+        </div>
+      ) : (
+        <CardContainer>{individualSubscriptionCards}</CardContainer>
+      )}
     </SubscriptionsStyles>
   );
 }

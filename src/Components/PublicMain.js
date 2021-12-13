@@ -4,7 +4,10 @@ import Casting from "./Free/Casting";
 import Subscriptions from "./Orders/Subscriptions";
 import CutPlays from "./Free/CutPlays";
 import Double from "./Free/Double";
+import FrequentlyAskedQuestions from "./Info/FrequentlyAskedQuestions";
 import FolgerSituation from "./Orders/FolgerSituation";
+import GettingStarted from "./Info/GettingStarted";
+import Help from "./Info/Help";
 import OrderSuccess from "./Orders/OrderSuccess";
 import PartScripts from "./Free/PartScripts";
 import PricingIndividual from "./Orders/PricingIndividual";
@@ -27,13 +30,16 @@ export default function PublicMain() {
       <Switch>
         <Route exact path="/" component={Welcome} />
         <Route exact path="/casting" component={Casting} />
-        <Route path="/subscriptions" component={Subscriptions} />
+        <Route path="/faq" component={FrequentlyAskedQuestions} />
+        <Route path="/getting-started" component={GettingStarted} />
+        <Route path="/help" component={Help} />
         <Route exact path="/cut" component={CutPlays} />
         <Route exact path="/doubling" component={Double} />
         <Route exact path="/folger" component={FolgerSituation} />
         <Route exact path="/part-scripts" component={PartScripts} />
         <Route path="/pricing-individual" component={PricingIndividual} />
         <Route path="/pricing-institutional" component={PricingInstitutional} />
+        <Route path="/subscriptions" component={Subscriptions} />
         <Route path="/success" component={OrderSuccess} />
         <Route exact path="/wordcloud" component={WordCloud} />
       </Switch>

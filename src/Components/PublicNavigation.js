@@ -14,6 +14,9 @@ export default function PublicNavigation() {
                 <Nav.Link href="/">Home</Nav.Link>
               </Nav.Item>
               <Nav.Item>
+                <Nav.Link href="/help">Help</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
                 <Nav.Link href="/casting">Cast your play</Nav.Link>
               </Nav.Item>
               <Nav.Item>
@@ -27,6 +30,11 @@ export default function PublicNavigation() {
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link href="/part-scripts">Generate part scripts</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/subscriptions">
+                  Subscribe for more features!
+                </Nav.Link>
               </Nav.Item>
               <LoginHooks />
               <PaypalButton />

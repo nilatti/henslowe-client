@@ -49,6 +49,9 @@ const CardContent = styled.div`
       color: #000;
     }
   }
+  .info {
+    font-size: 0.8em;
+  }
 `;
 const InfoButton = styled.div`
   background-color: var(--color-very-dark);
@@ -75,11 +78,15 @@ export default function SubscriptionCard({ subscription, type }) {
     let res = await createCheckoutSession({ price: subscription.price });
     window.location.href = res.data.stripeUrl;
   };
+  //tktktk update when out of beta
   return (
     <CardStyle>
       <CardContent>
         <h2>{subscription.description}</h2>
-        <p>${subscription.amount / 100}</p>
+        <p>
+          <strike>$12</strike> ${subscription.amount / 100}
+        </p>
+        <p className="info">Limited time beta pricing!</p>
       </CardContent>
       <InfoButtonContainer>
         <InfoButton>

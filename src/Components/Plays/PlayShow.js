@@ -10,7 +10,6 @@ export default function PlayShow({ onDeleteClick }) {
   if (loading || role == "unset") {
     return <LoadingModal displayText="Loading play" />;
   } else {
-    console.log("role", role);
     return (
       <Profile>
         {role === "admin" ? (

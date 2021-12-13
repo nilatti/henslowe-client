@@ -20,7 +20,6 @@ export default function Plays() {
     if (response.status >= 400) {
       console.log("Error creating play");
     } else {
-      console.log(response.data);
       history.push(`/plays/${response.data.id}`);
     }
   }

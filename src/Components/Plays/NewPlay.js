@@ -36,8 +36,6 @@ export default function NewPlay({ author, onFormClose, onFormSubmit }) {
     !author
       ? (inputs.author_id = selectedAuthor[0].id)
       : (inputs.author_id = author.id);
-    console.log(selectedAuthor);
-    console.log(inputs);
     onFormSubmit(inputs);
   }
   if (loading) {

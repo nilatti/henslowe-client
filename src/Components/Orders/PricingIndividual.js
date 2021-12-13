@@ -6,7 +6,7 @@ export default function PricingIndividual() {
   const { me } = useMeState();
   return (
     <div>
-      <h2>Pricing for individuals</h2>
+      <h2>Pricing</h2>
       <div>
         <h3>Do you need to pay at all?</h3>
         <div>
@@ -19,7 +19,7 @@ export default function PricingIndividual() {
           </ul>
           <h4>
             With a free account{" "}
-            {!me.email && (
+            {!me?.email && (
               <ToolTip>
                 Just click the Google button at the top to register
               </ToolTip>

@@ -18,7 +18,7 @@ export default function FolgerSituation() {
         email and also a site notification upon login. If you would like to help
         keep this freely available, please consider donating what you can, or{" "}
         <Link to="/subscriptions">sign up for a membership</Link> (only
-        $10/month or $100/year).
+        <strike>$12/month</strike> $8/month while the site is in beta).
       </div>
     </div>
   );

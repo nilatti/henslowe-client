@@ -23,14 +23,16 @@ export default function IndividualAccount() {
     if (res.status >= 400) {
       console.log("error getting subscriptions");
     } else {
-      let sortedSubscriptions = _.sortBy(res.data, "current_period_start");
-      setSubscriptions(sortedSubscriptions);
-      if (
-        sortedSubscriptions[sortedSubscriptions.length - 1].status == "active"
-      ) {
-        setCurrentlyActiveSubscription(
-          sortedSubscriptions[sortedSubscriptions.length - 1]
-        );
+      if (res.data.length) {
+        let sortedSubscriptions = _.sortBy(res.data, "current_period_start");
+        setSubscriptions(sortedSubscriptions);
+        if (
+          sortedSubscriptions[sortedSubscriptions.length - 1].status == "active"
+        ) {
+          setCurrentlyActiveSubscription(
+            sortedSubscriptions[sortedSubscriptions.length - 1]
+          );
+        }
       }
     }
     setLoading(false);
@@ -75,7 +77,14 @@ export default function IndividualAccount() {
       </div>
       <div>
         <h3>Subscription info</h3>
-        {subscriptionItems}
+        {!!subscriptionItems.length ? (
+          subscriptionItems
+        ) : (
+          <div>
+            You aren't subscribed for a paid membership.{" "}
+            <Link to="/subscriptions">Sign up now!</Link>
+          </div>
+        )}
       </div>
       {currentlyActiveSubscription && (
         <div>
