@@ -10,14 +10,11 @@ const API = axios.create({
 });
 
 async function requestLogin(googleData) {
-  return API.post(
-    "/auth/google_oauth2/callback",
-    JSON.stringify({
-      code: googleData.code,
-      grant_type: "authorization_code",
-      redirect_uri: `${process.env.REACT_APP_API_ROOT}`,
-    })
-  );
+  return API.post("/auth/google_oauth2/callback", {
+    code: googleData.code,
+    grant_type: "authorization_code",
+    redirect_uri: `${process.env.REACT_APP_API_ROOT}`,
+  });
 }
 
 // await fetch(`/auth/google_oauth2/callback`, {
