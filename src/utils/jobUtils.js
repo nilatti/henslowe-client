@@ -58,7 +58,7 @@ export function groupByTheater(jobs) {
           return (
             <li key={productionId}>
               <Link to={`/productions/${productionId}`}>
-                {groupedByProduction[productionId][0].production.play.title}
+                {groupedByProduction[productionId][0].production.play?.title}
               </Link>
               : {productionJobTitles.join(", ")}
             </li>

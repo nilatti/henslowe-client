@@ -150,6 +150,10 @@ export default function TheaterShow() {
       )}
       <div>
         <h2>Productions</h2>
+        <em>
+          Don't see a recently added production? Reload the page in a minute; it
+          can take a while for our robots to build your workspace.
+        </em>
         {role === "admin" && (
           <div>
             <Link to={`/productions/new?theaterId=${theater.id}`}>

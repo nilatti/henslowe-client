@@ -35,6 +35,10 @@ export default function ProductionsList() {
   ));
   return (
     <div>
+      <em>
+        Don't see a recently added production? Reload the page in a minute; it
+        can take a while for our robots to build your workspace.
+      </em>
       <ul>{productionsLI}</ul>
     </div>
   );
