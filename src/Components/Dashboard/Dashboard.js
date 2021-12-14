@@ -45,11 +45,11 @@ export default function Dashboard() {
   useEffect(() => {
     if (user.jobs && user.conflicts && user.conflict_patterns) {
       let currentJobs = user.jobs
-        .filter(
-          (job) =>
-            new Date(job.end_date) > new Date() &&
-            new Date(job.start_date) < new Date()
-        )
+        // .filter(
+        //   (job) =>
+        //     new Date(job.end_date) > new Date() &&
+        //     new Date(job.start_date) < new Date()
+        // )
         .map((job) => (
           <li key={job.id}>
             {job.specialization?.title}{" "}
