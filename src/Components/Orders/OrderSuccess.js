@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useMeState } from "../../lib/meState";
 import { getSubscriptionsForUser } from "../../api/stripe";
 export default function OrderSuccess() {
@@ -6,6 +7,7 @@ export default function OrderSuccess() {
 
   useEffect(async () => {
     let response = await getSubscriptionsForUser(me.id);
+    console.log(response.data);
     if (response.status >= 400) {
       console.log("error fetching user subscriptions");
     } else {
@@ -15,5 +17,12 @@ export default function OrderSuccess() {
       }
     }
   }, []);
-  return <div>{me.subscription_status}</div>;
+  return (
+    <div>
+      Welcome to Henslowe's Cloud. Thank you for subscribing. Feel free to
+      explore. Checkout out our{" "}
+      <Link to="/getting-started">Getting Started</Link>page for some help
+      finding your way around.
+    </div>
+  );
 }

@@ -267,7 +267,7 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
       </div>
       <hr />
 
-      <div>
+      {/* <div>
         <h2>Design & Tech</h2>
         <ul>
           <Link to={`/productions/${production.id}/set`}>
@@ -276,7 +276,7 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
           <li>TK Costume Design Dashboard</li>
           <li>TK props dashboard</li>
         </ul>
-      </div>
+      </div> */}
     </>
   );
 }

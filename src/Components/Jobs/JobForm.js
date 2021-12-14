@@ -119,6 +119,7 @@ export default function JobForm({
       ]);
     }
     if (!user) {
+      console.log(me.subscription_status);
       const response = await getItems("user");
       if (response.status >= 400) {
         console.log("Error fetching users");
