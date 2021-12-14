@@ -36,7 +36,6 @@ export default function ProductionsList() {
   return (
     <div>
       <ul>{productionsLI}</ul>
-      <Link to="/productions/new">Add New</Link>
     </div>
   );
 }

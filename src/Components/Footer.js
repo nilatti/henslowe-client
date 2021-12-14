@@ -19,11 +19,13 @@ export default function Footer() {
         <br /> This means:
         <ul>
           <li>
-            Some features may not work as expected (if you hit one of those,
-            please <a href="mailto:henslowescloud@gmail.com">Email me</a>{" "}
+            Some features may not work as expected (if you hit one of those, try
+            logging out and back in, and please{" "}
+            <a href="mailto:henslowescloud@gmail.com">Email me</a>{" "}
             (henslowescloud@gmail.com))
           </li>
           <li>New features will appear frequently.</li>
+
           <li>
             <Link to="/subscriptions">Subscriptions are 33% off!</Link> Once the
             site is out of beta, the cost will increase from $8/month to

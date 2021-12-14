@@ -24,6 +24,10 @@ export default function UserShow({ onDeleteClick, onEditClick, user }) {
           <span className="right floated edit icon" onClick={onEditClick}>
             <i className="fas fa-pencil-alt"></i>
           </span>
+        </div>
+      )}
+      {overlap(roles, ["superadmin"]) && (
+        <div>
           <span
             className="right floated trash icon"
             onClick={handleDeleteClick}
