@@ -57,7 +57,7 @@ export default function Dashboard() {
               <span>
                 on{" "}
                 <Link to={`/productions/${job.production_id}`}>
-                  {job.production.play.title}
+                  {job.production.play?.title}
                 </Link>{" "}
               </span>
             )}
