@@ -45,9 +45,11 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
   });
   const [dateFormOpen, setDateFormOpen] = useState(false);
   const [linesPerMinuteFormOpen, setLinesPerMinuteFormOpen] = useState(false);
+  const [playId, setPlayId] = useState();
   const [productionCopyComplete, setProductionCopyComplete] = useState(false);
+  const [productionCopyStatus, setProductionCopyStatus] = useState("");
   const [pollingInterval, setPollingInterval] = useState(
-    production?.play?.production_copy_complete ? null : 1000
+    production?.play?.production_copy_complete ? null : 5000
   );
 
   const linesTotal =
@@ -59,16 +61,20 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
 
   //check if the play is ready for interaction
   useInterval(async () => {
-    let productionHasPlay = await getProduction(production.id);
-    if (productionHasPlay.data.play?.id) {
+    if (playId && productionCopyComplete) {
+      setPollingInterval(null);
+    } else if (playId) {
       let productionCopyCompleteData = await getProductionCopyComplete(
         production.play?.id
       );
       setProductionCopyComplete(
         productionCopyCompleteData.data.production_copy_complete
       );
-      if (productionCopyComplete) {
-        setPollingInterval(null);
+      setProductionCopyStatus(productionCopyCompleteData.data.copy_status);
+    } else {
+      let productionHasPlay = await getProduction(production.id);
+      if (productionHasPlay.data.play?.id) {
+        setPlayId(productionHasPlay.data.play.id);
       }
     }
   }, pollingInterval);
@@ -125,6 +131,9 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
               "A Theater"
             )}
           </h2>
+          <div>
+            <em>{productionCopyStatus}</em>
+          </div>
           <div onDoubleClick={() => toggleDateForm()}>
             {dateFormOpen ? (
               <Form noValidate onSubmit={(e) => handleSubmit(e)}>

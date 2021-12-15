@@ -457,7 +457,6 @@ function ProductionProvider({ children }) {
         errorStatus: "Error updating rehearsal",
       });
     } else {
-      console.log(response.data);
       let newRehearsals = rehearsals.map((rehearsal) =>
         rehearsal.id === updatedRehearsal.id
           ? {

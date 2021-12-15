@@ -60,7 +60,7 @@ export default function CastList({}) {
       </li>
     ));
     setCastingsItems(tempCastingsItems);
-  }, [JSON.stringify(castings)]);
+  }, [JSON.stringify(castings), JSON.stringify(actorsAndAuditioners)]);
 
   async function deleteCasting(castingId) {
     const response = await deleteJob(castingId);
