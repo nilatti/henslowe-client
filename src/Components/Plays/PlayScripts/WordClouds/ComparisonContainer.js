@@ -26,6 +26,7 @@ const ComparisonPair = styled.div`
 `;
 
 const ComparisonContainer = forwardRef(({ context, play }, ref) => {
+  console.log(play);
   const [words, setWords] = useState(context.lines);
   const [includedOriginalWords, setIncludedOriginalWords] = useState([
     words.originalWords,
@@ -89,25 +90,24 @@ const ComparisonContainer = forwardRef(({ context, play }, ref) => {
             wordList={words.originalContent}
           />
         </ComparisonItem>
-        {!play.canonical ||
-          (play.free && (
-            <ComparisonItem>
-              <h3>Cut text</h3>
-              <CloudContainer>
-                <ReactWordcloud
-                  callbacks={callbacks}
-                  options={options}
-                  size={size}
-                  words={includedNewWords}
-                />
-              </CloudContainer>
-              <WordCount
-                list="newContent"
-                updateWordList={updateWords}
-                wordList={words.newContent}
+        {(!play.canonical || play.free) && (
+          <ComparisonItem>
+            <h3>Cut text</h3>
+            <CloudContainer>
+              <ReactWordcloud
+                callbacks={callbacks}
+                options={options}
+                size={size}
+                words={includedNewWords}
               />
-            </ComparisonItem>
-          ))}
+            </CloudContainer>
+            <WordCount
+              list="newContent"
+              updateWordList={updateWords}
+              wordList={words.newContent}
+            />
+          </ComparisonItem>
+        )}
       </ComparisonPair>
     </ComparisonContainerStyles>
   );
