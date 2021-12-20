@@ -38,7 +38,7 @@ export default function AuthorShow({ onDeleteClick }) {
       console.log("error getting author");
     } else {
       setAuthor(response.data);
-      setPlays(response.data.plays);
+      setPlays(response.data.plays.filter((p) => p.canonical));
     }
     setLoading(false);
   }, []);

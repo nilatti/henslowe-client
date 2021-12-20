@@ -41,10 +41,13 @@ function ProductionAuthProvider({ productionId, children }) {
   const { me } = useMeState();
   const [role, setRole] = useState("unset");
   useEffect(async () => {
-    if (productionId) {
-      let userRole = await getUserRoleForProduction(me, productionId);
-      setRole(userRole);
-    }
+    // if (productionId) {
+    let userRole = await getUserRoleForProduction({
+      user: me,
+      productionId: productionId,
+    });
+    setRole(userRole);
+    // }
   }, [productionId]);
   return (
     <ProductionAuthStateProvider value={{ role }}>

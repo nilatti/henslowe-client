@@ -14,7 +14,7 @@ import { useForm } from "../../hooks/environmentUtils";
 import { useMeState } from "../../lib/meState";
 
 import { buildUserName } from "../../utils/actorUtils";
-import { StartEndDatePair } from "../../utils/formUtils";
+import { StartEndDatePair } from "../Inputs";
 
 import NewUserModal from "../Users/NewUserModal";
 export default function JobForm({
@@ -119,7 +119,6 @@ export default function JobForm({
       ]);
     }
     if (!user) {
-      console.log(me.subscription_status);
       const response = await getItems("user");
       if (response.status >= 400) {
         console.log("Error fetching users");

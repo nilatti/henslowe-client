@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Form, FormGroupInline } from "../Form";
 import { Typeahead } from "react-bootstrap-typeahead";
-import { FormButtonGroup } from "../Inputs";
+import { FormButtonGroup, StartEndDatePair } from "../Inputs";
 
 import { getTheaterNames } from "../../api/theaters";
 
@@ -11,7 +11,6 @@ import { getPlayTitles } from "../../api/plays";
 import { useForm } from "../../hooks/environmentUtils";
 import { useMeState } from "../../lib/meState";
 import { theatersWhereUserIsAdmin } from "../../utils/authorizationUtils";
-import { StartEndDatePair } from "../../utils/formUtils";
 
 export default function NewProductionForm({ onFormSubmit, theaterId, playId }) {
   let history = useHistory();

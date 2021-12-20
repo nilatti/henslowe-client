@@ -1,6 +1,6 @@
 import styled from "styled-components";
 const ModalStyle = styled.div`
-  background-color: rgba(105, 105, 105, 0.5);
+  background-color: rgba(105, 105, 105, 0.85);
   color: white;
   height: 100%;
   left: 50%;

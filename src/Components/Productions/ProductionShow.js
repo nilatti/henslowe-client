@@ -17,14 +17,16 @@ import { getProductionCopyComplete } from "../../api/plays";
 import { useForm, useInterval } from "../../hooks/environmentUtils";
 import { useProductionState } from "../../lib/productionState";
 import { formatDateForRails } from "../../utils/dateTimeUtils";
-import { StartEndDatePair } from "../../utils/formUtils";
+import { StartEndDatePair } from "../Inputs";
 import { upcomingRehearsalsList } from "../../utils/rehearsalUtils";
 import { getProduction } from "../../api/productions";
+import { useMeState } from "../../lib/meState";
 
 const ProductionProfile = styled.div`
   text-align: center;
 `;
 export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
+  const { me } = useMeState();
   const {
     createJob,
     deleteJob,
@@ -83,9 +85,15 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
     e.preventDefault();
     updateProduction({
       id: production.id,
-      end_date: formatDateForRails(inputs.end_date),
+      end_date: formatDateForRails({
+        date: inputs.end_date,
+        timezone: me.timezone,
+      }),
       lines_per_minute: inputs.lines_per_minute,
-      start_date: formatDateForRails(inputs.start_date),
+      start_date: formatDateForRails({
+        date: inputs.start_date,
+        timezone: me.timezone,
+      }),
     });
     setDateFormOpen(false);
     setLinesPerMinuteFormOpen(false);
@@ -216,7 +224,12 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
                   <th>Who is called</th>
                 </tr>
               </thead>
-              <tbody>{upcomingRehearsalsList(rehearsals)}</tbody>
+              <tbody>
+                {upcomingRehearsalsList({
+                  rehearsals: rehearsals,
+                  timezone: me.timezone,
+                })}
+              </tbody>
             </DefaultTable>
             <p>
               <Link to={`/productions/${production.id}/rehearsal-schedule`}>

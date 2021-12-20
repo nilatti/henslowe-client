@@ -22,7 +22,6 @@ export default function SpecializationJobsList({ jobs }) {
     console.log(job);
   }
   function getTheaters(jobs) {
-    console.log(jobs);
     let userTheaters = _.uniqBy(
       jobs.map((j) => j.theater),
       "theater_id"

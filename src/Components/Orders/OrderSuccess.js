@@ -7,7 +7,6 @@ export default function OrderSuccess() {
 
   useEffect(async () => {
     let response = await getSubscriptionsForUser(me.id);
-    console.log(response.data);
     if (response.status >= 400) {
       console.log("error fetching user subscriptions");
     } else {

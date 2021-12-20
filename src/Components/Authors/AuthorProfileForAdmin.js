@@ -7,13 +7,18 @@ import {
   TextInputWithToggle,
 } from "../Inputs";
 import ToolTip from "../ToolTip";
-import { USER_GENDER_DESCRIPTORS } from "../../utils/hardcodedConstants";
+import {
+  DEFAULT_TIMEZONE,
+  USER_GENDER_DESCRIPTORS,
+} from "../../utils/hardcodedConstants";
 import { firstLetterUpcase } from "../../utils/stringUtils";
+import { useMeState } from "../../lib/meState";
 export default function AuthorProfileForAdmin({
   author,
   onDeleteClick,
   updateAuthor,
 }) {
+  const { me } = useMeState();
   const [dateForm, setDateForm] = useState(false);
   const [genderForm, setGenderForm] = useState(false);
   const [nameForm, setNameForm] = useState(false);
@@ -119,6 +124,7 @@ export default function AuthorProfileForAdmin({
           startDate={inputs.birthdate}
           startLabel="Birth date"
           startName="birthdate"
+          timezone={me.timezone || DEFAULT_TIMEZONE}
           toggleForm={toggleDateForm}
           toggleText="Doubleclick to set author dates"
         />

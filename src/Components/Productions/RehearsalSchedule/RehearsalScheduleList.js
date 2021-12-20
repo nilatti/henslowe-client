@@ -15,7 +15,13 @@ import { Spinner } from "../../Loaders";
 import { useQuery } from "../../../hooks/environmentUtils";
 import { useProductionState } from "../../../lib/productionState";
 import { getEndOfWeek, getStartOfWeek } from "../../../utils/dateTimeUtils";
-
+import { useMeState } from "../../../lib/meState";
+import {
+  DATE_FORMAT,
+  DATE_FORMAT_FOR_RAILS,
+  DATE_FORMAT_WITH_MONTH_NAME,
+  DATE_FORMAT_WITH_WEEKDAY,
+} from "../../../utils/hardcodedConstants";
 const EditButtons = styled.div`
   display: ${(props) => (props.show ? "flex" : "none")};
   flex-flow: row wrap;
@@ -36,6 +42,7 @@ const RehearsalScheduleListStyles = styled.div`
 
 export default function RehearsalScheduleList() {
   let query = useQuery();
+  const { me } = useMeState();
   const { role } = useProductionAuthState();
   const { loading, rehearsals, production } = useProductionState();
   const [thisWeekRehearsals, setThisWeekRehearsals] = useState([]);
@@ -43,22 +50,24 @@ export default function RehearsalScheduleList() {
   const [lastWeekRehearsals, setLastWeekRehearsals] = useState(false);
   const [addRehearsalsOpen, setAddRehearsalsOpen] = useState(false);
   const [endTime, setEndTime] = useState(
-    query.get("endTime") || getEndOfWeek(moment())
+    query.get("endTime") ||
+      getEndOfWeek({ date: moment(), timezone: me.timezone })
   );
   const [startTime, setStartTime] = useState(
-    query.get("startTime") || getStartOfWeek(moment())
+    query.get("startTime") ||
+      getStartOfWeek({ date: moment(), timezone: me.timezone })
   );
   const [lastWeekStartTime, setLastWeekStartTime] = useState(
-    moment(startTime).subtract(7, "d").format("YYYY-MM-DD")
+    moment(startTime).tz(me.timezone).subtract(7, "d").format("YYYY-MM-DD")
   );
   const [lastWeekEndTime, setLastWeekEndTime] = useState(
-    moment(endTime).subtract(7, "d").format("YYYY-MM-DD")
+    moment(endTime).tz(me.timezone).subtract(7, "d").format("YYYY-MM-DD")
   );
   const [nextWeekStartTime, setNextWeekStartTime] = useState(
-    moment(startTime).add(7, "d").format("YYYY-MM-DD")
+    moment(startTime).tz(me.timezone).add(7, "d").format("YYYY-MM-DD")
   );
   const [nextWeekEndTime, setNextWeekEndTime] = useState(
-    moment(endTime).add(7, "d").format("YYYY-MM-DD")
+    moment(endTime).tz(me.timezone).add(7, "d").format("YYYY-MM-DD")
   );
 
   const rehearsalsList = useMemo(() => rehearsals);
@@ -93,9 +102,13 @@ export default function RehearsalScheduleList() {
 
   function getRehearsalsForTimeRange(rehearsals, endTime, startTime) {
     return rehearsals.filter(function (rehearsal) {
+      let rehearsalStartTime = moment(rehearsal.start_time).tz(me.timezone);
+      let tzEndTime = moment(endTime).tz(me.timezone);
+      let tzStartTime = moment(startTime).tz(me.timezone);
+
       if (
-        rehearsal.start_time >= startTime &&
-        rehearsal.start_time <= endTime
+        rehearsalStartTime >= tzStartTime &&
+        rehearsalStartTime <= tzEndTime
       ) {
         return rehearsal;
       }
@@ -108,9 +121,13 @@ export default function RehearsalScheduleList() {
 
   function updateDatesLast() {
     let lastWeekStart = moment(startTime)
+      .tz(me.timezone)
       .subtract(14, "d")
-      .format("YYYY-MM-DD");
-    let lastWeekEnd = moment(endTime).subtract(14, "d").format("YYYY-MM-DD");
+      .format(DATE_FORMAT_FOR_RAILS);
+    let lastWeekEnd = moment(endTime)
+      .tz(me.timezone)
+      .subtract(14, "d")
+      .format(DATE_FORMAT_FOR_RAILS);
     setNextWeekEndTime(endTime);
     setNextWeekStartTime(startTime);
     setEndTime(lastWeekEndTime);
@@ -120,8 +137,14 @@ export default function RehearsalScheduleList() {
   }
 
   function updateDatesNext() {
-    let nextWeekStart = moment(startTime).add(14, "d").format("YYYY-MM-DD");
-    let nextWeekEnd = moment(endTime).add(14, "d").format("YYYY-MM-DD");
+    let nextWeekStart = moment(startTime)
+      .tz(me.timezone)
+      .add(14, "d")
+      .format(DATE_FORMAT_FOR_RAILS);
+    let nextWeekEnd = moment(endTime)
+      .tz(me.timezone)
+      .add(14, "d")
+      .format(DATE_FORMAT_FOR_RAILS);
     setLastWeekEndTime(endTime);
     setLastWeekStartTime(startTime);
     setEndTime(nextWeekEndTime);
@@ -136,7 +159,7 @@ export default function RehearsalScheduleList() {
     return (
       <RehearsalDayGroup
         key={group}
-        date={moment(group).format("dddd, MMMM D")}
+        date={moment(group).format(DATE_FORMAT_WITH_WEEKDAY)}
       >
         {groupedRehearsals[group].map((rehearsal) => {
           return <EditableRehearsal key={rehearsal.id} rehearsal={rehearsal} />;
@@ -177,8 +200,8 @@ export default function RehearsalScheduleList() {
         </div>
       )}
       <h3>
-        {moment(startTime).format("MMM D, YYYY")}-
-        {moment(endTime).format("MMM D, YYYY")}
+        {moment(startTime).format(DATE_FORMAT_WITH_MONTH_NAME)}-
+        {moment(endTime).format(DATE_FORMAT_WITH_MONTH_NAME)}
       </h3>
       {role == "admin" && (
         <EditButtons show={addRehearsalsOpen}>

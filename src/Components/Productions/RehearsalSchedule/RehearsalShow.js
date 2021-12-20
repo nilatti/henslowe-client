@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import Moment from "react-moment";
+import "moment-timezone";
 import styled from "styled-components";
 
 import EditableRehearsalContent from "./Content/EditableRehearsalContent";
@@ -8,6 +9,8 @@ import { useProductionState } from "../../../lib/productionState";
 import { useProductionAuthState } from "../../Contexts";
 import { unavailableUsers } from "../../../utils/rehearsalUtils";
 import { buildUserName } from "../../../utils/actorUtils";
+import { TIME_FORMAT } from "../../../utils/hardcodedConstants";
+import { useMeState } from "../../../lib/meState";
 
 const EditIcons = styled.div``;
 
@@ -40,14 +43,20 @@ const Space = styled.div``;
 export default function RehearsalShow({ handleEditClick, rehearsal }) {
   const { deleteRehearsal, notActors } = useProductionState();
   const { role } = useProductionAuthState();
+  const { me } = useMeState();
 
   let unavailableNotActors = unavailableUsers(notActors, rehearsal);
   return (
     <RehearsalContainer>
       <h4>{rehearsal.title}</h4>
       <Time>
-        <Moment format="h:mm a">{rehearsal.start_time}</Moment>-
-        <Moment format=" h:mm a">{rehearsal.end_time}</Moment>
+        <Moment format={TIME_FORMAT} tz={me.timezone || DEFAULT_TIMEZONE}>
+          {rehearsal.start_time}
+        </Moment>
+        -
+        <Moment format={TIME_FORMAT} tz={me.timezone || DEFAULT_TIMEZONE}>
+          {rehearsal.end_time}
+        </Moment>
       </Time>
       <Space>
         {rehearsal.space_id ? (

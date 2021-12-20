@@ -14,7 +14,7 @@ export default function PlaysSubComponent({ plays }) {
 
   return (
     <div id="plays">
-      <ul>{plays}</ul>
+      <ul>{playLIs}</ul>
     </div>
   );
 }

@@ -78,7 +78,12 @@ export function getOverlap(loggedInUser, targetUser) {
   );
   if (pastProductionOverlap.length) {
     pastProductionOverlap.some((productionId) => {
-      if (getUserRoleForProduction(loggedInUser, productionId) === "admin") {
+      if (
+        getUserRoleForProduction({
+          user: loggedInUser,
+          productionId: productionId,
+        }) === "admin"
+      ) {
         roleArray.push("past_production_admin");
         return true;
       } else {
@@ -139,7 +144,12 @@ export function getOverlap(loggedInUser, targetUser) {
   //if logged in user is a theater admin, that overrides production admin bc it is higher up
   if (currentTheaterJobsOverlaps || currentProductionJobsOverlaps) {
     currentProductionJobsOverlaps?.some((productionId) => {
-      if (getUserRoleForProduction(loggedInUser, productionId) === "admin") {
+      if (
+        getUserRoleForProduction({
+          user: loggedInUser,
+          productionId: productionId,
+        }) === "admin"
+      ) {
         roleArray.push("current_production_admin");
         return true;
       } else {
@@ -168,7 +178,10 @@ export function getSuperAdminRole(user) {
   }
 }
 
-export async function getUserRoleForProduction(user, productionId) {
+export async function getUserRoleForProduction({
+  user: user,
+  productionId: productionId,
+}) {
   if (getSuperAdminRole(user)) {
     return "admin";
   }
@@ -257,7 +270,10 @@ export async function getUserRoleForTheater(user, theaterId) {
 export function productionsWhereUserIsAdmin(user, productions) {
   let userAdminProductions = [];
   productions.forEach((production) => {
-    if (getUserRoleForProduction(user, production.id) === "admin") {
+    if (
+      getUserRoleForProduction({ user: user, productionId: production.id }) ===
+      "admin"
+    ) {
       userAdminProductions.push(production);
     }
   });
@@ -267,7 +283,10 @@ export function productionsWhereUserIsAdmin(user, productions) {
 export function productionsWhereUserIsMember(user, productions) {
   let userMemberProductions = [];
   productions.forEach((production) => {
-    if (getUserRoleForProduction(user, production.id) === "member") {
+    if (
+      getUserRoleForProduction({ user: user, productionId: production.id }) ===
+      "member"
+    ) {
       userMemberProductions.push(production);
     }
   });

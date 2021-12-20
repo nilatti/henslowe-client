@@ -301,14 +301,14 @@ function ProductionProvider({ children }) {
     if (response.status >= 400) {
       console.log("error creating rehearsals");
     } else {
-      setLoadingComplete(false);
+      setLoading(true);
       const allRehearsalResponse = await getItemsWithParent(
         "production",
         productionId,
         "rehearsal"
       );
       if (allRehearsalResponse) {
-        setLoadingComplete(true);
+        setLoading(false);
       }
       if (allRehearsalResponse.status >= 400) {
         console.log("error getting rehearsals");
@@ -325,7 +325,7 @@ function ProductionProvider({ children }) {
         });
 
         setRehearsals(datedRehearsals);
-        setLoadingComplete(true);
+        setLoading(false);
       }
     }
   }

@@ -1,6 +1,8 @@
 import Moment from "react-moment";
+import "moment-timezone";
 import { Link } from "react-router-dom";
 import { buildUserName } from "./actorUtils";
+import { DATE_TIME_FORMAT, TIME_FORMAT } from "../utils/hardcodedConstants";
 
 function unavailableUsers(users, rehearsal) {
   let usersHaveConflicts = users.filter(
@@ -38,7 +40,7 @@ function rehearsalContent({ acts, frenchScenes, scenes }) {
   return content;
 }
 
-function upcomingRehearsalsList(rehearsals) {
+function upcomingRehearsalsList({ rehearsals, timezone }) {
   let dateRangeStart = new Date();
   dateRangeStart = dateRangeStart.setDate(dateRangeStart.getDate() - 1);
   let dateRangeEnd = new Date();
@@ -53,8 +55,13 @@ function upcomingRehearsalsList(rehearsals) {
     .map((rehearsal) => (
       <tr key={rehearsal.id}>
         <td>
-          <Moment format="MMM D h:mm a">{rehearsal.start_time}</Moment>-
-          <Moment format="h:mm a">{rehearsal.end_time}</Moment>
+          <Moment format={DATE_TIME_FORMAT} tz={timezone || DEFAULT_TIMEZONE}>
+            {rehearsal.start_time}
+          </Moment>
+          -
+          <Moment format={TIME_FORMAT} tz={timezone || DEFAULT_TIMEZONE}>
+            {rehearsal.end_time}
+          </Moment>
         </td>
         <td>{rehearsal.space && <span>{rehearsal.space.name}</span>}</td>
         <td>{rehearsal.title && <strong>{rehearsal.title}</strong>}</td>

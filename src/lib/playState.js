@@ -28,8 +28,8 @@ function PlayProvider({ children }) {
       } else {
         setPlay(response.data);
       }
-      setLoading(false);
     }
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -266,7 +266,6 @@ function PlayProvider({ children }) {
     if (response.status >= 400) {
       console.log("error creating onstage");
     } else {
-      console.log("response data", response.data);
       let updatedOnStages = [...onStages, response.data];
       setOnStages(updatedOnStages);
       let workingFrenchScene = frenchScenes.find(

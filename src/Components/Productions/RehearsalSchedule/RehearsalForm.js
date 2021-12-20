@@ -4,8 +4,9 @@ import { useForm } from "../../../hooks/environmentUtils";
 import { Button } from "../../Button";
 import { Form, FormGroup } from "../../Form";
 import { useProductionState } from "../../../lib/productionState";
-import { StartEndDateTimePair } from "../../../utils/formUtils";
+import { StartEndDateTimePair } from "../../Inputs";
 import { formatDateTimeForRails } from "../../../utils/dateTimeUtils";
+import { useMeState } from "../../../lib/meState";
 
 const RehearsalFormStyles = styled.div`
   display: flex;
@@ -18,6 +19,7 @@ export default function RehearsalForm({
   onFormSubmit,
   rehearsal,
 }) {
+  const { me } = useMeState();
   const { inputs, handleChange } = useForm({
     end_time: rehearsal?.end_time || new Date(),
     notes: rehearsal?.notes || "",
@@ -34,10 +36,16 @@ export default function RehearsalForm({
     }
     onFormSubmit({
       id: id,
-      end_time: formatDateTimeForRails(inputs.endTime),
+      end_time: formatDateTimeForRails({
+        datetime: inputs.endTime,
+        timezone: me.timezone,
+      }),
       notes: inputs.notes,
       space_id: "",
-      start_time: formatDateTimeForRails(inputs.startTime),
+      start_time: formatDateTimeForRails({
+        datetime: inputs.startTime,
+        timezone: me.timezone,
+      }),
       title: inputs.title,
       production_id: productionId,
     });
@@ -56,7 +64,6 @@ export default function RehearsalForm({
 
   return (
     <RehearsalFormStyles>
-      <h2>New Rehearsal</h2>
       <Form
         width="85%"
         noValidate
@@ -67,6 +74,7 @@ export default function RehearsalForm({
           endTime={inputs.end_time}
           startTime={inputs.start_time}
           handleChange={handleChange}
+          timezone={me.timezone}
         />
         <FormGroup>
           <label htmlFor="title">Title:</label>

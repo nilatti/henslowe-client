@@ -1,12 +1,41 @@
 import parse from "html-react-parser";
+import Datetime from "react-datetime";
+import moment from "moment";
 import { Button } from "./Button";
+
 import { Form, FormGroupInline } from "./Form";
-import { US_STATES_ARRAY } from "../utils/hardcodedConstants";
+import {
+  DATE_FORMAT,
+  DATE_TIME_FORMAT,
+  DATE_TIME_FORMAT_FOR_RAILS,
+  DEFAULT_TIMEZONE,
+  TIME_FORMAT,
+  US_STATES_ARRAY,
+} from "../utils/hardcodedConstants";
 import { formatPhoneNumber } from "../utils/stringUtils";
-import { StartEndDatePair } from "../utils/formUtils";
 //Input = just the input
 //as form = input wrapped in a form
 //with toggle = form with a toggle switch
+import {
+  formatDateTimeForRails,
+  isAfterDate,
+  isAfterTime,
+} from "../utils/dateTimeUtils";
+
+let valid = function (current, startTime) {
+  return current.isSame(startTime, "day") || current.isAfter(startTime);
+};
+
+function handleDateTimeChange({ time, name, handleChange }) {
+  let event = {
+    target: {
+      value: time,
+      name: name,
+      type: "datetime",
+    },
+  };
+  handleChange(event);
+}
 
 function AddressInput({
   city,
@@ -244,6 +273,133 @@ function NumberRangeWithToggle({
           startValue={startValue}
         />
       )}
+    </>
+  );
+}
+
+export function StartEndDatePair({
+  endDate,
+  endLabel,
+  endName,
+  handleChange,
+  startDate,
+  startLabel,
+  startName,
+}) {
+  const [tempStartDate, setTempStartDate] = useState(startDate);
+  function handleStartDateChange(date, startName, handleChange) {
+    //this is a hacky workaround that keeps the end time after the start time.
+    setTempStartDate(date);
+    handleDateTimeChange({
+      date: date,
+      name: startName,
+      handleChange: handleChange,
+    });
+  }
+
+  endName = endName || "end_date";
+  startName = startName || "start_date";
+  return (
+    <>
+      <label>{startLabel || "From"}</label>
+      <Datetime
+        dateFormat={DATE_FORMAT}
+        name={startName || "startDate"}
+        onChange={(date) =>
+          handleStartDateChange(date, startName, handleChange)
+        }
+        required
+        timeFormat={false}
+        value={startDate}
+      />
+      <label>{endLabel || "To"}</label>
+      <Datetime
+        name={endName || "endDate"}
+        format={DATE_FORMAT}
+        // isValidDate={(current) => isAfterDate(tempStartDate, current)}
+        onChange={(date) =>
+          handleDateTimeChange({
+            date: date,
+            name: endName,
+            handleChange: handleChange,
+            timezone: timezone,
+          })
+        }
+        required
+        timeFormat={false}
+        value={endDate || ""}
+      />
+    </>
+  );
+}
+
+export function StartEndTimePair({ endTime, handleChange, startTime }) {
+  return (
+    <>
+      <label>Starting at...</label>
+      <Datetime
+        dateFormat={false}
+        format={TIME_FORMAT}
+        onChange={(time) =>
+          handleDateTimeChange(time, "start_time", handleChange)
+        }
+        required
+        value={startTime}
+      />
+      <label>and ending at...</label>
+      <Datetime
+        dateFormat={false}
+        format={TIME_FORMAT}
+        onChange={(time) =>
+          handleDateTimeChange(time, "end_time", handleChange)
+        }
+        required
+        value={endTime}
+      />
+    </>
+  );
+}
+
+export function StartEndDateTimePair({
+  endTime,
+  handleChange,
+  startTime,
+  timezone,
+}) {
+  return (
+    <>
+      <label>Start Time</label>
+      <Datetime
+        type="datetime"
+        onChange={(time) =>
+          handleDateTimeChange({
+            time: time,
+            name: "start_time",
+            handleChange: handleChange,
+          })
+        }
+        dateFormat={DATE_FORMAT}
+        displayTimeZone={timezone || DEFAULT_TIMEZONE}
+        timeFormat={TIME_FORMAT}
+        name="start_time"
+        value={startTime}
+      />
+      <label>End Time</label>
+      <Datetime
+        name="end_time"
+        onChange={(time) =>
+          handleDateTimeChange({
+            time: time,
+            name: "end_time",
+            handleChange: handleChange,
+            timezone: timezone,
+          })
+        }
+        displayTimeZone={timezone || DEFAULT_TIMEZONE}
+        type="datetime"
+        value={endTime}
+        // isValidDate={(current) => valid(current, startTime)}
+      />
     </>
   );
 }

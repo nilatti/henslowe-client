@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import moment from "moment";
 import styled from "styled-components";
 import PeopleCheckboxes from "./People/PeopleCheckboxes";
 import { Button } from "../../Button";
@@ -7,8 +6,13 @@ import { FancyCheckBox, FancyRadio, FancyCheckBoxLabel } from "../../Styled";
 import { Form, FormGroup } from "../../Form";
 import { useForm } from "../../../hooks/environmentUtils";
 import { useProductionState } from "../../../lib/productionState";
-import { StartEndDatePair, StartEndTimePair } from "../../../utils/formUtils";
+import { StartEndDatePair, StartEndTimePair } from "../../Inputs";
 import { DAYS_OF_WEEK } from "../../../utils/hardcodedConstants";
+import {
+  formatDateForRails,
+  formatTimeForRails,
+} from "../../../utils/dateTimeUtils";
+import { useMeState } from "../../../lib/meState";
 
 const Explainer = styled.div`
   font-style: italic;
@@ -24,6 +28,7 @@ const RehearsalPatternCreatorStyles = styled.div`
 `;
 
 export default function RehearsalPatternCreator({ production, cancel }) {
+  const { me } = useMeState();
   // const [validated, setValidated] = useState(false);
   const { createRehearsalSchedulePattern, hiredUsers } = useProductionState();
   const [defaultUsers, setDefaultUsers] = useState(hiredUsers);
@@ -39,6 +44,16 @@ export default function RehearsalPatternCreator({ production, cancel }) {
   function handleSubmit(event) {
     event.preventDefault();
     let calledUsers = defaultUsers.filter((user) => user.isCalled);
+    let formattedEndDate = formatDateForRails({
+      date: inputs.end_date,
+      timezone: me.timezone,
+    });
+    let formattedEndTime = formatTimeForRails(inputs.end_time);
+    let formattedStartDate = formatDateForRails({
+      date: inputs.start_date,
+      timezone: me.timezone,
+    });
+    let formattedStartTime = formatTimeForRails(inputs.start_time);
     let rehearsalSchedulePattern = {
       id: production.id,
       rehearsal_schedule_pattern: {
@@ -46,11 +61,11 @@ export default function RehearsalPatternCreator({ production, cancel }) {
         break_length: inputs.breakLength,
         days_of_week: inputs.daysOfWeek,
         default_user_ids: calledUsers.map((user) => user.id),
-        end_date: moment(inputs.end_date).format("YYYY-MM-DD"),
-        end_time: moment(inputs.end_time).format("HH:mmZZ"),
+        end_date: formattedEndDate,
+        end_time: formattedEndTime,
         time_between_breaks: inputs.timeBetweenBreaks,
-        start_date: moment(inputs.start_date).format("YYYY-MM-DD"),
-        start_time: moment(inputs.start_time).format("HH:mmZZ"),
+        start_date: formattedStartDate,
+        start_time: formattedStartTime,
       },
     };
     cancel(); //closes form

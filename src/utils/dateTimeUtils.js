@@ -1,34 +1,35 @@
 import moment from "moment";
-
+import {
+  DATE_FORMAT_FOR_RAILS,
+  DATE_TIME_FORMAT_FOR_RAILS,
+  DEFAULT_TIMEZONE,
+} from "./hardcodedConstants";
 function calculateDuration(endTime, startTime) {
   return moment
     .duration(
-      moment(endTime, "YYYY/MM/DD HH:mm").diff(
-        moment(startTime, "YYYY/MM/DD HH:mm")
+      moment(endTime, DATE_TIME_FORMAT_FOR_RAILS).diff(
+        moment(startTime, DATE_TIME_FORMAT_FOR_RAILS)
       )
     )
     .asMinutes();
 }
 
-//tktktk figure out how the hell to manage timezones correctly.
-//save to database in UTC
-//show to user/receive from user in browser local tz.
-function formatDateForRails(date) {
-  return moment(date).format("YYYY-MM-DD");
+function formatDateForRails({ date }) {
+  return moment(date).format(DATE_FORMAT_FOR_RAILS);
 }
-function formatDateTimeForRails(datetime) {
-  return moment(datetime).format("YYYY-MM-DD hh:mm:ss");
+function formatDateTimeForRails({ datetime }) {
+  return moment(datetime).format(DATE_TIME_FORMAT_FOR_RAILS);
 }
 function formatTimeForRails(time) {
-  return moment(time).format("YYYY-MM-DD hh:mm:ss");
+  return moment(time).format(DATE_TIME_FORMAT_FOR_RAILS);
 }
-function getStartOfWeek(date) {
-  let momentDate = moment(date);
+function getStartOfWeek({ date, timezone }) {
+  let momentDate = moment(date).tz(timezone || DEFAULT_TIMEZONE);
   return momentDate.startOf("week").format();
 }
 
-function getEndOfWeek(date) {
-  let momentDate = moment(date);
+function getEndOfWeek({ date, timezone }) {
+  let momentDate = moment(date).tz(timezone || DEFAULT_TIMEZONE);
   return momentDate.endOf("week").format();
 }
 

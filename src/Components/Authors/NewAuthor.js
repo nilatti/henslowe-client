@@ -1,7 +1,6 @@
 import { useHistory } from "react-router";
 import { Form, FormGroupInline } from "../Form";
-import { StartEndDatePair } from "../../utils/formUtils";
-import { FormButtonGroup, TextInput } from "../Inputs";
+import { FormButtonGroup, StartEndDatePair, TextInput } from "../Inputs";
 import { useForm } from "../../hooks/environmentUtils";
 import { USER_GENDER_DESCRIPTORS } from "../../utils/hardcodedConstants";
 import { firstLetterUpcase } from "../../utils/stringUtils";

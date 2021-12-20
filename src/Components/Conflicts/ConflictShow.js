@@ -1,5 +1,10 @@
 import Moment from "react-moment";
 import PropTypes from "prop-types";
+import { useMeState } from "../../lib/meState";
+import {
+  DATE_TIME_FORMAT,
+  DEFAULT_TIMEZONE,
+} from "../../utils/hardcodedConstants";
 
 export default function ConflictShow({
   conflict,
@@ -7,13 +12,19 @@ export default function ConflictShow({
   handleDeleteClick,
   role,
 }) {
+  const { me } = useMeState();
   function onDeleteClick() {
     handleDeleteClick(conflict.id);
   }
   return (
     <>
-      <Moment format="h:mm A MMM D, YYYY">{conflict.start_time}</Moment>-
-      <Moment format="h:mm A MMM D, YYYY">{conflict.end_time}</Moment>
+      <Moment format={DATE_TIME_FORMAT} tz={me.timezone || DEFAULT_TIMEZONE}>
+        {conflict.start_time}
+      </Moment>
+      -
+      <Moment format={DATE_TIME_FORMAT} tz={me.timezone || DEFAULT_TIMEZONE}>
+        {conflict.end_time}
+      </Moment>
       {role && (role === "admin" || role === "self") && (
         <>
           : {conflict.category}

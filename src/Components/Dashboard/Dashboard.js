@@ -82,7 +82,10 @@ export default function Dashboard() {
         .map((job) => job.production);
       setProductions(currentProductions);
 
-      let upcomingRehearsals = upcomingRehearsalsList(user.rehearsals);
+      let upcomingRehearsals = upcomingRehearsalsList({
+        rehearsals: user.rehearsals,
+        timezone: user.timezone,
+      });
       setRehearsals(upcomingRehearsals);
     }
   }, [user]);

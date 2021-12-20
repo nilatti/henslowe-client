@@ -26,7 +26,6 @@ const ComparisonPair = styled.div`
 `;
 
 const ComparisonContainer = forwardRef(({ context, play }, ref) => {
-  console.log(play);
   const [words, setWords] = useState(context.lines);
   const [includedOriginalWords, setIncludedOriginalWords] = useState([
     words.originalWords,

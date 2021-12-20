@@ -53,8 +53,8 @@ export default function PlayProfileForAdmin({
         label: `${author.first_name} ${author.last_name}`,
       }));
       setAuthors(formattedAuthors);
-      setLoading(false);
     }
+    setLoading(false);
   }, []);
 
   function closeAllForms() {

@@ -213,7 +213,7 @@ export default function ConflictsList({ current = false }) {
       ));
     return (
       <>
-        <h4>One-Off Conflicts</h4>
+        <h4>Individual Conflicts</h4>
         <ul>{showConflicts}</ul>
         {localRole && (localRole === "admin" || localRole === "self") && (
           <div>

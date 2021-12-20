@@ -10,7 +10,7 @@ import {
 } from "../Styled";
 import { useConflicts } from "../../lib/conflictState";
 import { useForm } from "../../hooks/environmentUtils";
-import { StartEndDatePair, StartEndTimePair } from "../../utils/formUtils";
+import { StartEndDatePair, StartEndTimePair } from "../Inputs";
 import { DAYS_OF_WEEK } from "../../utils/hardcodedConstants";
 import { firstLetterUpcase } from "../../utils/stringUtils";
 
