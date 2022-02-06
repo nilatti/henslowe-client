@@ -286,7 +286,7 @@ export function StartEndDatePair({
   startLabel,
   startName,
 }) {
-  const [tempStartDate, setTempStartDate] = useState(startDate);
+  // const [tempStartDate, setTempStartDate] = useState(startDate);
   function handleStartDateChange(date, startName, handleChange) {
     //this is a hacky workaround that keeps the end time after the start time.
     setTempStartDate(date);
