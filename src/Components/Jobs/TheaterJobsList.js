@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import JobForm from "./JobForm";
-import ProductionJobListItem from "./ProductionJobListItem";
-import { Button } from "../Button";
+import JobForm from "./JobForm.js";
+import ProductionJobListItem from "./ProductionJobListItem.js";
+import { Button } from "../Button.js";
 
 export default function TheaterJobsList({
   handleDeleteJob,

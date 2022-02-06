@@ -2,9 +2,9 @@ import _ from "lodash";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import styled from "styled-components";
-import RehearsalForm from "./RehearsalForm";
-import RehearsalShow from "./RehearsalShow";
-import { useProductionState } from "../../../lib/productionState";
+import RehearsalForm from "./RehearsalForm.js";
+import RehearsalShow from "./RehearsalShow.js";
+import { useProductionState } from "../../../lib/productionState.js";
 
 const RehearsalStyle = styled.div`
   border-top: 1px solid var(--color-light);

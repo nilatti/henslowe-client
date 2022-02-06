@@ -17,13 +17,4 @@ async function requestLogin(googleData) {
   });
 }
 
-// await fetch(`/auth/google_oauth2/callback`, {
-//     method: "POST",
-//     body: JSON.stringify({
-//       code: googleData.code,
-//       grant_type: "authorization_code",
-//       redirect_uri: `${process.env.REACT_APP_API_ROOT}`,
-//     }),
-//   });
-
 export { requestLogin };

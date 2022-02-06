@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { AddNewTabStyle } from "./BreakdownStyles";
-import { Form, FormGroupInline } from "../Form";
-import { FormButtonGroup, NumberRange } from "../Inputs";
-import LoadingModal from "../LoadingModal";
-import { usePlayState } from "../../lib/playState";
-import { useForm } from "../../hooks/environmentUtils";
-import { firstLetterUpcase } from "../../utils/stringUtils";
+import { AddNewTabStyle } from "./BreakdownStyles.js";
+import { Form, FormGroupInline } from "../Form.js";
+import { FormButtonGroup, NumberRange } from "../Inputs.js";
+import LoadingModal from "../LoadingModal.js";
+import { usePlayState } from "../../lib/playState.js";
+import { useForm } from "../../hooks/environmentUtils.js";
+import { firstLetterUpcase } from "../../utils/stringUtils.js";
 
 export default function NewTextItem({
   number,

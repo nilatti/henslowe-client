@@ -1,18 +1,18 @@
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Spinner } from "../Loaders";
-import Modal from "../Modal";
+import { Spinner } from "../Loaders.js";
+import Modal from "../Modal.js";
 
-import { useProductionState } from "../../lib/productionState";
+import { useProductionState } from "../../lib/productionState.js";
 
-import { deleteJob } from "../../api/jobs";
+import { deleteJob } from "../../api/jobs.js";
 
-import CastingContainer from "./CastingContainer";
-import CastingReassign from "./CastingReassign";
-import NewCasting from "./NewCasting";
-import { Button } from "../Button";
-import FakeActors from "../Productions/FakeActors";
+import CastingContainer from "./CastingContainer.js";
+import CastingReassign from "./CastingReassign.js";
+import NewCasting from "./NewCasting.js";
+import { Button } from "../Button.js";
+import FakeActors from "../Productions/FakeActors.js";
 
 const CastListStyle = styled.div`
   display: flex;

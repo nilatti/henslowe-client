@@ -1,9 +1,9 @@
-import LoadingModal from "../LoadingModal";
-import { usePlayState } from "../../lib/playState";
-import PlayProfileForAdmin from "./PlayProfileForAdmin";
-import PlayProfileForVisitor from "./PlayProfileForVisitor";
-import { useProductionAuthState } from "../Contexts";
-import { Profile } from "../Styled";
+import LoadingModal from "../LoadingModal.js";
+import { usePlayState } from "../../lib/playState.js";
+import PlayProfileForAdmin from "./PlayProfileForAdmin.js";
+import PlayProfileForVisitor from "./PlayProfileForVisitor.js";
+import { useProductionAuthState } from "../Contexts.js";
+import { Profile } from "../Styled.js";
 export default function PlayShow({ onDeleteClick }) {
   const { loading, play, updatePlay } = usePlayState();
   const { role } = useProductionAuthState();

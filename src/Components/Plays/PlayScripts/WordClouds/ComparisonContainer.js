@@ -1,8 +1,8 @@
 import { forwardRef, useRef, useEffect, useState } from "react";
 import ReactWordcloud from "react-wordcloud";
 import styled from "styled-components";
-import WordCount from "./WordCount";
-import { Button } from "../../../Button";
+import WordCount from "./WordCount.js";
+import { Button } from "../../../Button.js";
 const CloudContainer = styled.div`
   max-height: 700px;
 `;

@@ -2,22 +2,22 @@ import { useEffect, useState } from "react";
 
 import { Typeahead } from "react-bootstrap-typeahead";
 import { Form, FormGroup } from "../Form.js";
-import Modal from "../Modal";
-import { Spinner } from "../Loaders";
+import Modal from "../Modal.js";
+import { Spinner } from "../Loaders.js";
+import fetchData from "../../hooks/fetchData.js";
 import { SHAKESPEARE_ID } from "../../utils/hardcodedConstants.js";
-import { getPlayTitles } from "../../api/plays";
-import { usePlayState } from "../../lib/freePlayState";
+import { getPlayTitles } from "../../api/plays.js";
+import { usePlayState } from "../../lib/freePlayState.js";
 
 export default function SelectPlay() {
-  const { getPlay, loading } = usePlayState();
+  const { getPlay, loading, setLoading } = usePlayState();
+  // const { errorDisplay, error, setError } = ErrorApi();
   const [plays, setPlays] = useState([]);
   const [selectedPlay, setSelectedPlay] = useState([]); // Typeahead returns an array even if it is set to return only one item
   useEffect(async () => {
-    const response = await getPlayTitles();
-    if (response.status >= 400) {
-      setErrorStatus("Error fetching plays");
-    } else {
-      let shakespeare = response.data.filter(
+    let response = await fetchData(getPlayTitles, setLoading);
+    if (response) {
+      let shakespeare = response.filter(
         (play) => play.author_id == SHAKESPEARE_ID
       );
       const plays = shakespeare.map((play) => ({

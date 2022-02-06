@@ -1,18 +1,18 @@
 import { useState } from "react";
-import { useHistory } from "react-router";
-import ToolTip from "../ToolTip";
+import { useNavigate } from "react-router";
+import ToolTip from "../ToolTip.js";
 import {
   AddressInputWithToggle,
   TelephoneInputWithToggle,
   TextInputAsForm,
   TextAreaInputWithToggle,
   UrlInputWithToggle,
-} from "../Inputs";
-import { useForm } from "../../hooks/environmentUtils";
-import { deleteItem } from "../../api/crud";
+} from "../Inputs.js";
+import { useForm } from "../../hooks/environmentUtils.js";
+import { deleteItem } from "../../api/crud.js";
 
 export default function SpaceProfileForAdmin({ space, updateSpace }) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [addressForm, setAddressForm] = useState(false);
   const [missionForm, setMissionForm] = useState(false);
   const [nameForm, setNameForm] = useState(false);
@@ -68,7 +68,7 @@ export default function SpaceProfileForAdmin({ space, updateSpace }) {
     if (response.status >= 400) {
       console.log("error deleting space");
     } else {
-      history.push("/spaces");
+      navigate("/spaces");
     }
   }
   return (

@@ -1,11 +1,11 @@
 import _ from "lodash";
 import { useEffect, useState } from "react";
 
-import { sortUsers } from "../../../utils/actorUtils";
+import { sortUsers } from "../../../utils/actorUtils.js";
 
-import PeopleListItem from "./PeopleListItem";
-import ActorTrack from "./ActorTrack";
-import { useProductionState } from "../../../lib/productionState";
+import PeopleListItem from "./PeopleListItem.js";
+import ActorTrack from "./ActorTrack.js";
+import { useProductionState } from "../../../lib/productionState.js";
 
 export default function PeopleList() {
   const { jobs, hiredUsers } = useProductionState();

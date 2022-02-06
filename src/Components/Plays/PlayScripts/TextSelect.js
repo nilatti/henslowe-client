@@ -1,5 +1,5 @@
 import TreeViewMenu from "react-simple-tree-menu";
-import { TextSelectStyles } from "./ScriptStyles";
+import { TextSelectStyles } from "./ScriptStyles.js";
 export default function TextSelect({ play, loadText }) {
   if (!play.acts) {
     return <div>Awaiting skeletong</div>;

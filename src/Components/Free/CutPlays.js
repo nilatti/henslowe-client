@@ -1,13 +1,13 @@
 //this is the container for play editing for UNPAID customers. It talks to the play state provider
 import { useState } from "react";
-import { usePlayState } from "../../lib/freePlayState";
-import { Button } from "../Button";
-import { Form, FormGroupInline } from "../Form";
-import { Spinner } from "../Loaders";
-import Modal from "../Modal";
+import { usePlayState } from "../../lib/freePlayState.js";
+import { Button } from "../Button.js";
+import { Form, FormGroupInline } from "../Form.js";
+import { Spinner } from "../Loaders.js";
+import Modal from "../Modal.js";
 
-import SelectPlay from "./SelectPlay";
-import EditScript from "./EditScript";
+import SelectPlay from "./SelectPlay.js";
+import EditScript from "./EditScript.js";
 
 export default function CutPlays() {
   const { characters, loading, play, playSkeleton, setPlay, updateLine } =
@@ -42,6 +42,7 @@ export default function CutPlays() {
   }
 
   if (!play?.id) {
+    console.log("no play selected");
     return <SelectPlay />;
   }
 

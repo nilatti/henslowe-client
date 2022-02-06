@@ -1,5 +1,5 @@
-import AuthorShow from "./AuthorShow";
-import { SuperAuthProvider } from "../Contexts";
+import AuthorShow from "./AuthorShow.js";
+import { SuperAuthProvider } from "../Contexts.js";
 
 export default function AuthorWrapper({ onDeleteClick }) {
   return (

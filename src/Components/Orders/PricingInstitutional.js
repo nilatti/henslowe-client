@@ -1,4 +1,4 @@
-import ComingSoon from "./ComingSoon";
+import ComingSoon from "./ComingSoon.js";
 export default function PricingInstitutional() {
   return (
     <div>

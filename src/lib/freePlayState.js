@@ -1,9 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { getPlaySkeleton, getPlayScript } from "../api/plays";
+import { getPlaySkeleton, getPlayScript } from "../api/plays.js";
 import {
   determineTypeOfLine,
   mergeTextFromFrenchScenes,
-} from "../utils/playScriptUtils";
+} from "../utils/playScriptUtils.js";
 import _ from "lodash";
 const PlayStateContext = createContext();
 const PlayStateProvider = PlayStateContext.Provider;
@@ -330,6 +330,7 @@ function PlayProvider({ children }) {
         play,
         playSkeleton,
         setFakeActors,
+        setLoading,
         setPlay,
         updateActorJobs,
         updateCastings,

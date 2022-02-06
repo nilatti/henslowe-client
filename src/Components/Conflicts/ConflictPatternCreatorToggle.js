@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Button } from "../Button";
+import { Button } from "../Button.js";
 
 import ConflictPatternCreator from "./ConflictPatternCreator.js";
 

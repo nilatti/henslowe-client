@@ -1,9 +1,9 @@
 import uuid from "react-uuid";
 import styled from "styled-components";
-import ActorParts from "./ActorParts";
-import CharacterParts from "./CharacterParts";
-import { Button } from "../../../Button";
-import { buildUserName } from "../../../../utils/actorUtils";
+import ActorParts from "./ActorParts.js";
+import CharacterParts from "./CharacterParts.js";
+import { Button } from "../../../Button.js";
+import { buildUserName } from "../../../../utils/actorUtils.js";
 
 const ButtonDivStyle = styled.div`
   border: 3px solid var(--color-dark);

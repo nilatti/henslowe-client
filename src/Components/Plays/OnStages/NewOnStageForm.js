@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Form, FormGroupInline } from "../../Form";
-import { FormButtonGroup } from "../../Inputs";
-import CharacterSelect from "../Characters/CharacterSelect";
-import { useForm } from "../../../hooks/environmentUtils";
-import { usePlayState } from "../../../lib/playState";
+import { Form, FormGroupInline } from "../../Form.js";
+import { FormButtonGroup } from "../../Inputs.js";
+import CharacterSelect from "../Characters/CharacterSelect.js";
+import { useForm } from "../../../hooks/environmentUtils.js";
+import { usePlayState } from "../../../lib/playState.js";
 //filter characters, make a switch for character groups
 export default function NewOnStageForm({ frenchScene, onFormClose }) {
   const { addNewOnStage, characters, characterGroups } = usePlayState();

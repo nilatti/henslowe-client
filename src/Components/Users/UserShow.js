@@ -1,13 +1,13 @@
-import Moment from "react-moment";
-import { useUserAuthState } from "../Contexts";
+import { useUserAuthState } from "../Contexts.js";
 
-import UserJobsList from "../Jobs/UserJobsList";
-import ConflictsList from "../Conflicts/ConflictsList";
+import UserJobsList from "../Jobs/UserJobsList.js";
+import ConflictsList from "../Conflicts/ConflictsList.js";
 
-import { buildUserName } from "../../utils/actorUtils";
-import { overlap } from "../../utils/arrayUtils";
-import { ConflictStateProvider } from "../../lib/conflictState";
-import { USER_CONFLICT_REASONS } from "../../utils/hardcodedConstants";
+import { buildUserName } from "../../utils/actorUtils.js";
+import { overlap } from "../../utils/arrayUtils.js";
+import { ConflictStateProvider } from "../../lib/conflictState.js";
+import { USER_CONFLICT_REASONS } from "../../utils/hardcodedConstants.js";
+import { DisplayDate } from "../../utils/dateTimeUtils.js";
 
 export default function UserShow({ onDeleteClick, onEditClick, user }) {
   const { roles } = useUserAuthState();
@@ -149,7 +149,7 @@ export default function UserShow({ onDeleteClick, onEditClick, user }) {
         ]) && (
           <div>
             <strong>Date of Birth:</strong>{" "}
-            <Moment format="MMMM Do, YYYY">{user.birthdate}</Moment>
+            <DisplayDate date={user.birthdate} timezone={me.timezone} />
           </div>
         )}
       {user.gender && (

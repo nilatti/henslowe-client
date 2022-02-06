@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import Moment from "react-moment";
-import { deleteSubscription, renewSubscription } from "../../api/stripe";
-import { Button } from "../Button";
-import { useMeState } from "../../lib/meState";
+import { deleteSubscription, renewSubscription } from "../../api/stripe.js";
+import { Button } from "../Button.js";
+import { useMeState } from "../../lib/meState.js";
 
-import Modal from "../Modal";
-import { DATE_FORMAT, DEFAULT_TIMEZONE } from "../../utils/hardcodedConstants";
+import Modal from "../Modal.js";
+import { DisplayDate } from "../../utils/dateTimeUtils.js";
 export default function SubscriptionItem({
   setLoading,
   subscription,
@@ -69,12 +68,10 @@ export default function SubscriptionItem({
       <Modal>
         <div>
           Your cancellation was successful. Your subscription will end on:{" "}
-          <Moment
-            format={DATE_FORMAT}
-            timezone={me.timezone || DEFAULT_TIMEZONE}
-          >
-            {new Date(subscription.current_period_end * 1000)}
-          </Moment>
+          <DisplayDate
+            date={new Date(subscription.current_period_end * 1000)}
+            timezone={me.timezone}
+          />
           <Button onClick={() => setCancellationSuccessful(false)}>Back</Button>
         </div>
       </Modal>
@@ -85,12 +82,7 @@ export default function SubscriptionItem({
       <Modal>
         <div>
           Renewal successful! New end date is:{" "}
-          <Moment
-            format={DATE_FORMAT}
-            timezone={me.timezone || DEFAULT_TIMEZONE}
-          >
-            {renewedEndDate}
-          </Moment>
+          <DisplayDate date={renewedEndDate} timezone={me.timezone} />
           <Button onClick={() => setRenewalSuccessful(false)}>Back</Button>
         </div>
       </Modal>
@@ -104,9 +96,10 @@ export default function SubscriptionItem({
       <div>Status: {subscription.status}</div>
       <div>
         Started:{" "}
-        <Moment format={DATE_FORMAT} timezone={me.timezone || DEFAULT_TIMEZONE}>
-          {new Date(subscription.current_period_start * 1000)}
-        </Moment>
+        <DisplayDate
+          date={new Date(subscription.current_period_start * 1000)}
+          timezone={me.timezone}
+        />
       </div>
       <div>
         {subscription.cancel_at_period_end ? (
@@ -114,9 +107,10 @@ export default function SubscriptionItem({
         ) : (
           <span>Renews on:</span>
         )}{" "}
-        <Moment format={DATE_FORMAT} timezone={me.timezone || DEFAULT_TIMEZONE}>
-          {new Date(subscription.current_period_end * 1000)}
-        </Moment>
+        <DisplayDate
+          date={new Date(subscription.current_period_end * 1000)}
+          timezone={me.timezone}
+        />
       </div>
       {!subscription.cancel_at_period_end ? (
         <Button onClick={cancelSubscription}>

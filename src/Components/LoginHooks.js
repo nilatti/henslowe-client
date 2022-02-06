@@ -1,36 +1,39 @@
-import GoogleLogin from "react-google-login";
-import { useHistory } from "react-router-dom";
-import { useMeState } from "../lib/meState";
-import { requestLogin } from "../api/googleAuth";
+import { GoogleLogin } from "react-google-login";
+import { useNavigate } from "react-router-dom";
+import { useMeState } from "../lib/meState.js";
+import { requestLogin } from "../api/googleAuth.js";
+import { refreshTokenSetup } from "../utils/refreshToken.js";
+import jwt_decode from "jwt-decode";
+
+const clientId = process.env.REACT_APP_GOOGLE_CLIENT_KEY;
 
 export default function LoginHooks() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { setMe } = useMeState();
-  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_KEY;
-  const handleLogin = async (googleData) => {
+  const onSuccess = async (googleData) => {
     const res = await requestLogin(googleData);
     const data = res.data;
-    let tokenExpire = new Date();
-    tokenExpire = tokenExpire.setDate(tokenExpire.getDate() + 250);
-    localStorage.setItem("token_expire", JSON.stringify(tokenExpire));
     setMe(data);
     if (!data.program_name) {
-      history.push(`/users/new`);
+      navigate(`/users/new`);
     } else {
-      history.push("/");
+      navigate("/");
     }
   };
-  const handleFailure = () => {
+
+  const onFailure = () => {
     console.log("login failed");
   };
+
   return (
     <GoogleLogin
       clientId={clientId}
       buttonText="Log in or sign up with Google"
-      onSuccess={handleLogin}
-      onFailure={() => handleFailure}
+      onSuccess={onSuccess}
+      onFailure={onFailure}
       cookiePolicy={"single_host_origin"}
       responseType="code"
+      isSignedIn={true}
     />
   );
 }

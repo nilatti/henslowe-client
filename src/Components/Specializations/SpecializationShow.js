@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import SpecializationProfileForAdmin from "./SpecializationProfileForAdmin";
-import SpecializationProfileForVisitor from "./SpecializationProfileForVisitor";
-import LoadingModal from "../LoadingModal";
-import { useSuperAuthState } from "../Contexts";
-import SpecializationJobsList from "../Jobs/SpeciailzationJobsList";
-import { Profile } from "../Styled";
-import { getItem, updateServerItem } from "../../api/crud";
+import SpecializationProfileForAdmin from "./SpecializationProfileForAdmin.js";
+import SpecializationProfileForVisitor from "./SpecializationProfileForVisitor.js";
+import LoadingModal from "../LoadingModal.js";
+import { useSuperAuthState } from "../Contexts.js";
+import SpecializationJobsList from "../Jobs/SpeciailzationJobsList.js";
+import { Profile } from "../Styled.js";
+import { getItem, updateServerItem } from "../../api/crud.js";
 
 export default function SpecializationShow({ onDeleteClick }) {
   const { role } = useSuperAuthState();

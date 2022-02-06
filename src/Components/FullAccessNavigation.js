@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { Nav, Navbar, Container } from "react-bootstrap";
-import LogoutHooks from "./LogoutHooks";
-import { useMeState } from "../lib/meState";
+import LogoutHooks from "./LogoutHooks.js";
+import { useMeState } from "../lib/meState.js";
 import {
   getSuperAdminRole,
   theatersWhereUserIsAdmin,
-} from "../utils/authorizationUtils";
+} from "../utils/authorizationUtils.js";
 
 export default function FullAccessNavigation() {
   const { me } = useMeState();

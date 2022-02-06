@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import StageExitsList from "./StageExitsList";
-import LoadingModal from "../../LoadingModal";
-import { getProductionSkeleton } from "../../../api/productions";
-import { ProductionAuthProvider } from "../../Contexts";
+import StageExitsList from "./StageExitsList.js";
+import LoadingModal from "../../LoadingModal.js";
+import { getProductionSkeleton } from "../../../api/productions.js";
+import { ProductionAuthProvider } from "../../Contexts.js";
 
 export default function SetDesignDashboard() {
   const { productionId } = useParams();

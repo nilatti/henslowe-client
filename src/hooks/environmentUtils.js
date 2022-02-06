@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { isAfterTime } from "../utils/dateTimeUtils";
+import { isAfterTime } from "../utils/dateTimeUtils.js";
 
 export function useQuery() {
   return new URLSearchParams(useLocation().search);

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { Button } from "../../../Button";
-import { FancyRadio, FancyRadioLabelBox } from "../../../Styled";
+import { Button } from "../../../Button.js";
+import { FancyRadio, FancyRadioLabelBox } from "../../../Styled.js";
 
-import { useForm } from "../../../../hooks/environmentUtils";
+import { useForm } from "../../../../hooks/environmentUtils.js";
 
 const ContentForm = styled.div`
   align-items: center;

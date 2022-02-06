@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-import UserForm from "./UserForm";
+import UserForm from "./UserForm.js";
 
 export default function NewUser({ onFormClose, onFormSubmit }) {
   return (

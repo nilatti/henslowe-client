@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getItems } from "../../api/crud";
-import LoadingModal from "../LoadingModal";
+import { getItems } from "../../api/crud.js";
+// import "../ErrorApi";
+import LoadingModal from "../LoadingModal.js";
 
 export default function AuthorsList() {
   const [authors, setAuthors] = useState([]);
   const [authorsLIs, setAuthorsLIs] = useState([]);
+  const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -33,6 +35,10 @@ export default function AuthorsList() {
     setLoading(false);
   }, []);
 
+  if (errors.length) {
+    console.log("errors!");
+    // return <ErrorApi errors={errors} />;
+  }
   if (loading || !authors.length) {
     return <LoadingModal displayText="Loading authors" />;
   }

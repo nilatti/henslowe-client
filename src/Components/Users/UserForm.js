@@ -1,9 +1,9 @@
-import { AddressInput, TelephoneInput } from "../Inputs";
+import { AddressInput, TelephoneInput } from "../Inputs.js";
 import PropTypes from "prop-types";
-import { Button } from "../Button";
-import { Form, FormGroupInline } from "../Form";
-import { useForm } from "../../hooks/environmentUtils";
-import { useMeState } from "../../lib/meState";
+import { Button } from "../Button.js";
+import { Form, FormGroupInline } from "../Form.js";
+import { useForm } from "../../hooks/environmentUtils.js";
+import { useMeState } from "../../lib/meState.js";
 import TimezonePicker from "react-timezone";
 
 export default function UserForm({ onFormClose, onFormSubmit, user }) {

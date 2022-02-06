@@ -1,8 +1,8 @@
 import { Tab, Tabs } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import { usePlayState } from "../../lib/freePlayState";
-import DoublingChartShow from "../Productions/DoublingChartShow";
+import { usePlayState } from "../../lib/freePlayState.js";
+import DoublingChartShow from "../Productions/DoublingChartShow.js";
 
 export default function DoublingChartContainer({}) {
   const { castings, fakeActorsArray, play } = usePlayState();

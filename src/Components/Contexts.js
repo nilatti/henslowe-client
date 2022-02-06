@@ -2,14 +2,14 @@ import { createContext, useContext, useEffect, useState } from "react";
 const roles = "";
 export const AppAuthContext = createContext(roles);
 
-import { useMeState } from "../lib/meState";
+import { useMeState } from "../lib/meState.js";
 import {
   getOverlap,
   getSuperAdminRole,
   getUserRoleForProduction,
   getUserRoleForSpace,
   getUserRoleForTheater,
-} from "../utils/authorizationUtils";
+} from "../utils/authorizationUtils.js";
 
 const SuperAuthContext = createContext();
 const SuperAuthStateProvider = SuperAuthContext.Provider;

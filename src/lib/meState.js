@@ -1,12 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useHistory } from "react-router";
-import { buildUserName } from "../utils/actorUtils";
-import { updateServerItem } from "../api/crud";
+import { useNavigate } from "react-router";
+import { buildUserName } from "../utils/actorUtils.js";
+import { updateServerItem } from "../api/crud.js";
 const MeStateContext = createContext();
 const MeStateProvider = MeStateContext.Provider;
 
 function MeProvider({ children }) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [me, setMe] = useState(JSON.parse(localStorage.getItem("user")) || {});
   const [signingIn, setSigningIn] = useState(false);
 
@@ -34,6 +34,7 @@ function MeProvider({ children }) {
   function clearMe() {
     localStorage.clear();
     setMe(null);
+    // navigate(`/?error=${error}`);
   }
 
   async function updateMe(newMe) {

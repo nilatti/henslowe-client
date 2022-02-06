@@ -1,5 +1,5 @@
-import { ProductionProvider } from "../../lib/productionState";
-import DoublingChartContainer from "./DoublingChartContainer";
+import { ProductionProvider } from "../../lib/productionState.js";
+import DoublingChartContainer from "./DoublingChartContainer.js";
 
 export default function DoublingCharts() {
   return (

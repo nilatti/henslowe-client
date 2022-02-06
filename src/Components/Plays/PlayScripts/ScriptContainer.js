@@ -1,9 +1,9 @@
 import _ from "lodash";
-import LineShowEditable from "./LineShowEditable";
-import LineShowRead from "./LineShowRead";
+import LineShowEditable from "./LineShowEditable.js";
+import LineShowRead from "./LineShowRead.js";
 
-import { sortLines } from "../../../utils/playScriptUtils";
-import { useProductionAuthState } from "../../Contexts";
+import { sortLines } from "../../../utils/playScriptUtils.js";
+import { useProductionAuthState } from "../../Contexts.js";
 
 export default function ScriptContainer({ handleLineSubmit, showCut, text }) {
   const { role } = useProductionAuthState();

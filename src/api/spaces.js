@@ -1,4 +1,4 @@
-import API from "./api";
+import API from "./api.js";
 
 async function createSpace(space) {
   return API.post("spaces", {

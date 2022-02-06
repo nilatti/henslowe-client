@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useMeState } from "../../lib/meState";
-import { getSubscriptionsForUser } from "../../api/stripe";
+import { useMeState } from "../../lib/meState.js";
+import { getSubscriptionsForUser } from "../../api/stripe.js";
 export default function OrderSuccess() {
   const { me, updateMe } = useMeState();
 

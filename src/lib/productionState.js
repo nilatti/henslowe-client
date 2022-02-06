@@ -1,12 +1,12 @@
 import _, { set } from "lodash";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   ACTOR_SPECIALIZATION_ID,
   AUDITIONER_SPECIALIZATION_ID,
-} from "../utils/hardcodedConstants";
+} from "../utils/hardcodedConstants.js";
 import { buildRehearsalSchedule } from "../api/productions.js";
 
 import {
@@ -16,9 +16,9 @@ import {
   getItem,
   getItemsWithParent,
   updateServerItem,
-} from "../api/crud";
-import { getJobs } from "../api/jobs";
-import { getFakeUsers } from "../api/users";
+} from "../api/crud.js";
+import { getJobs } from "../api/jobs.js";
+import { getFakeUsers } from "../api/users.js";
 const ProductionStateContext = createContext();
 const ProductionStateProvider = ProductionStateContext.Provider;
 
@@ -36,7 +36,7 @@ function ProductionProvider({ children }) {
   const [fakeActorsArray, setFakeActorsArray] = useState([]);
   const [fullPlay, setFullPlay] = useState();
   const [hiredUsers, setHiredUsers] = useState([]);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
   const [jobsActing, setJobsActing] = useState([]);
   const [jobsNotActing, setJobsNotActing] = useState([]);
@@ -353,7 +353,7 @@ function ProductionProvider({ children }) {
       setNotActors([]);
       setRehearsals([]);
       setLoading(false);
-      history.push("/productions");
+      navigate("/productions");
     }
     setLoading(false);
   }

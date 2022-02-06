@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Row, Tab, Tabs } from "react-bootstrap";
-import FrenchSceneInfoTab from "./FrenchSceneInfoTab";
-import NewTextItem from "./NewTextItem";
-import TextInfo from "./TextInfo";
-import { filterEmptyContent } from "../../utils/playScriptUtils";
+import FrenchSceneInfoTab from "./FrenchSceneInfoTab.js";
+import NewTextItem from "./NewTextItem.js";
+import TextInfo from "./TextInfo.js";
+import { filterEmptyContent } from "../../utils/playScriptUtils.js";
 
 export default function SceneInfoTab({ prettyName, scene }) {
   const [key, setKey] = useState();

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { useMeState } from "../../lib/meState";
+import { useMeState } from "../../lib/meState.js";
 const NumberedList = styled.ol`
   li {
     list-style: numeral;

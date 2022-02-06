@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
 import styled from "styled-components";
-import RehearsalContentForm from "./RehearsalContentForm";
-import RehearsalContentShow from "./RehearsalContentShow";
-import { useProductionState } from "../../../../lib/productionState";
+import RehearsalContentForm from "./RehearsalContentForm.js";
+import RehearsalContentShow from "./RehearsalContentShow.js";
+import { useProductionState } from "../../../../lib/productionState.js";
 
 const Content = styled.div`
   display: flex;

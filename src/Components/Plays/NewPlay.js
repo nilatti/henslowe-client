@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
-import { Form } from "../Form";
-import { FormButtonGroup, TextInput } from "../Inputs";
-import { useForm } from "../../hooks/environmentUtils";
-import LoadingModal from "../LoadingModal";
-import { getItems } from "../../api/crud";
+import { Form } from "../Form.js";
+import { FormButtonGroup, TextInput } from "../Inputs.js";
+import { useForm } from "../../hooks/environmentUtils.js";
+import LoadingModal from "../LoadingModal.js";
+import { getItems } from "../../api/crud.js";
 export default function NewPlay({ author, onFormClose, onFormSubmit }) {
   const [authors, setAuthors] = useState([]);
   const [loading, setLoading] = useState(false);

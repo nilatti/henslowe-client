@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import PeopleCheckboxes from "./People/PeopleCheckboxes";
-import { Button } from "../../Button";
-import { FancyCheckBox, FancyRadio, FancyCheckBoxLabel } from "../../Styled";
-import { Form, FormGroup } from "../../Form";
-import { useForm } from "../../../hooks/environmentUtils";
-import { useProductionState } from "../../../lib/productionState";
-import { StartEndDatePair, StartEndTimePair } from "../../Inputs";
-import { DAYS_OF_WEEK } from "../../../utils/hardcodedConstants";
+import PeopleCheckboxes from "./People/PeopleCheckboxes.js";
+import { Button } from "../../Button.js";
+import { FancyCheckBox, FancyRadio, FancyCheckBoxLabel } from "../../Styled.js";
+import { Form, FormGroup } from "../../Form.js";
+import { useForm } from "../../../hooks/environmentUtils.js";
+import { useProductionState } from "../../../lib/productionState.js";
+import { StartEndDatePair, StartEndTimePair } from "../../Inputs.js";
+import { DAYS_OF_WEEK } from "../../../utils/hardcodedConstants.js";
 import {
   formatDateForRails,
   formatTimeForRails,
-} from "../../../utils/dateTimeUtils";
-import { useMeState } from "../../../lib/meState";
+} from "../../../utils/dateTimeUtils.js";
+import { useMeState } from "../../../lib/meState.js";
 
 const Explainer = styled.div`
   font-style: italic;

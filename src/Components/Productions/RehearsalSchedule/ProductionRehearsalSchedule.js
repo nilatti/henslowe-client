@@ -1,5 +1,5 @@
-import RehearsalScheduleList from "./RehearsalScheduleList";
-import { ProductionProvider } from "../../../lib/productionState";
+import RehearsalScheduleList from "./RehearsalScheduleList.js";
+import { ProductionProvider } from "../../../lib/productionState.js";
 
 export default function ProductionRehearsalsSchedule() {
   return (

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import TheaterListItem from "./TheaterListItem";
-import { getJobs } from "../../api/jobs";
-import { useMeState } from "../../lib/meState";
-import { getSuperAdminRole } from "../../utils/authorizationUtils";
-import { Button } from "../Button";
+import TheaterListItem from "./TheaterListItem.js";
+import { getJobs } from "../../api/jobs.js";
+import { useMeState } from "../../lib/meState.js";
+import { getSuperAdminRole } from "../../utils/authorizationUtils.js";
+import { Button } from "../Button.js";
 
 export default function TheatersList({ theaters }) {
   const { me } = useMeState();

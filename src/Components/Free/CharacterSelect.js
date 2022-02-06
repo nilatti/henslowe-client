@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { FormGroup } from "../Form";
+import { FormGroup } from "../Form.js";
 
 import { Typeahead } from "react-bootstrap-typeahead";
-import { usePlayState } from "../../lib/freePlayState";
+import { usePlayState } from "../../lib/freePlayState.js";
 
 export default function CharacterSelect({
   characters,

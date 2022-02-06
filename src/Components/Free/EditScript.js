@@ -3,16 +3,16 @@ import { Link } from "react-router-dom";
 import {
   EditAreaStyles,
   EditScriptStyles,
-} from "../Plays/PlayScripts/ScriptStyles";
-import TextEdit from "./TextEdit";
-import TextSelect from "../Plays/PlayScripts/TextSelect";
-import { usePlayState } from "../../lib/freePlayState";
+} from "../Plays/PlayScripts/ScriptStyles.js";
+import TextEdit from "./TextEdit.js";
+import TextSelect from "../Plays/PlayScripts/TextSelect.js";
+import { usePlayState } from "../../lib/freePlayState.js";
 import {
   determineTypeOfLine,
   getFrenchScenesFromAct,
   getFrenchScenesFromPlay,
   mergeTextFromFrenchScenes,
-} from "../../utils/playScriptUtils";
+} from "../../utils/playScriptUtils.js";
 
 export default function EditScript({ linesPerMinute }) {
   const { determineTypeOfLine, getSelectedText, play, updateLine } =

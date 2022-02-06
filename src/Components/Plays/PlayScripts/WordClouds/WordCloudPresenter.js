@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import uuid from "react-uuid";
-import { Button } from "../../../Button";
-import ComparisonContainer from "./ComparisonContainer";
+import { Button } from "../../../Button.js";
+import ComparisonContainer from "./ComparisonContainer.js";
 
 import {
   getFrenchScenesFromAct,
@@ -9,7 +9,7 @@ import {
   getLinesForCharacter,
   mergeTextFromFrenchScenes,
   returnWordsFromLines,
-} from "../../../../utils/playScriptUtils";
+} from "../../../../utils/playScriptUtils.js";
 
 export default function WordCloudPresenter({ context, play }) {
   let contextArray = context.map((item) => {

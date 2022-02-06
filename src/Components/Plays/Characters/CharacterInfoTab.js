@@ -1,19 +1,19 @@
 import _ from "lodash";
 import { useState } from "react";
 import styled from "styled-components";
-import { Button } from "../../Button";
+import { Button } from "../../Button.js";
 import {
   TextAreaInputWithToggle,
   TextInputAsForm,
   TextInputWithToggle,
-} from "../../Inputs";
-import ToolTip from "../../ToolTip";
+} from "../../Inputs.js";
+import ToolTip from "../../ToolTip.js";
 import info from "../../Images/info_icon.png";
-import { usePlayState } from "../../../lib/playState";
-import { useForm } from "../../../hooks/environmentUtils";
-import { calculateLineCount } from "../../../utils/playScriptUtils";
+import { usePlayState } from "../../../lib/playState.js";
+import { useForm } from "../../../hooks/environmentUtils.js";
+import { calculateLineCount } from "../../../utils/playScriptUtils.js";
 
-import CharacterLine from "./CharacterLine";
+import CharacterLine from "./CharacterLine.js";
 
 const HeadingStyles = styled.div`
   display: flex;

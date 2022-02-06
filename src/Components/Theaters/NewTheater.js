@@ -1,7 +1,7 @@
-import { useHistory } from "react-router-dom";
-import { AddressInput, FormButtonGroup } from "../Inputs";
-import { Form, FormGroupInline } from "../Form";
-import { useForm } from "../../hooks/environmentUtils";
+import { useNavigate } from "react-router-dom";
+import { AddressInput, FormButtonGroup } from "../Inputs.js";
+import { Form, FormGroupInline } from "../Form.js";
+import { useForm } from "../../hooks/environmentUtils.js";
 
 export default function NewTheater({ onFormSubmit }) {
   const { inputs, handleChange } = useForm({
@@ -14,10 +14,10 @@ export default function NewTheater({ onFormSubmit }) {
     website: "",
     zip: "",
   });
-  const history = useHistory();
+  const navigate = useNavigate();
 
   function onFormClose() {
-    history.push("/theaters");
+    navigate("/theaters");
   }
 
   function handleSubmit(event) {

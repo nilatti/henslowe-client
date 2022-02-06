@@ -1,8 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
-import PartScriptPresenter from "./PartScriptPresenter";
-import PartScriptSelector from "./PartScriptSelector";
-import { Button } from "../../../Button";
+import PartScriptPresenter from "./PartScriptPresenter.js";
+import PartScriptSelector from "./PartScriptSelector.js";
+import { Button } from "../../../Button.js";
 
 const PartScriptContainerStyles = styled.div`
   display: flex;

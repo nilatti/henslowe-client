@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
-import "react-select/dist/react-select.css";
+// import "react-select/dist/react-select.css";
 
-import { getItems } from "../../api/crud";
-import { Button } from "../Button";
-import { Form } from "../Form";
-import { FormButtonGroup } from "../Inputs";
-import LoadingModal from "../LoadingModal";
+import { getItems } from "../../api/crud.js";
+import { Button } from "../Button.js";
+import { Form } from "../Form.js";
+import { FormButtonGroup } from "../Inputs.js";
+import LoadingModal from "../LoadingModal.js";
 
 export default function SpaceAgreementFormForTheaters({
   onFormSubmit,

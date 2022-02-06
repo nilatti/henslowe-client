@@ -1,15 +1,15 @@
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import SubscriptionItem from "./SubscriptionItem";
-import { Profile } from "../Styled";
-import { useMeState } from "../../lib/meState";
+import SubscriptionItem from "./SubscriptionItem.js";
+import { Profile } from "../Styled.js";
+import { useMeState } from "../../lib/meState.js";
 import {
   getSubscriptionsForUser,
   updatePaymentInformation,
-} from "../../api/stripe";
-import LoadingModal from "../LoadingModal";
-import { Button } from "../Button";
+} from "../../api/stripe.js";
+import LoadingModal from "../LoadingModal.js";
+import { Button } from "../Button.js";
 export default function IndividualAccount() {
   const { me } = useMeState();
   const [loading, setLoading] = useState(false);

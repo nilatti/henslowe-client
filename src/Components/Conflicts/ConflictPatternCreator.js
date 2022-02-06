@@ -1,8 +1,8 @@
 import React from "react";
 
-import { USER_CONFLICT_REASONS } from "../../utils/hardcodedConstants";
+import { USER_CONFLICT_REASONS } from "../../utils/hardcodedConstants.js";
 
-import ConflictPatternCreatorForm from "./ConflictPatternCreatorForm";
+import ConflictPatternCreatorForm from "./ConflictPatternCreatorForm.js";
 
 export default function ConflictPatternCreator({ onFormSubmit, cancel }) {
   return (

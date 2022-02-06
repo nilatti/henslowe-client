@@ -3,18 +3,18 @@ import { useParams } from "react-router";
 import { Button } from "react-bootstrap";
 
 import { RIEInput } from "@attently/riek";
-import StageExitShow from "./StageExitShow";
-import { useProductionAuthState } from "../../Contexts";
-import LoadingModal from "../../LoadingModal";
+import StageExitShow from "./StageExitShow.js";
+import { useProductionAuthState } from "../../Contexts.js";
+import LoadingModal from "../../LoadingModal.js";
 
 import {
   createItemWithParent,
   deleteItem,
   getItemsWithParent,
   updateServerItem,
-} from "../../../api/crud";
+} from "../../../api/crud.js";
 
-import StageExitForm from "./StageExitForm";
+import StageExitForm from "./StageExitForm.js";
 
 export default function StageExitsList() {
   const { productionId } = useParams();

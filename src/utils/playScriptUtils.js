@@ -1,5 +1,5 @@
 import _ from "lodash";
-import Syllable from "syllable";
+import { syllable } from "syllable";
 import { isConstructorDeclaration } from "typescript";
 
 function calculateLineCount(lines) {
@@ -10,9 +10,9 @@ function calculateLineCount(lines) {
     let defaultSyllables = 10;
     let count = 0;
     if (line.new_content && line.new_content.length > 0) {
-      syllablesPerLine = Syllable(line.new_content);
+      syllablesPerLine = syllable(line.new_content);
     } else {
-      syllablesPerLine = Syllable(line.original_content);
+      syllablesPerLine = syllable(line.original_content);
     }
     line.count = calculateChange(syllablesPerLine, defaultSyllables);
   });

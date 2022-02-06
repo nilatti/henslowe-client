@@ -1,7 +1,11 @@
 import _ from "lodash";
-import { FancyCheckBox, FancyCheckBoxLabel, FancyRadio } from "../../../Styled";
+import {
+  FancyCheckBox,
+  FancyCheckBoxLabel,
+  FancyRadio,
+} from "../../../Styled.js";
 
-import { buildUserName } from "../../../../utils/actorUtils";
+import { buildUserName } from "../../../../utils/actorUtils.js";
 
 export default function PeopleCheckboxes({ onChange, users }) {
   function sortUsers(users) {

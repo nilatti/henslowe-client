@@ -1,4 +1,4 @@
-import API from "./api";
+import API from "./api.js";
 
 async function createAct(playId, act) {
   return API.post(`plays/${playId}/acts`, {
@@ -98,6 +98,7 @@ async function getPlaySkeleton(playId) {
 }
 
 async function getPlayTitles() {
+  console.log("get play titles called");
   return API.request(`plays/play_titles`);
 }
 

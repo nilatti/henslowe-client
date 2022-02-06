@@ -1,4 +1,4 @@
-import API from "./api";
+import API from "./api.js";
 
 async function buildUserConflictPattern(userId, conflictSchedulePattern) {
   return API.put(`users/${userId}/build_conflict_schedule`, {

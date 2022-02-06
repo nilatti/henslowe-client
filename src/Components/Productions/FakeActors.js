@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Button } from "../Button";
-import { Form, FormGroupInline } from "../Form";
-import { useForm } from "../../hooks/environmentUtils";
+import { Button } from "../Button.js";
+import { Form, FormGroupInline } from "../Form.js";
+import { useForm } from "../../hooks/environmentUtils.js";
 //actors is object { female: int, male: int, nonbinary: int}
 export default function FakeActors({ actors, onSubmit }) {
   const [formOpen, setFormOpen] = useState(true);

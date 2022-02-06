@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
-import { Button } from "../Button";
-import { Form, FormGroupInline } from "../Form";
-import { useProductionState } from "../../lib/productionState";
-import { buildUserName } from "../../utils/actorUtils";
-import { Spinner } from "../Loaders";
-import Modal from "../Modal";
+import { Button } from "../Button.js";
+import { Form, FormGroupInline } from "../Form.js";
+import { useProductionState } from "../../lib/productionState.js";
+import { buildUserName } from "../../utils/actorUtils.js";
+import { Spinner } from "../Loaders.js";
+import Modal from "../Modal.js";
 export default function CastingReassign({ onClose }) {
   const { actorsAndAuditioners, loading, reassignAllRolesForUser } =
     useProductionState();

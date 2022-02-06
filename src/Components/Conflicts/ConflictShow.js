@@ -1,10 +1,5 @@
-import Moment from "react-moment";
-import PropTypes from "prop-types";
-import { useMeState } from "../../lib/meState";
-import {
-  DATE_TIME_FORMAT,
-  DEFAULT_TIMEZONE,
-} from "../../utils/hardcodedConstants";
+import { useMeState } from "../../lib/meState.js";
+import { DisplayDateTimeRange } from "../../utils/dateTimeUtils.js";
 
 export default function ConflictShow({
   conflict,
@@ -16,15 +11,14 @@ export default function ConflictShow({
   function onDeleteClick() {
     handleDeleteClick(conflict.id);
   }
+  console.log(conflict);
   return (
     <>
-      <Moment format={DATE_TIME_FORMAT} tz={me.timezone || DEFAULT_TIMEZONE}>
-        {conflict.start_time}
-      </Moment>
-      -
-      <Moment format={DATE_TIME_FORMAT} tz={me.timezone || DEFAULT_TIMEZONE}>
-        {conflict.end_time}
-      </Moment>
+      <DisplayDateTimeRange
+        end_datetime={conflict.end_time}
+        start_datetime={conflict.start_time}
+        timezone={me.timezone}
+      />
       {role && (role === "admin" || role === "self") && (
         <>
           : {conflict.category}

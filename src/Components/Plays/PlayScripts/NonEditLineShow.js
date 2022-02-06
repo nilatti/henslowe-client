@@ -1,12 +1,12 @@
 import uuid from "react-uuid";
 
-var Diff = require("diff");
+import { Diff } from "diff";
 import {
   CharacterName,
   Line,
   LineNumber,
   LineShowStylesNonEdit,
-} from "./ScriptStyles";
+} from "./ScriptStyles.js";
 
 export default function NonEditLineShow({
   index,

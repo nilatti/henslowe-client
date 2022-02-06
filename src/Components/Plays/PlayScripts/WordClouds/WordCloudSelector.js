@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Button } from "../../../Button";
-import { FancyCheckBox, FancyCheckBoxLabel, FancyRadio } from "../../../Styled";
+import { Button } from "../../../Button.js";
+import {
+  FancyCheckBox,
+  FancyCheckBoxLabel,
+  FancyRadio,
+} from "../../../Styled.js";
 import {
   getFrenchScenesFromPlay,
   getScenesFromPlay,
-} from "../../../../utils/playScriptUtils";
+} from "../../../../utils/playScriptUtils.js";
 
 const SelectGroup = styled.div`
   display: flex;

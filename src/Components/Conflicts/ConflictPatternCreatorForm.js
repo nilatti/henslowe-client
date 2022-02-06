@@ -1,18 +1,18 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { Button } from "../Button";
-import { Form, FormGroup } from "../Form";
+import { Button } from "../Button.js";
+import { Form, FormGroup } from "../Form.js";
 import {
   FancyCheckBox,
   FancyCheckBoxLabel,
   FancyRadio,
   FancyRadioLabelBox,
-} from "../Styled";
-import { useConflicts } from "../../lib/conflictState";
-import { useForm } from "../../hooks/environmentUtils";
-import { StartEndDatePair, StartEndTimePair } from "../Inputs";
-import { DAYS_OF_WEEK } from "../../utils/hardcodedConstants";
-import { firstLetterUpcase } from "../../utils/stringUtils";
+} from "../Styled.js";
+import { useConflicts } from "../../lib/conflictState.js";
+import { useForm } from "../../hooks/environmentUtils.js";
+import { StartEndDatePair, StartEndTimePair } from "../Inputs.js";
+import { DAYS_OF_WEEK } from "../../utils/hardcodedConstants.js";
+import { firstLetterUpcase } from "../../utils/stringUtils.js";
 
 export default function ConflictPatternCreatorForm({ cancel, onFormSubmit }) {
   const { inputs, handleChange } = useForm({

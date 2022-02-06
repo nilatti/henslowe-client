@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 
-import CastingContainer from "../Jobs/CastingContainer";
-import FakeActors from "../Productions/FakeActors";
+import CastingContainer from "../Jobs/CastingContainer.js";
+import FakeActors from "../Productions/FakeActors.js";
 
-import SelectPlay from "./SelectPlay";
-import { Spinner } from "../Loaders";
-import Modal from "../Modal";
-import { usePlayState } from "../../lib/freePlayState";
+import SelectPlay from "./SelectPlay.js";
+import { Spinner } from "../Loaders.js";
+import Modal from "../Modal.js";
+import { usePlayState } from "../../lib/freePlayState.js";
 
 export default function Casting({}) {
   const {

@@ -1,18 +1,12 @@
 import { useState } from "react";
-import { Link, Route, Switch, useHistory } from "react-router-dom";
-import CharactersBreakdown from "./Characters/CharactersBreakdown";
-import PlayWrapper from "./PlayWrapper";
-import PlaysList from "./PlaysList";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import PlayWrapper from "./PlayWrapper.js";
+import PlaysList from "./PlaysList.js";
 
-import NewPlay from "./NewPlay";
-import PartScriptsContainerPaid from "./PlayScripts/PartScripts/PartScriptsContainerPaid";
-import PlayShow from "./PlayShow";
-import PlayScript from "./PlayScripts/PlayScript";
-import TextUnitBreakdown from "./TextUnitBreakdown";
-import WordCloudContainerPaid from "./PlayScripts/WordClouds/WordCloudContainerPaid";
-import { createItem, deleteItem } from "../../api/crud";
+import NewPlay from "./NewPlay.js";
+import { createItem, deleteItem } from "../../api/crud.js";
 export default function Plays() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [errors, setErrors] = useState([]);
 
   async function createPlay(play) {
@@ -20,7 +14,7 @@ export default function Plays() {
     if (response.status >= 400) {
       console.log("Error creating play");
     } else {
-      history.push(`/plays/${response.data.id}`);
+      navigate(`/plays/${response.data.id}`);
     }
   }
 
@@ -29,12 +23,12 @@ export default function Plays() {
     if (response.status >= 400) {
       console.log("Error deleting play");
     } else {
-      history.push("/plays");
+      navigate("/plays");
     }
   }
 
   function closeNewPlayForm() {
-    history.push("/plays");
+    navigate("/plays");
   }
   function handleCreateFormSubmit(play) {
     createPlay(play);
@@ -48,74 +42,27 @@ export default function Plays() {
             <Link to="/plays">Plays</Link>
           </h2>
           <hr />
-          <Switch>
+          <Routes>
             <Route
-              path="/plays/:playId/character_breakdown"
-              render={(props) => (
-                <PlayWrapper {...props}>
-                  <CharactersBreakdown />
-                </PlayWrapper>
-              )}
-            />
-            <Route
-              path="/plays/new"
-              render={(props) => (
+              path="/new"
+              element={
                 <NewPlay
-                  {...props}
                   onFormClose={closeNewPlayForm}
                   onFormSubmit={handleCreateFormSubmit}
                 />
-              )}
-            />
-            <Route
-              path="/plays/:playId/part_scripts"
-              render={(props) => (
-                <PlayWrapper {...props}>
-                  <PartScriptsContainerPaid />
-                </PlayWrapper>
-              )}
-            />
-            <Route
-              path="/plays/:playId/playscript"
-              render={(props) => (
-                <PlayWrapper {...props}>
-                  <PlayScript />
-                </PlayWrapper>
-              )}
+              }
             />
 
             <Route
-              path="/plays/:playId/text_breakdown"
-              render={(props) => (
-                <PlayWrapper {...props}>
-                  <TextUnitBreakdown />
-                </PlayWrapper>
-              )}
-            />
-
-            <Route
-              path="/plays/:playId/word_clouds"
-              render={(props) => (
-                <PlayWrapper {...props}>
-                  <WordCloudContainerPaid />
-                </PlayWrapper>
-              )}
-            />
-
-            <Route
-              path={`/plays/:playId`}
-              render={(props) => (
-                <PlayWrapper {...props}>
-                  <PlayShow onDeleteClick={deletePlay} />
-                </PlayWrapper>
-              )}
+              path={`/:playId/*`}
+              element={<PlayWrapper onDeleteClick={deletePlay} />}
             />
             <Route
-              path="/plays/"
-              component={PlaysList}
+              path="/"
+              element={<PlaysList />}
               onDeleteClick={deletePlay}
             />
-          </Switch>
+          </Routes>
         </div>
       </div>
     </>

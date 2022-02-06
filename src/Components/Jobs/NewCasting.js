@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
-import { Button } from "../Button";
-import { Form, FormGroupInline } from "../Form";
-import { ACTOR_SPECIALIZATION_ID } from "../../utils/hardcodedConstants";
-import { buildUserName } from "../../utils/actorUtils";
-import { useProductionState } from "../../lib/productionState";
+import { Button } from "../Button.js";
+import { Form, FormGroupInline } from "../Form.js";
+import { ACTOR_SPECIALIZATION_ID } from "../../utils/hardcodedConstants.js";
+import { buildUserName } from "../../utils/actorUtils.js";
+import { useProductionState } from "../../lib/productionState.js";
 
 export default function NewCasting({ users }) {
   const { createCasting, production } = useProductionState();

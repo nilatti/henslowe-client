@@ -1,11 +1,15 @@
 import moment from "moment";
 import styled from "styled-components";
-import { FancyCheckBox, FancyCheckBoxLabel, FancyRadio } from "../../../Styled";
+import {
+  FancyCheckBox,
+  FancyCheckBoxLabel,
+  FancyRadio,
+} from "../../../Styled.js";
 
-import ToolTip from "../../../ToolTip";
+import ToolTip from "../../../ToolTip.js";
 import info from "../../../Images/info_icon.png";
-import { buildUserName } from "../../../../utils/actorUtils";
-import { calculateDuration } from "../../../../utils/dateTimeUtils";
+import { buildUserName } from "../../../../utils/actorUtils.js";
+import { calculateDuration } from "../../../../utils/dateTimeUtils.js";
 
 const ContentSelectItem = styled.div`
   display: flex;

@@ -1,7 +1,7 @@
-import { Button } from "../../Button";
-import { Form, FormGroupInline } from "../../Form";
+import { Button } from "../../Button.js";
+import { Form, FormGroupInline } from "../../Form.js";
 
-import { useForm } from "../../../hooks/environmentUtils";
+import { useForm } from "../../../hooks/environmentUtils.js";
 
 export default function StageExitForm({
   onFormClose,

@@ -1,5 +1,5 @@
-import { Spinner } from "./Loaders";
-import Modal from "./Modal";
+import { Spinner } from "./Loaders.js";
+import Modal from "./Modal.js";
 
 export default function LoadingModal({ displayText }) {
   return (

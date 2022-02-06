@@ -1,22 +1,27 @@
 import { useState } from "react";
-import { useHistory } from "react-router";
-import ToolTip from "../ToolTip";
+import { useNavigate } from "react-router";
+import ToolTip from "../ToolTip.js";
 import {
   AddressInputWithToggle,
   TelephoneInputWithToggle,
   TextInputAsForm,
   TextAreaInputWithToggle,
   UrlInputWithToggle,
-} from "../Inputs";
-import { useForm } from "../../hooks/environmentUtils";
-import { deleteItem } from "../../api/crud";
+} from "../Inputs.js";
+import { useForm } from "../../hooks/environmentUtils.js";
+import { deleteItem } from "../../api/crud.js";
 
-export default function TheaterProfileForAdmin({ theater, updateTheater }) {
+export default function TheaterProfileForAdmin({
+  onDeleteClick,
+  theater,
+  updateTheater,
+}) {
   const [addressForm, setAddressForm] = useState(false);
   const [missionForm, setMissionForm] = useState(false);
   const [nameForm, setNameForm] = useState(false);
   const [phoneForm, setPhoneForm] = useState(false);
   const [urlForm, setUrlForm] = useState(false);
+  const navigate = useNavigate();
   const { inputs, handleChange } = useForm({
     city: theater?.city || "",
     id: theater?.id || null,
@@ -67,7 +72,7 @@ export default function TheaterProfileForAdmin({ theater, updateTheater }) {
     if (response.status >= 400) {
       console.log("error deleting theater");
     } else {
-      history.push("/theaters");
+      navigate("/theaters");
     }
   }
 
@@ -95,7 +100,7 @@ export default function TheaterProfileForAdmin({ theater, updateTheater }) {
             </h2>
             <span
               className="right floated trash icon"
-              onClick={() => handleDelete(theater.id)}
+              onClick={() => onDeleteClick(theater.id)}
             >
               <i className="fas fa-trash-alt"></i>
             </span>

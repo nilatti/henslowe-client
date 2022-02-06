@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Tab, Tabs } from "react-bootstrap";
-import DoublingChartShow from "./DoublingChartShow";
-import Modal from "../Modal";
-import { Spinner } from "../Loaders";
-import CastList from "../Jobs/CastList";
-import { getPlayScript } from "../../api/plays";
-import { useProductionState } from "../../lib/productionState";
+import DoublingChartShow from "./DoublingChartShow.js";
+import Modal from "../Modal.js";
+import { Spinner } from "../Loaders.js";
+import CastList from "../Jobs/CastList.js";
+import { getPlayScript } from "../../api/plays.js";
+import { useProductionState } from "../../lib/productionState.js";
 export default function DoublingChartContainer() {
   const {
     actors,

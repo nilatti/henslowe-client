@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Tab, Tabs } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import CharacterInfoTab from "./CharacterInfoTab";
-import NewCharacter from "./NewCharacter";
-import LoadingModal from "../../LoadingModal";
+import CharacterInfoTab from "./CharacterInfoTab.js";
+import NewCharacter from "./NewCharacter.js";
+import LoadingModal from "../../LoadingModal.js";
 
-import { usePlayState } from "../../../lib/playState";
+import { usePlayState } from "../../../lib/playState.js";
 export default function CharactersBreakdown() {
   const { charactersAll, loading, loadPlay, play } = usePlayState();
   const [characterTabs, setCharacterTabs] = useState([]);

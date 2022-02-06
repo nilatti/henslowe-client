@@ -1,5 +1,5 @@
 import { Typeahead } from "react-bootstrap-typeahead";
-import { FormGroup } from "../../Form";
+import { FormGroup } from "../../Form.js";
 
 export default function CharacterSelect({
   characters,

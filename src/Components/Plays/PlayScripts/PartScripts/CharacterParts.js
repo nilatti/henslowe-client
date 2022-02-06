@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import {
   getFrenchScenesFromPlay,
   mergeTextFromFrenchScenes,
-} from "../../../../utils/playScriptUtils";
-import PartScriptTextContainer from "./PartScriptTextContainer";
+} from "../../../../utils/playScriptUtils.js";
+import PartScriptTextContainer from "./PartScriptTextContainer.js";
 
 export default function CharacterParts({ character, play }) {
   const [showCut, setShowCut] = useState(true);

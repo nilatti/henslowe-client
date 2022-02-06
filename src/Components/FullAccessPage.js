@@ -1,7 +1,7 @@
-import FullAccessMain from "./FullAccessMain";
-import FullAccessNavigation from "./FullAccessNavigation";
-import Footer from "./Footer";
-import { PageContent } from "./Styled";
+import FullAccessMain from "./FullAccessMain.js";
+import FullAccessNavigation from "./FullAccessNavigation.js";
+import Footer from "./Footer.js";
+import { PageContent } from "./Styled.js";
 
 const FullAccessPage = () => {
   return (

@@ -11,22 +11,22 @@
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import ExtraUsers from "./ExtraUsers";
-import PlayContentCheckboxes from "./PlayContentCheckboxes";
-import TextUnitSelector from "./TextUnitSelector";
-import { Button } from "../../../Button";
+import ExtraUsers from "./ExtraUsers.js";
+import PlayContentCheckboxes from "./PlayContentCheckboxes.js";
+import TextUnitSelector from "./TextUnitSelector.js";
+import { Button } from "../../../Button.js";
 
-import Modal from "../../../Modal";
-import { Spinner } from "../../../Loaders";
+import Modal from "../../../Modal.js";
+import { Spinner } from "../../../Loaders.js";
 
 import {
   getPlayActOnStages,
   getPlayFrenchSceneOnStages,
   getPlaySceneOnStages,
 } from "../../../../api/plays.js";
-import { useProductionState } from "../../../../lib/productionState";
-import { buildUserName } from "../../../../utils/actorUtils";
-import { unavailableUsers } from "../../../../utils/rehearsalUtils";
+import { useProductionState } from "../../../../lib/productionState.js";
+import { buildUserName } from "../../../../utils/actorUtils.js";
+import { unavailableUsers } from "../../../../utils/rehearsalUtils.js";
 
 const ContentForm = styled.div`
   align-items: center;

@@ -4,24 +4,24 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import EditableRehearsal from "./EditableRehearsal";
-import RehearsalDayGroup from "./RehearsalDayGroup";
-import RehearsalFormToggle from "./RehearsalFormToggle";
-import RehearsalPatternCreatorToggle from "./RehearsalPatternCreatorToggle";
-import { Button } from "../../Button";
-import Modal from "../../Modal";
-import { useProductionAuthState } from "../../Contexts";
-import { Spinner } from "../../Loaders";
-import { useQuery } from "../../../hooks/environmentUtils";
-import { useProductionState } from "../../../lib/productionState";
-import { getEndOfWeek, getStartOfWeek } from "../../../utils/dateTimeUtils";
-import { useMeState } from "../../../lib/meState";
+import EditableRehearsal from "./EditableRehearsal.js";
+import RehearsalDayGroup from "./RehearsalDayGroup.js";
+import RehearsalFormToggle from "./RehearsalFormToggle.js";
+import RehearsalPatternCreatorToggle from "./RehearsalPatternCreatorToggle.js";
+import { Button } from "../../Button.js";
+import Modal from "../../Modal.js";
+import { useProductionAuthState } from "../../Contexts.js";
+import { Spinner } from "../../Loaders.js";
+import { useQuery } from "../../../hooks/environmentUtils.js";
+import { useProductionState } from "../../../lib/productionState.js";
+import { getEndOfWeek, getStartOfWeek } from "../../../utils/dateTimeUtils.js";
+import { useMeState } from "../../../lib/meState.js";
 import {
   DATE_FORMAT,
   DATE_FORMAT_FOR_RAILS,
   DATE_FORMAT_WITH_MONTH_NAME,
   DATE_FORMAT_WITH_WEEKDAY,
-} from "../../../utils/hardcodedConstants";
+} from "../../../utils/hardcodedConstants.js";
 const EditButtons = styled.div`
   display: ${(props) => (props.show ? "flex" : "none")};
   flex-flow: row wrap;

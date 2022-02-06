@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { EditAreaStyles, EditScriptStyles } from "./ScriptStyles";
-import TextEdit from "./TextEdit";
-import TextSelect from "./TextSelect";
-import { usePlayState } from "../../../lib/playState";
+import { EditAreaStyles, EditScriptStyles } from "./ScriptStyles.js";
+import TextEdit from "./TextEdit.js";
+import TextSelect from "./TextSelect.js";
+import { usePlayState } from "../../../lib/playState.js";
 import {
   determineTypeOfLine,
   getFrenchScenesFromAct,
   getFrenchScenesFromPlay,
   mergeTextFromFrenchScenes,
-} from "../../../utils/playScriptUtils";
+} from "../../../utils/playScriptUtils.js";
 
 export default function EditScript({ linesPerMinute }) {
   const { getSelectedText, play, updateLine } = usePlayState();

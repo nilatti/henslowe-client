@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import _ from "lodash";
-import { getSubscriptionsForUser } from "../../api/stripe";
-import { getItems } from "../../api/crud";
-import LoadingModal from "../LoadingModal";
-import SubscriptionCard from "./SubscriptionCard";
-import { useMeState } from "../../lib/meState";
-import { Link } from "react-router-dom";
+import { getSubscriptionsForUser } from "../../api/stripe.js";
+import { getItems } from "../../api/crud.js";
+import LoadingModal from "../LoadingModal.js";
+import SubscriptionCard from "./SubscriptionCard.js";
+import { useMeState } from "../../lib/meState.js";
 
 const CardContainer = styled.div`
   align-items: center;

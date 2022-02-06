@@ -2,16 +2,16 @@ import PropTypes from "prop-types";
 import React from "react";
 // import { Button, Col, Form } from "react-bootstrap";
 import Datetime from "react-datetime";
-import { Button } from "../Button";
-import { Form, FormGroup } from "../Form";
-import { FancyRadio, FancyRadioLabelBox } from "../Styled";
+import { Button } from "../Button.js";
+import { Form, FormGroup } from "../Form.js";
+import { FancyRadio, FancyRadioLabelBox } from "../Styled.js";
 
-import { useConflicts } from "../../lib/conflictState";
-import { useMeState } from "../../lib/meState";
-import { useForm } from "../../hooks/environmentUtils";
-import { StartEndDateTimePair } from "../Inputs";
-import { firstLetterUpcase } from "../../utils/stringUtils";
-import { formatDateTimeForRails } from "../../utils/dateTimeUtils";
+import { useConflicts } from "../../lib/conflictState.js";
+import { useMeState } from "../../lib/meState.js";
+import { useForm } from "../../hooks/environmentUtils.js";
+import { StartEndDateTimePair } from "../Inputs.js";
+import { firstLetterUpcase } from "../../utils/stringUtils.js";
+import { formatDateTimeForRails } from "../../utils/dateTimeUtils.js";
 
 // const validate = ({ startTime, endTime }) => {
 //   return {

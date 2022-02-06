@@ -1,8 +1,8 @@
 import { useState } from "react";
-import ScriptContainer from "./ScriptContainer";
-import { Button } from "../Button";
-import { calculateRunTime } from "../../utils/playScriptUtils";
-import { TextEditStyles } from "../Plays/PlayScripts/ScriptStyles";
+import ScriptContainer from "./ScriptContainer.js";
+import { Button } from "../Button.js";
+import { calculateRunTime } from "../../utils/playScriptUtils.js";
+import { TextEditStyles } from "../Plays/PlayScripts/ScriptStyles.js";
 export default function TextEdit({
   handleLineSubmit,
   linesPerMinute,

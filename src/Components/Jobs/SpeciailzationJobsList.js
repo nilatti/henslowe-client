@@ -2,7 +2,7 @@ import _ from "lodash";
 import { checkPropTypes } from "prop-types";
 import { useEffect, useState } from "react";
 
-import { UserLink } from "../../utils/actorUtils";
+import { UserLink } from "../../utils/actorUtils.js";
 export default function SpecializationJobsList({ jobs }) {
   const [formattedUsers, setFormattedUsers] = useState([]);
 

@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
 import { forwardRef, useEffect, useRef, useState } from "react";
-import { useProductionAuthState } from "../../../Contexts";
+import { useProductionAuthState } from "../../../Contexts.js";
 import uuid from "react-uuid";
 import styled from "styled-components";
-import { EditIcons } from "../../../Styled";
-import { rehearsalContent } from "../../../../utils/rehearsalUtils";
+import { EditIcons } from "../../../Styled.js";
+import { rehearsalContent } from "../../../../utils/rehearsalUtils.js";
 
 const ContentShow = styled.div`
   display: flex;

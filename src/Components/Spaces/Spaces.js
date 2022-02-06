@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { Link, Route, Switch, useHistory } from "react-router-dom";
-import { createItem, deleteItem, updateServerItem } from "../../api/crud";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import { createItem, deleteItem, updateServerItem } from "../../api/crud.js";
 
-import { getSpaceNames } from "../../api/spaces";
-import SpacesList from "./SpacesList";
-import SpaceWrapper from "./SpaceWrapper";
-import NewSpace from "./NewSpace";
-import ErrorMessages from "../ErrorMessages";
+import { getSpaceNames } from "../../api/spaces.js";
+import SpacesList from "./SpacesList.js";
+import SpaceWrapper from "./SpaceWrapper.js";
+import NewSpace from "./NewSpace.js";
+import ErrorMessages from "../ErrorMessages.js";
 
 export default function Spaces() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [spaces, setSpaces] = useState([]);
   const [errors, setErrors] = useState([]);
 
@@ -29,7 +29,7 @@ export default function Spaces() {
     } else {
       let newSpaces = (spaces) => [...spaces, newSpace];
       setSpaces(newSpaces);
-      history.push(`/spaces/${response.data.id}`);
+      navigate(`/spaces/${response.data.id}`);
     }
   }
 
@@ -40,7 +40,7 @@ export default function Spaces() {
     } else {
       let newSpaces = spaces.filter((space) => space.id != spaceId);
       setSpaces(newSpaces);
-      history.push("/spaces");
+      navigate("/spaces");
     }
   }
 
@@ -57,8 +57,7 @@ export default function Spaces() {
         }
       });
       setSpaces(newSpaces);
-      history.push(`/spaces/${response.data.id}`);
-      history.go();
+      navigate(`/spaces/${response.data.id}`);
     }
   }
 
@@ -69,16 +68,16 @@ export default function Spaces() {
       </h2>
       <ErrorMessages errors={errors} />
       <hr />
-      <Switch>
+      <Routes>
         <Route
           path="/spaces/new"
-          render={(props) => (
+          children={(props) => (
             <NewSpace {...props} onFormSubmit={handleCreateFormSubmit} />
           )}
         />
         <Route
           path={`/spaces/:spaceId`}
-          render={(props) => (
+          children={(props) => (
             <SpaceWrapper
               {...props}
               onDeleteClick={handleDeleteClick}
@@ -88,9 +87,9 @@ export default function Spaces() {
         />
         <Route
           path={"/spaces/"}
-          render={(props) => <SpacesList {...props} spaces={spaces} />}
+          children={(props) => <SpacesList {...props} spaces={spaces} />}
         />
-      </Switch>
+      </Routes>
     </div>
   );
 }

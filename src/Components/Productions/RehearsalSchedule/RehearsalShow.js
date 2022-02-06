@@ -1,16 +1,15 @@
 import PropTypes from "prop-types";
-import Moment from "react-moment";
-import "moment-timezone";
 import styled from "styled-components";
 
-import EditableRehearsalContent from "./Content/EditableRehearsalContent";
-import EditableRehearsalPeople from "./People/EditableRehearsalPeople";
-import { useProductionState } from "../../../lib/productionState";
-import { useProductionAuthState } from "../../Contexts";
-import { unavailableUsers } from "../../../utils/rehearsalUtils";
-import { buildUserName } from "../../../utils/actorUtils";
-import { TIME_FORMAT } from "../../../utils/hardcodedConstants";
-import { useMeState } from "../../../lib/meState";
+import EditableRehearsalContent from "./Content/EditableRehearsalContent.js";
+import EditableRehearsalPeople from "./People/EditableRehearsalPeople.js";
+import { useProductionState } from "../../../lib/productionState.js";
+import { useProductionAuthState } from "../../Contexts.js";
+import { unavailableUsers } from "../../../utils/rehearsalUtils.js";
+import { buildUserName } from "../../../utils/actorUtils.js";
+import { TIME_FORMAT } from "../../../utils/hardcodedConstants.js";
+import { useMeState } from "../../../lib/meState.js";
+import { DisplayTimeRange } from "../../../utils/dateTimeUtils.js";
 
 const EditIcons = styled.div``;
 
@@ -50,13 +49,11 @@ export default function RehearsalShow({ handleEditClick, rehearsal }) {
     <RehearsalContainer>
       <h4>{rehearsal.title}</h4>
       <Time>
-        <Moment format={TIME_FORMAT} tz={me.timezone || DEFAULT_TIMEZONE}>
-          {rehearsal.start_time}
-        </Moment>
-        -
-        <Moment format={TIME_FORMAT} tz={me.timezone || DEFAULT_TIMEZONE}>
-          {rehearsal.end_time}
-        </Moment>
+        <DisplayTimeRange
+          end_time={rehearsal.end_time}
+          start_time={rehearsal.start_time}
+          timezone={me.timezone}
+        />
       </Time>
       <Space>
         {rehearsal.space_id ? (

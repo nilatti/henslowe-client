@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-import { Button } from "../../Button";
+import { Button } from "../../Button.js";
 
-import RehearsalPatternCreator from "./RehearsalPatternCreator";
+import RehearsalPatternCreator from "./RehearsalPatternCreator.js";
 
 export default function RehearsalPatternCreatorToggle({ isOpen, production }) {
   const [formOpen, setFormOpen] = useState(isOpen);

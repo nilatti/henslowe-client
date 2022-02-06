@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import styled from "styled-components";
-import AuthorProfileForAdmin from "./AuthorProfileForAdmin";
-import AuthorProfileForVisitor from "./AuthorProfileForVisitor";
-import LoadingModal from "../LoadingModal";
-import { Button } from "../Button";
-import { useSuperAuthState } from "../Contexts";
-import { Profile } from "../Styled";
-import NewPlay from "../Plays/NewPlay";
-import PlaysSubComponent from "../Plays/PlaysSubComponent";
-import { createItem, getItem, updateServerItem } from "../../api/crud";
+import AuthorProfileForAdmin from "./AuthorProfileForAdmin.js";
+import AuthorProfileForVisitor from "./AuthorProfileForVisitor.js";
+import LoadingModal from "../LoadingModal.js";
+import { Button } from "../Button.js";
+import { useSuperAuthState } from "../Contexts.js";
+import { Profile } from "../Styled.js";
+import NewPlay from "../Plays/NewPlay.js";
+import PlaysSubComponent from "../Plays/PlaysSubComponent.js";
+import { createItem, getItem, updateServerItem } from "../../api/crud.js";
 const AuthorStyles = styled.div`
   display: flex;
   flex-flow: row wrap;

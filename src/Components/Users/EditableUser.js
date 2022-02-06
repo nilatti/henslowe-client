@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getItem } from "../../api/crud";
+import { getItem } from "../../api/crud.js";
 
-import UserForm from "./UserForm";
-import UserShow from "./UserShow";
-import Modal from "../Modal";
-import { Spinner } from "../Loaders";
+import UserForm from "./UserForm.js";
+import UserShow from "./UserShow.js";
+import Modal from "../Modal.js";
+import { Spinner } from "../Loaders.js";
 
 // import { getOverlap } from "../../utils/authorizationUtils";
-import { UserAuthProvider } from "../Contexts";
+import { UserAuthProvider } from "../Contexts.js";
 
 export default function EditableUser({ onDeleteClick, onFormSubmit }) {
   const [formOpen, setFormOpen] = useState(false);

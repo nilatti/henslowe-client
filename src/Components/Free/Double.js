@@ -1,12 +1,12 @@
 //this is the container for doubling for UNPAID customers. It talks to the play state provider
-import SelectPlay from "./SelectPlay";
-import { Button } from "../Button";
-import { Spinner } from "../Loaders";
-import Modal from "../Modal";
-import DoublingChartContainer from "./DoublingChartContainer";
-import FakeActors from "../Productions/FakeActors";
+import SelectPlay from "./SelectPlay.js";
+import { Button } from "../Button.js";
+import { Spinner } from "../Loaders.js";
+import Modal from "../Modal.js";
+import DoublingChartContainer from "./DoublingChartContainer.js";
+import FakeActors from "../Productions/FakeActors.js";
 
-import { usePlayState } from "../../lib/freePlayState";
+import { usePlayState } from "../../lib/freePlayState.js";
 
 export default function Double() {
   const { loading, fakeActors, fakeActorsArray, setFakeActors, play, setPlay } =

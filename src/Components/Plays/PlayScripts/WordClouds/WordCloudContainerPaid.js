@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import WordCloudContainer from "./WordCloudContainer";
-import LoadingModal from "../../../LoadingModal";
-import { usePlayState } from "../../../../lib/playState";
+import WordCloudContainer from "./WordCloudContainer.js";
+import LoadingModal from "../../../LoadingModal.js";
+import { usePlayState } from "../../../../lib/playState.js";
 
 export default function WordCloudContainerPaid() {
   const { loadFullPlay, loading, play } = usePlayState();

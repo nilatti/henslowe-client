@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { useMeState } from "../../lib/meState";
-import { Button } from "../Button";
+import { useMeState } from "../../lib/meState.js";
+import { Button } from "../Button.js";
 
-import { buildUserName } from "../../utils/actorUtils";
+import { buildUserName } from "../../utils/actorUtils.js";
 
 export default function UsersList({ users }) {
   const { me } = useMeState();

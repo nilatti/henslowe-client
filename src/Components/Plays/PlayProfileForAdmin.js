@@ -1,17 +1,17 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
-import { useForm } from "../../hooks/environmentUtils";
-import { Form, FormGroupInline } from "../Form";
-import { Button } from "../Button";
+import { useForm } from "../../hooks/environmentUtils.js";
+import { Form, FormGroupInline } from "../Form.js";
+import { Button } from "../Button.js";
 import {
   FormButtonGroup,
   TextInputAsForm,
   TextAreaInputWithToggle,
-} from "../Inputs";
-import ToolTip from "../ToolTip";
-import LoadingModal from "../LoadingModal";
-import { getItems } from "../../api/crud";
+} from "../Inputs.js";
+import ToolTip from "../ToolTip.js";
+import LoadingModal from "../LoadingModal.js";
+import { getItems } from "../../api/crud.js";
 
 export default function PlayProfileForAdmin({
   play,

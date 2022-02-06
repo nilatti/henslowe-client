@@ -1,4 +1,4 @@
-import API from "./api";
+import API from "./api.js";
 
 async function createCheckoutSession({ price, subscription_id }) {
   return API.post("charges/create_checkout_session", {

@@ -1,8 +1,8 @@
-import styled from "styled-components";
 import { useEffect, useState } from "react";
-import OnStageShow from "./OnStageShow";
-import NewOnStageForm from "./NewOnStageForm";
-import { Button } from "../../Button";
+import styled from "styled-components";
+import OnStageShow from "./OnStageShow.js";
+import NewOnStageForm from "./NewOnStageForm.js";
+import { Button } from "../../Button.js";
 
 const OnStageListStyles = styled.ul`
   li:nth-child(even) {

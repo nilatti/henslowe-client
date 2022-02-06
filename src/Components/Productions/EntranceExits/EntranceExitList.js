@@ -5,8 +5,8 @@ import { Button } from "react-bootstrap";
 
 import _ from "lodash";
 
-import EntranceExitShow from "./EntranceExitShow";
-import NewEntranceExitForm from "./NewEntranceExitForm";
+import EntranceExitShow from "./EntranceExitShow.js";
+import NewEntranceExitForm from "./NewEntranceExitForm.js";
 
 class EntranceExitsList extends Component {
   state = {

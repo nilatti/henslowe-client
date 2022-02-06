@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { Link } from "react-router-dom";
 
-import { UserLink } from "./actorUtils";
+import { UserLink } from "./actorUtils.js";
 
 export function groupCastingByActor(availableActors, castings) {
   let grouped = _.groupBy(castings, "user_id");

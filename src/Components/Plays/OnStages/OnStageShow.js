@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { TextAreaInputWithToggle } from "../../Inputs";
-import { usePlayState } from "../../../lib/playState";
-import { useForm } from "../../../hooks/environmentUtils";
+import { TextAreaInputWithToggle } from "../../Inputs.js";
+import { usePlayState } from "../../../lib/playState.js";
+import { useForm } from "../../../hooks/environmentUtils.js";
 
 const OnStageShowStyles = styled.div`
   display: flex;

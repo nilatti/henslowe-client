@@ -6,7 +6,7 @@ import { Button, Col, Form } from "react-bootstrap";
 
 import { Typeahead } from "react-bootstrap-typeahead";
 
-import CharactersSelect from "../../../../Characters/CharactersSelect";
+import CharactersSelect from "../../../../Characters/CharactersSelect.js";
 
 class NewEntranceExitForm extends Component {
   constructor(props) {

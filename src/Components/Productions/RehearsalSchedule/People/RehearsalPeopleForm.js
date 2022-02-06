@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import PeopleCheckboxes from "./PeopleCheckboxes";
-import { Button } from "../../../Button";
-import { useProductionState } from "../../../../lib/productionState";
+import PeopleCheckboxes from "./PeopleCheckboxes.js";
+import { Button } from "../../../Button.js";
+import { useProductionState } from "../../../../lib/productionState.js";
 
 const PeopleForm = styled.div`
   align-items: center;

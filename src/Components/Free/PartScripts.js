@@ -1,11 +1,11 @@
 //this is the container for part scripts for UNPAID customers. It talks to the play state provider
-import SelectPlay from "./SelectPlay";
+import SelectPlay from "./SelectPlay.js";
 
-import { Spinner } from "../Loaders";
-import Modal from "../Modal";
-import { Button } from "../Button";
-import PartScriptContainer from "../Plays/PlayScripts/PartScripts/PartScriptContainer";
-import { usePlayState } from "../../lib/freePlayState";
+import { Spinner } from "../Loaders.js";
+import Modal from "../Modal.js";
+import { Button } from "../Button.js";
+import PartScriptContainer from "../Plays/PlayScripts/PartScripts/PartScriptContainer.js";
+import { usePlayState } from "../../lib/freePlayState.js";
 
 export default function PartScripts() {
   const { fakeActorsArray, loading, play, setPlay } = usePlayState();

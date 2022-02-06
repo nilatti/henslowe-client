@@ -1,16 +1,16 @@
-import { useHistory } from "react-router-dom";
-import { Form, FormGroupInline } from "../Form";
-import { useForm } from "../../hooks/environmentUtils";
-import { FormButtonGroup } from "../Inputs";
+import { useNavigate } from "react-router-dom";
+import { Form, FormGroupInline } from "../Form.js";
+import { useForm } from "../../hooks/environmentUtils.js";
+import { FormButtonGroup } from "../Inputs.js";
 export default function NewSpecialization({ onFormSubmit }) {
   const { inputs, handleChange } = useForm({
     description: "",
     title: "",
   });
-  const history = useHistory();
+  const navgivate = useNavigate();
 
   function onFormClose() {
-    history.push("/specializations");
+    navigate("/specializations");
   }
   function handleSubmit(event) {
     event.preventDefault();

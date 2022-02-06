@@ -2,9 +2,9 @@ import _ from "lodash";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import LoadingModal from "../LoadingModal";
+import LoadingModal from "../LoadingModal.js";
 
-import { getProductionNames } from "../../api/productions";
+import { getProductionNames } from "../../api/productions.js";
 
 export default function ProductionsList() {
   const [loading, setLoading] = useState(true);

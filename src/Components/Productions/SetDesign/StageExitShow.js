@@ -1,5 +1,5 @@
 import { useState } from "react";
-import StageExitForm from "./StageExitForm";
+import StageExitForm from "./StageExitForm.js";
 
 export default function StageExitShow({ onDelete, onFormSubmit, stageExit }) {
   const [formOpen, setFormOpen] = useState(false);

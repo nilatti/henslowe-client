@@ -1,4 +1,4 @@
-import API from "./api";
+import API from "./api.js";
 
 async function createAuthor(author) {
   return API.post("authors", {

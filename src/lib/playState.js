@@ -1,9 +1,14 @@
 import _ from "lodash";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { createItem, deleteItem, getItem, updateServerItem } from "../api/crud";
-import { getPlayScript, getPlaySkeleton } from "../api/plays";
-import { determineTypeOfLine } from "../utils/playScriptUtils";
+import {
+  createItem,
+  deleteItem,
+  getItem,
+  updateServerItem,
+} from "../api/crud.js";
+import { getPlayScript, getPlaySkeleton } from "../api/plays.js";
+import { determineTypeOfLine } from "../utils/playScriptUtils.js";
 const PlayStateContext = createContext();
 const PlayStateProvider = PlayStateContext.Provider;
 function PlayProvider({ children }) {

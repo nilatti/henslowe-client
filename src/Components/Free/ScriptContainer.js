@@ -1,7 +1,7 @@
 import _ from "lodash";
-import LineShowEditable from "./LineShowEditable";
+import LineShowEditable from "./LineShowEditable.js";
 
-import { sortLines } from "../../utils/playScriptUtils";
+import { sortLines } from "../../utils/playScriptUtils.js";
 
 export default function ScriptContainer({ handleLineSubmit, showCut, text }) {
   function orderText() {

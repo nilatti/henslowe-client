@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
-import { Button } from "../../../Button";
-import Confirm from "../../../Confirm";
-import { FancyCheckBox, FancyCheckBoxLabel, FancyRadio } from "../../../Styled";
-import { buildUserName } from "../../../../utils/actorUtils";
+import { Button } from "../../../Button.js";
+import Confirm from "../../../Confirm.js";
+import {
+  FancyCheckBox,
+  FancyCheckBoxLabel,
+  FancyRadio,
+} from "../../../Styled.js";
+import { buildUserName } from "../../../../utils/actorUtils.js";
 
 export default function ExtraUsers({
   extraUsers,

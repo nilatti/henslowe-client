@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { Button } from "../../Button";
+import { Button } from "../../Button.js";
 
 import RehearsalForm from "./RehearsalForm.js";
-import { useProductionState } from "../../../lib/productionState";
+import { useProductionState } from "../../../lib/productionState.js";
 
 export default function RehearsalFormToggle() {
   const [formOpen, setFormOpen] = useState(false);

@@ -1,4 +1,4 @@
-import API from "./api";
+import API from "./api.js";
 
 async function createScene(actId, scene) {
   return API.post(`scenes`, {

@@ -1,20 +1,20 @@
-import { Link, Switch, Route } from "react-router-dom";
-import { InfoBanner } from "./Styled";
-import Casting from "./Free/Casting";
-import Subscriptions from "./Orders/Subscriptions";
-import CutPlays from "./Free/CutPlays";
-import Double from "./Free/Double";
-import FrequentlyAskedQuestions from "./Info/FrequentlyAskedQuestions";
-import FolgerSituation from "./Orders/FolgerSituation";
-import GettingStarted from "./Info/GettingStarted";
-import Help from "./Info/Help";
-import OrderSuccess from "./Orders/OrderSuccess";
-import PartScripts from "./Free/PartScripts";
-import PricingIndividual from "./Orders/PricingIndividual";
-import PricingInstitutional from "./Orders/PricingInstitutional";
-import Welcome from "./Free/Welcome";
-import WordCloud from "./Free/WordCloud";
-import { PlayProvider } from "../lib/freePlayState";
+import { Link, Routes, Route } from "react-router-dom";
+import { InfoBanner } from "./Styled.js";
+import Casting from "./Free/Casting.js";
+import Subscriptions from "./Orders/Subscriptions.js";
+import CutPlays from "./Free/CutPlays.js";
+import Double from "./Free/Double.js";
+import FrequentlyAskedQuestions from "./Info/FrequentlyAskedQuestions.js";
+import FolgerSituation from "./Orders/FolgerSituation.js";
+import GettingStarted from "./Info/GettingStarted.js";
+import Help from "./Info/Help.js";
+import OrderSuccess from "./Orders/OrderSuccess.js";
+import PartScripts from "./Free/PartScripts.js";
+import PricingIndividual from "./Orders/PricingIndividual.js";
+import PricingInstitutional from "./Orders/PricingInstitutional.js";
+import Welcome from "./Free/Welcome.js";
+import WordCloud from "./Free/WordCloud.js";
+import { PlayProvider } from "../lib/freePlayState.js";
 
 export default function PublicMain() {
   return (
@@ -27,22 +27,25 @@ export default function PublicMain() {
           Learn more about signing up for an account.
         </Link>
       </InfoBanner>
-      <Switch>
-        <Route exact path="/" component={Welcome} />
-        <Route exact path="/casting" component={Casting} />
-        <Route path="/faq" component={FrequentlyAskedQuestions} />
-        <Route path="/getting-started" component={GettingStarted} />
-        <Route path="/help" component={Help} />
-        <Route exact path="/cut" component={CutPlays} />
-        <Route exact path="/doubling" component={Double} />
-        <Route exact path="/folger" component={FolgerSituation} />
-        <Route exact path="/part-scripts" component={PartScripts} />
-        <Route path="/pricing-individual" component={PricingIndividual} />
-        <Route path="/pricing-institutional" component={PricingInstitutional} />
-        <Route path="/subscriptions" component={Subscriptions} />
-        <Route path="/success" component={OrderSuccess} />
-        <Route exact path="/wordcloud" component={WordCloud} />
-      </Switch>
+      <Routes>
+        <Route path="/" element={<Welcome />} />
+        <Route path="/casting" element={<Casting />} />
+        <Route path="/faq" element={<FrequentlyAskedQuestions />} />
+        <Route path="/getting-started" element={<GettingStarted />} />
+        <Route path="/help" element={<Help />} />
+        <Route path="/cut" element={<CutPlays />} />
+        <Route path="/doubling" element={<Double />} />
+        <Route path="/folger" element={<FolgerSituation />} />
+        <Route path="/part-scripts" element={<PartScripts />} />
+        <Route path="/pricing-individual" element={<PricingIndividual />} />
+        <Route
+          path="/pricing-institutional"
+          element={<PricingInstitutional />}
+        />
+        <Route path="/subscriptions" element={<Subscriptions />} />
+        <Route path="/success" element={<OrderSuccess />} />
+        <Route path="/wordcloud" element={<WordCloud />} />
+      </Routes>
     </PlayProvider>
   );
 }

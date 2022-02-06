@@ -1,8 +1,12 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { Button } from "../../../Button";
-import { buildUserName } from "../../../../utils/actorUtils";
-import { FancyCheckBox, FancyCheckBoxLabel, FancyRadio } from "../../../Styled";
+import { Button } from "../../../Button.js";
+import { buildUserName } from "../../../../utils/actorUtils.js";
+import {
+  FancyCheckBox,
+  FancyCheckBoxLabel,
+  FancyRadio,
+} from "../../../Styled.js";
 import { Link } from "react-router-dom";
 
 const SelectGroup = styled.div`

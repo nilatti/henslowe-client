@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Tab, Tabs } from "react-bootstrap";
-import TheaterInfoTab from "../Theaters/TheaterInfoTab";
-import { useSpaceAuthState } from "../Contexts";
-import LoadingModal from "../LoadingModal";
-import { ConflictStateProvider } from "../../lib/conflictState";
-import ConflictsList from "../Conflicts/ConflictsList";
-import { Profile } from "../Styled";
-import SpaceProfileForAdmin from "./SpaceProfileForAdmin";
-import SpaceProfileForVisitor from "./SpaceProfileForVisitor";
-import SpaceAgreementFormForSpaces from "../SpaceAgreements/SpaceAgreementFormForSpaces";
-import { SPACE_CONFLICT_REASONS } from "../../utils/hardcodedConstants";
-import { getItem, updateServerItem } from "../../api/crud";
+import TheaterInfoTab from "../Theaters/TheaterInfoTab.js";
+import { useSpaceAuthState } from "../Contexts.js";
+import LoadingModal from "../LoadingModal.js";
+import { ConflictStateProvider } from "../../lib/conflictState.js";
+import ConflictsList from "../Conflicts/ConflictsList.js";
+import { Profile } from "../Styled.js";
+import SpaceProfileForAdmin from "./SpaceProfileForAdmin.js";
+import SpaceProfileForVisitor from "./SpaceProfileForVisitor.js";
+import SpaceAgreementFormForSpaces from "../SpaceAgreements/SpaceAgreementFormForSpaces.js";
+import { SPACE_CONFLICT_REASONS } from "../../utils/hardcodedConstants.js";
+import { getItem, updateServerItem } from "../../api/crud.js";
 
 export default function SpaceShow() {
   const { role } = useSpaceAuthState();

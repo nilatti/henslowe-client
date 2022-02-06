@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { Tab, Tabs } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import ActInfoTab from "./ActInfoTab";
-import NewTextItem from "./NewTextItem";
-import LoadingModal from "../LoadingModal";
-import { usePlayState } from "../../lib/playState";
+import ActInfoTab from "./ActInfoTab.js";
+import NewTextItem from "./NewTextItem.js";
+import LoadingModal from "../LoadingModal.js";
+import { usePlayState } from "../../lib/playState.js";
 export default function TextUnitBreakdown() {
   const { acts, loading, loadPlay, play } = usePlayState();
   const [actTabs, setActTabs] = useState([]);

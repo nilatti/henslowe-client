@@ -1,11 +1,11 @@
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getJobs } from "../../../../api/jobs";
-import LoadingModal from "../../../LoadingModal";
-import PartScriptContainer from "./PartScriptContainer";
-import { usePlayState } from "../../../../lib/playState";
-import { ACTOR_SPECIALIZATION_ID } from "../../../../utils/hardcodedConstants";
+import { getJobs } from "../../../../api/jobs.js";
+import LoadingModal from "../../../LoadingModal.js";
+import PartScriptContainer from "./PartScriptContainer.js";
+import { usePlayState } from "../../../../lib/playState.js";
+import { ACTOR_SPECIALIZATION_ID } from "../../../../utils/hardcodedConstants.js";
 
 export default function PartScriptsContainerPaid() {
   const { loadFullPlay, loading, play } = usePlayState();

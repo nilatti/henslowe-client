@@ -5,12 +5,12 @@ import {
   NumberRangeWithToggle,
   TextInputAsForm,
   TextAreaInputWithToggle,
-} from "../Inputs";
-import ToolTip from "../ToolTip";
+} from "../Inputs.js";
+import ToolTip from "../ToolTip.js";
 import info from "../Images/info_icon.png";
-import { useForm } from "../../hooks/environmentUtils";
-import { firstLetterUpcase } from "../../utils/stringUtils";
-import { usePlayState } from "../../lib/playState";
+import { useForm } from "../../hooks/environmentUtils.js";
+import { firstLetterUpcase } from "../../utils/stringUtils.js";
+import { usePlayState } from "../../lib/playState.js";
 
 const HeadingStyles = styled.div`
   display: flex;

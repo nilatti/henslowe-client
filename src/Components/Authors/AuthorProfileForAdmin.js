@@ -1,18 +1,18 @@
 import { useState } from "react";
-import { useForm } from "../../hooks/environmentUtils";
-import { Form, FormGroupInline } from "../Form";
+import { useForm } from "../../hooks/environmentUtils.js";
+import { Form, FormGroupInline } from "../Form.js";
 import {
   FormButtonGroup,
   StartEndDatePairWithToggle,
   TextInputWithToggle,
-} from "../Inputs";
-import ToolTip from "../ToolTip";
+} from "../Inputs.js";
+import ToolTip from "../ToolTip.js";
 import {
   DEFAULT_TIMEZONE,
   USER_GENDER_DESCRIPTORS,
-} from "../../utils/hardcodedConstants";
-import { firstLetterUpcase } from "../../utils/stringUtils";
-import { useMeState } from "../../lib/meState";
+} from "../../utils/hardcodedConstants.js";
+import { firstLetterUpcase } from "../../utils/stringUtils.js";
+import { useMeState } from "../../lib/meState.js";
 export default function AuthorProfileForAdmin({
   author,
   onDeleteClick,

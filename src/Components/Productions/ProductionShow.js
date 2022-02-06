@@ -1,26 +1,26 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { Tab, Tabs } from "react-bootstrap";
-import { BrowserRouter as Router, Link, useRouteMatch } from "react-router-dom";
-import { Button } from "../Button";
-import { Spinner } from "../Loaders";
-import Modal from "../Modal";
-import PeopleList from "./People/PeopleList";
-import StageExitsList from "./SetDesign/StageExitsList";
-import { Form, FormGroupInline } from "../Form";
-import { useProductionAuthState } from "../Contexts";
-import AuditionersList from "../Jobs/AuditionersList";
-import ProductionJobsList from "../Jobs/ProductionJobsList";
-import CastList from "../Jobs/CastList";
-import { DefaultTable } from "../Styled";
-import { getProductionCopyComplete } from "../../api/plays";
-import { useForm, useInterval } from "../../hooks/environmentUtils";
-import { useProductionState } from "../../lib/productionState";
-import { formatDateForRails } from "../../utils/dateTimeUtils";
-import { StartEndDatePair } from "../Inputs";
-import { upcomingRehearsalsList } from "../../utils/rehearsalUtils";
-import { getProduction } from "../../api/productions";
-import { useMeState } from "../../lib/meState";
+import { Link } from "react-router-dom";
+import { Button } from "../Button.js";
+import { Spinner } from "../Loaders.js";
+import Modal from "../Modal.js";
+import PeopleList from "./People/PeopleList.js";
+import StageExitsList from "./SetDesign/StageExitsList.js";
+import { Form, FormGroupInline } from "../Form.js";
+import { useProductionAuthState } from "../Contexts.js";
+import AuditionersList from "../Jobs/AuditionersList.js";
+import ProductionJobsList from "../Jobs/ProductionJobsList.js";
+import CastList from "../Jobs/CastList.js";
+import { DefaultTable } from "../Styled.js";
+import { getProductionCopyComplete } from "../../api/plays.js";
+import { useForm, useInterval } from "../../hooks/environmentUtils.js";
+import { useProductionState } from "../../lib/productionState.js";
+import { formatDateForRails } from "../../utils/dateTimeUtils.js";
+import { StartEndDatePair } from "../Inputs.js";
+import { upcomingRehearsalsList } from "../../utils/rehearsalUtils.js";
+import { getProduction } from "../../api/productions.js";
+import { useMeState } from "../../lib/meState.js";
 
 const ProductionProfile = styled.div`
   text-align: center;
@@ -39,7 +39,6 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
   } = useProductionState();
 
   const { role } = useProductionAuthState();
-  const { url } = useRouteMatch();
   const { inputs, handleChange } = useForm({
     end_date: production.end_date || new Date(),
     start_date: production.start_date || new Date(),
@@ -275,7 +274,7 @@ export default function ProductionShow({ onDeleteClick, onFormSubmit }) {
 
       <div>
         <CastList />
-        <Link to={`${url}/doubling_charts/`}>
+        <Link to="doubling_charts">
           <Button variant="info">Show Doubling Charts</Button>
         </Link>
       </div>

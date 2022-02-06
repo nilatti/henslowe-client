@@ -1,18 +1,14 @@
 import { useState } from "react";
-import { Link, Route, Switch, useHistory } from "react-router-dom";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
 
-import DoublingCharts from "./DoublingCharts";
-import ProductionWrapper from "./ProductionWrapper";
-import ProductionShow from "./ProductionShow";
-import ProductionsList from "./ProductionsList";
-import ProductionRehearsalSchedule from "./RehearsalSchedule/ProductionRehearsalSchedule";
-import SetDesignDashboard from "./SetDesign/SetDesignDashboard";
+import ProductionWrapper from "./ProductionWrapper.js";
+import ProductionsList from "./ProductionsList.js";
 
-import NewProductionForm from "./NewProductionForm";
-import { createItem, deleteItem } from "../../api/crud";
-import { useQuery } from "../../hooks/environmentUtils";
+import NewProductionForm from "./NewProductionForm.js";
+import { createItem, deleteItem } from "../../api/crud.js";
+import { useQuery } from "../../hooks/environmentUtils.js";
 export default function Productions() {
-  const history = useHistory();
+  const navigate = useNavigate();
   let query = useQuery();
   const [errors, setErrors] = useState([]);
 
@@ -21,7 +17,7 @@ export default function Productions() {
     if (response.status >= 400) {
       console.log("Error creating Production");
     } else {
-      history.push(`/productions/${response.data.id}`);
+      navigate(`/productions/${response.data.id}`);
     }
   }
 
@@ -30,7 +26,7 @@ export default function Productions() {
     if (response.status >= 400) {
       console.log("Error deleting Production");
     } else {
-      history.push("/productions");
+      navigate("/productions");
     }
   }
   function handleCreateFormSubmit(production) {
@@ -49,47 +45,24 @@ export default function Productions() {
             <Link to="/productions">Productions</Link>
           </h2>
           <hr />
-          <Switch>
+          <Routes>
             <Route
-              path="/productions/new"
-              render={(props) => (
+              path="/new"
+              element={
                 <NewProductionForm
                   playId={parseInt(query.get("playId"))}
                   theaterId={parseInt(query.get("theaterId"))}
                   onFormSubmit={handleCreateFormSubmit}
                 />
-              )}
+              }
             />
-
+            <Route path="/:productionId/*" element={<ProductionWrapper />} />
             <Route
-              path={`/productions/:productionId/doubling_charts/`}
-              component={DoublingCharts}
-            />
-            <Route
-              path={`/productions/:productionId/rehearsal-schedule`}
-              render={(props) => (
-                <ProductionWrapper {...props}>
-                  <ProductionRehearsalSchedule />
-                </ProductionWrapper>
-              )}
-            />
-            <Route path={`/productions/:productionId/set`}>
-              <SetDesignDashboard />
-            </Route>
-            <Route
-              path={`/productions/:productionId`}
-              render={(props) => (
-                <ProductionWrapper {...props}>
-                  <ProductionShow />
-                </ProductionWrapper>
-              )}
-            />
-            <Route
-              path="/productions/"
-              component={ProductionsList}
+              path="/"
+              element={<ProductionsList />}
               onDeleteClick={handleDeleteClick}
             />
-          </Switch>
+          </Routes>
         </div>
       </div>
     </>

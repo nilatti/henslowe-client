@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import styled from "styled-components";
-import ConflictForm from "./ConflictForm";
-import ConflictShow from "./ConflictShow";
+import ConflictForm from "./ConflictForm.js";
+import ConflictShow from "./ConflictShow.js";
 
 const ConflictStyles = styled.li``;
 export default function EditableConflict({

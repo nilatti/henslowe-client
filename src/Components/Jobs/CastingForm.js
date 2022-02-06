@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
-import { Form, FormGroupInline } from "../Form";
-import { buildUserName } from "../../utils/actorUtils";
+import { Form, FormGroupInline } from "../Form.js";
+import { buildUserName } from "../../utils/actorUtils.js";
 
 export default function CastingForm({
   availableActors,

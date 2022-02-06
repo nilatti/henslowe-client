@@ -1,4 +1,4 @@
-import API from "./api";
+import API from "./api.js";
 
 async function createJob(job) {
   return API.post("jobs", {

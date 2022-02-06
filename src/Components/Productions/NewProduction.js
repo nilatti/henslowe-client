@@ -1,16 +1,16 @@
 import PropTypes from "prop-types";
 import { Col, Row } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
-import { useQuery } from "../../hooks/environmentUtils";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "../../hooks/environmentUtils.js";
 
-import NewProductionForm from "./NewProductionForm";
+import NewProductionForm from "./NewProductionForm.js";
 
 export default function NewProduction({ onFormSubmit }) {
   let query = useQuery();
-  let history = useHistory();
+  let navigate = useNavigate();
 
   function handleFormClose() {
-    history.goBack();
+    navigate(-1);
   }
 
   async function handleFormSubmit(production) {

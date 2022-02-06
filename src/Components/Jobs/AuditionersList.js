@@ -1,12 +1,12 @@
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import JobForm from "./JobForm";
-import { Button } from "../Button";
-import { getItem } from "../../api/crud";
-import { buildUserName } from "../../utils/actorUtils";
-import { AUDITIONER_SPECIALIZATION_ID } from "../../utils/hardcodedConstants";
-import { useProductionState } from "../../lib/productionState";
+import JobForm from "./JobForm.js";
+import { Button } from "../Button.js";
+import { getItem } from "../../api/crud.js";
+import { buildUserName } from "../../utils/actorUtils.js";
+import { AUDITIONER_SPECIALIZATION_ID } from "../../utils/hardcodedConstants.js";
+import { useProductionState } from "../../lib/productionState.js";
 export default function AuditionersList({
   handleDeleteJob,
   onFormSubmit,

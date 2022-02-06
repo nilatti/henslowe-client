@@ -1,5 +1,5 @@
-import TextInfo from "./TextInfo";
-import OnStagesList from "./OnStages/OnStagesList";
+import TextInfo from "./TextInfo.js";
+import OnStagesList from "./OnStages/OnStagesList.js";
 
 export default function FrenchSceneInfoTab({ actId, frenchScene, prettyName }) {
   return (

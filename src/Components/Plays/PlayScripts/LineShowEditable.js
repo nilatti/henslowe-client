@@ -1,18 +1,18 @@
 import { useState } from "react";
 import uuid from "react-uuid";
 
-import { Button } from "../../Button";
-import CharacterSelect from "../Characters/CharacterSelect";
-import LineEditForm from "./LineEditForm";
+import { Button } from "../../Button.js";
+import CharacterSelect from "../Characters/CharacterSelect.js";
+import LineEditForm from "./LineEditForm.js";
 import {
   ButtonContainer,
   CharacterName,
   Line,
   LineNumber,
   LineShowStyles,
-} from "./ScriptStyles";
+} from "./ScriptStyles.js";
 
-var Diff = require("diff");
+import { Diff } from "diff";
 
 export default function LineShowEditable({
   handleLineSubmit,

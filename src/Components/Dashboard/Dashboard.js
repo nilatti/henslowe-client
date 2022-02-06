@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { Spinner } from "../Loaders";
-import Modal from "../Modal";
-import { DefaultTable } from "../Styled";
-import { ConflictStateProvider } from "../../lib/conflictState";
-import ConflictsList from "../Conflicts/ConflictsList";
-import { USER_CONFLICT_REASONS } from "../../utils/hardcodedConstants";
-import { getItem } from "../../api/crud";
-import { useMeState } from "../../lib/meState";
-import { buildUserName } from "../../utils/actorUtils";
-import { upcomingRehearsalsList } from "../../utils/rehearsalUtils";
+import { Spinner } from "../Loaders.js";
+import Modal from "../Modal.js";
+import { DefaultTable } from "../Styled.js";
+import { ConflictStateProvider } from "../../lib/conflictState.js";
+import ConflictsList from "../Conflicts/ConflictsList.js";
+import { USER_CONFLICT_REASONS } from "../../utils/hardcodedConstants.js";
+import { getItem } from "../../api/crud.js";
+import { useMeState } from "../../lib/meState.js";
+import { buildUserName } from "../../utils/actorUtils.js";
+import { upcomingRehearsalsList } from "../../utils/rehearsalUtils.js";
 
 const DashboardStyles = styled.div`
   h3,
@@ -27,10 +27,11 @@ export default function Dashboard() {
   const [rehearsals, setRehearsals] = useState([]);
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   useEffect(async () => {
     setLoading(true);
     if (!me) {
-      history.push("");
+      navigate("/");
     }
     let response = await getItem(me.id, "user");
     if (response.status >= 400) {

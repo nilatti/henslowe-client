@@ -8,12 +8,12 @@ import {
   SPACE_ADMIN,
   SPACE_MEMBER,
   SUPERUSERS,
-} from "./hardcodedConstants";
+} from "./hardcodedConstants.js";
 
-import { intersection } from "../utils/arrayUtils";
-import { getItem } from "../api/crud";
-import { getProductionSkeleton } from "../api/productions";
-import { getJobs } from "../api/jobs";
+import { intersection } from "../utils/arrayUtils.js";
+import { getItem } from "../api/crud.js";
+import { getProductionSkeleton } from "../api/productions.js";
+import { getJobs } from "../api/jobs.js";
 
 export function getOverlap(loggedInUser, targetUser) {
   if (!loggedInUser | !targetUser) return;

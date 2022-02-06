@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { InfoTabStyles } from "../Styled";
+import { InfoTabStyles } from "../Styled.js";
 
 export default function SpaceInfoTab({ space }) {
   return (

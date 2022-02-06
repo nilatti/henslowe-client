@@ -1,8 +1,8 @@
 import _ from "lodash";
 
-import NonEditLineShow from "../NonEditLineShow";
-import { Button } from "../../../Button";
-import { sortLines } from "../../../../utils/playScriptUtils";
+import NonEditLineShow from "../NonEditLineShow.js";
+import { Button } from "../../../Button.js";
+import { sortLines } from "../../../../utils/playScriptUtils.js";
 
 export default function PartScriptTextContainer({
   characterIds,

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import PaypalButton from "./PaypalButton";
+import PaypalButton from "./PaypalButton.js";
 const FooterStyle = styled.div`
   background-color: #ffcccb;
   padding: 25px;

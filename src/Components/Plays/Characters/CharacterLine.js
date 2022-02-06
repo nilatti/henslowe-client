@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import uuid from "react-uuid";
-var Diff = require("diff");
-import { LineShowStylesNonEdit } from "../PlayScripts/ScriptStyles";
+import { Diff } from "diff";
+import { LineShowStylesNonEdit } from "../PlayScripts/ScriptStyles.js";
 
 export default function CharacterLine({ line, showCut }) {
   const [formattedLine, setFormattedLine] = useState(line);

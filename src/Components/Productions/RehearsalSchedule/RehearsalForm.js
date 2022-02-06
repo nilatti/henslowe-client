@@ -1,12 +1,12 @@
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { useForm } from "../../../hooks/environmentUtils";
-import { Button } from "../../Button";
-import { Form, FormGroup } from "../../Form";
-import { useProductionState } from "../../../lib/productionState";
-import { StartEndDateTimePair } from "../../Inputs";
-import { formatDateTimeForRails } from "../../../utils/dateTimeUtils";
-import { useMeState } from "../../../lib/meState";
+import { useForm } from "../../../hooks/environmentUtils.js";
+import { Button } from "../../Button.js";
+import { Form, FormGroup } from "../../Form.js";
+import { useProductionState } from "../../../lib/productionState.js";
+import { StartEndDateTimePair } from "../../Inputs.js";
+import { formatDateTimeForRails } from "../../../utils/dateTimeUtils.js";
+import { useMeState } from "../../../lib/meState.js";
 
 const RehearsalFormStyles = styled.div`
   display: flex;

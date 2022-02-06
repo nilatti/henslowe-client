@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react";
-import { Button } from "../Button";
-import { Form, FormGroup } from "../Form";
 import { Typeahead } from "react-bootstrap-typeahead";
-import { Spinner } from "../Loaders";
-import Modal from "../Modal";
-import { createItem, getItems } from "../../api/crud";
+import { Button } from "../Button.js";
+import { Form, FormGroup } from "../Form.js";
+import { Spinner } from "../Loaders.js";
+import Modal from "../Modal.js";
+import { createItem, getItems } from "../../api/crud.js";
 
-import { getProductionsForTheater } from "../../api/productions";
+import { getProductionsForTheater } from "../../api/productions.js";
 
-import { getTheaterNames } from "../../api/theaters";
+import { getTheaterNames } from "../../api/theaters.js";
 
-import { useForm } from "../../hooks/environmentUtils";
-import { useMeState } from "../../lib/meState";
+import { useForm } from "../../hooks/environmentUtils.js";
+import { useMeState } from "../../lib/meState.js";
 
-import { buildUserName } from "../../utils/actorUtils";
-import { StartEndDatePair } from "../Inputs";
+import { buildUserName } from "../../utils/actorUtils.js";
+import { StartEndDatePair } from "../Inputs.js";
 
-import NewUserModal from "../Users/NewUserModal";
+import NewUserModal from "../Users/NewUserModal.js";
 export default function JobForm({
   includeProduction = true,
   job,

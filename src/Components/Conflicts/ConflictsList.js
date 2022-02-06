@@ -1,20 +1,20 @@
 import _ from "lodash";
 import PropTypes from "prop-types";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { buildConflictPattern } from "../../api/conflicts.js";
 
 import {
   createItemWithParent,
   deleteItem,
   updateServerItem,
-} from "../../api/crud";
+} from "../../api/crud.js";
 
-import ConflictFormToggle from "./ConflictFormToggle";
-import ConflictPatternCreatorToggle from "./ConflictPatternCreatorToggle";
-import EditableConflict from "./EditableConflict";
-import ConflictPatternShow from "./ConflictPatternShow";
-import { overlap } from "../../utils/arrayUtils";
-import { useConflicts } from "../../lib/conflictState";
+import ConflictFormToggle from "./ConflictFormToggle.js";
+import ConflictPatternCreatorToggle from "./ConflictPatternCreatorToggle.js";
+import EditableConflict from "./EditableConflict.js";
+import ConflictPatternShow from "./ConflictPatternShow.js";
+import { overlap } from "../../utils/arrayUtils.js";
+import { useConflicts } from "../../lib/conflictState.js";
 
 export default function ConflictsList({ current = false }) {
   const {
@@ -51,7 +51,7 @@ export default function ConflictsList({ current = false }) {
   } else if (roles && roles.includes("superadmin")) {
     localRole = "admin";
   }
-  const history = useHistory();
+  const navigate = useNavigate();
 
   async function createConflict(conflict, parentId, parentType) {
     const response = await createItemWithParent(
@@ -143,7 +143,6 @@ export default function ConflictsList({ current = false }) {
 
   function handleConflictCreate(conflict) {
     createConflict(conflict, parentId, parentType);
-    // history.push(`/${parentType}s/${parentId}`);
   }
 
   function handleConflictDelete(conflictId) {

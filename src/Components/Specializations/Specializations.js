@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
-import { Link, Route, Switch, useHistory } from "react-router-dom";
-import { createItem, deleteItem, updateServerItem } from "../../api/crud";
-
-import { getItems } from "../../api/crud";
-import SpecializationsList from "./SpecializationsList";
-import SpecializationWrapper from "./SpecializationWrapper";
-import NewSpecialization from "./NewSpecialization";
-import ErrorMessages from "../ErrorMessages";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import {
+  createItem,
+  deleteItem,
+  getItems,
+  updateServerItem,
+} from "../../api/crud.js";
+import SpecializationsList from "./SpecializationsList.js";
+import SpecializationWrapper from "./SpecializationWrapper.js";
+import NewSpecialization from "./NewSpecialization.js";
+import ErrorMessages from "../ErrorMessages.js";
 
 export default function Specializations() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [specializations, setSpecializations] = useState([]);
   const [errors, setErrors] = useState([]);
 
@@ -32,7 +35,7 @@ export default function Specializations() {
         response.data,
       ];
       setSpecializations(newSpecializations);
-      history.push(`/specializations/${response.data.id}`);
+      navigate(`/specializations/${response.data.id}`);
     }
   }
 
@@ -45,8 +48,7 @@ export default function Specializations() {
         (specialization) => specialization.id != specializationId
       );
       setSpecializations(newSpecializations);
-      history.push("/specializations");
-      history.go();
+      navigate("/specializations");
     }
   }
 
@@ -66,8 +68,7 @@ export default function Specializations() {
         }
       });
       setSpecializations(newSpecializations);
-      history.push(`/specializations/${response.data.id}`);
-      history.go();
+      navigate(`/specializations/${response.data.id}`);
     }
   }
 
@@ -78,10 +79,10 @@ export default function Specializations() {
       </h2>
       <ErrorMessages errors={errors} />
       <hr />
-      <Switch>
+      <Routes>
         <Route
           path="/specializations/new"
-          render={(props) => (
+          children={(props) => (
             <NewSpecialization
               {...props}
               onFormSubmit={handleCreateFormSubmit}
@@ -90,7 +91,7 @@ export default function Specializations() {
         />
         <Route
           path={`/specializations/:specializationId`}
-          render={(props) => (
+          children={(props) => (
             <SpecializationWrapper
               {...props}
               onDeleteClick={handleDeleteClick}
@@ -100,11 +101,11 @@ export default function Specializations() {
         />
         <Route
           path={"/specializations/"}
-          render={(props) => (
+          children={(props) => (
             <SpecializationsList {...props} specializations={specializations} />
           )}
         />
-      </Switch>
+      </Routes>
     </div>
   );
 }

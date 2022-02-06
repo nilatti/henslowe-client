@@ -1,4 +1,4 @@
-import API from "./api";
+import API from "./api.js";
 
 async function createStageExit(productionId, stage_exit) {
   return API.post(`productions/${productionId}/stage_exits`, {

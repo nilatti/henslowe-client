@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Tab, Tabs } from "react-bootstrap";
-import NewTextItem from "./NewTextItem";
-import SceneInfoTab from "./SceneInfoTab";
-import TextInfo from "./TextInfo";
+import NewTextItem from "./NewTextItem.js";
+import SceneInfoTab from "./SceneInfoTab.js";
+import TextInfo from "./TextInfo.js";
 
-import { filterEmptyContent } from "../../utils/playScriptUtils";
+import { filterEmptyContent } from "../../utils/playScriptUtils.js";
 
 export default function ActInfoTab({ act }) {
   const [key, setKey] = useState();

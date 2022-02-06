@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 // import uuid from "react-uuid";
 import styled from "styled-components";
-import { useProductionAuthState } from "../../../Contexts";
-import { buildUserName } from "../../../../utils/actorUtils";
-import { EditIcons } from "../../../Styled";
+import { useProductionAuthState } from "../../../Contexts.js";
+import { buildUserName } from "../../../../utils/actorUtils.js";
+import { EditIcons } from "../../../Styled.js";
 
 const PeopleShow = styled.div`
   display: flex;

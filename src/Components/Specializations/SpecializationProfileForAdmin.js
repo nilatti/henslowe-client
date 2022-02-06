@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { useHistory } from "react-router";
-import { useForm } from "../../hooks/environmentUtils";
-import { TextAreaInputWithToggle, TextInputAsForm } from "../Inputs";
-import ToolTip from "../ToolTip";
+import { useNavigate } from "react-router";
+import { useForm } from "../../hooks/environmentUtils.js";
+import { TextAreaInputWithToggle, TextInputAsForm } from "../Inputs.js";
+import ToolTip from "../ToolTip.js";
 export default function SpecializationProfileForAdmin({
   onDeleteClick,
   specialization,
   updateSpecialization,
 }) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [descriptionForm, setDescriptionForm] = useState(false);
   const [nameForm, setNameForm] = useState(false);
   const { inputs, handleChange } = useForm({

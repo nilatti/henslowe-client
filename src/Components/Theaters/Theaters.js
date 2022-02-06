@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link, Route, Switch, useHistory } from "react-router-dom";
-import { createItem, deleteItem, updateServerItem } from "../../api/crud";
-import { getTheaterNames } from "../../api/theaters";
-import TheatersList from "./TheatersList";
-import TheaterWrapper from "./TheaterWrapper";
-import NewTheater from "./NewTheater";
-import ErrorMessages from "../ErrorMessages";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import { createItem, deleteItem, updateServerItem } from "../../api/crud.js";
+import { getTheaterNames } from "../../api/theaters.js";
+import TheatersList from "./TheatersList.js";
+import TheaterWrapper from "./TheaterWrapper.js";
+import NewTheater from "./NewTheater.js";
+import ErrorMessages from "../ErrorMessages.js";
 
 export default function Theaters() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [theaters, setTheaters] = useState([]);
   const [errors, setErrors] = useState([]);
 
@@ -28,7 +28,7 @@ export default function Theaters() {
     } else {
       let newTheaters = (theaters) => [...theaters, newTheater];
       setTheaters(newTheaters);
-      history.push(`/theaters/${response.data.id}`);
+      navigate(`/theaters/${response.data.id}`);
     }
   }
 
@@ -39,7 +39,7 @@ export default function Theaters() {
     } else {
       let newTheaters = theaters.filter((theater) => theater.id != theaterId);
       setTheaters(newTheaters);
-      history.push("/theaters");
+      navigate("/theaters");
     }
   }
 
@@ -56,8 +56,7 @@ export default function Theaters() {
         }
       });
       setTheaters(newTheaters);
-      history.push(`/theaters/${response.data.id}`);
-      history.go();
+      navigate(`/theaters/${response.data.id}`);
     }
   }
 
@@ -68,28 +67,22 @@ export default function Theaters() {
       </h2>
       <ErrorMessages errors={errors} />
       <hr />
-      <Switch>
+      <Routes>
         <Route
-          path="/theaters/new"
-          render={(props) => (
-            <NewTheater {...props} onFormSubmit={handleCreateFormSubmit} />
-          )}
+          path="/new"
+          element={<NewTheater onFormSubmit={handleCreateFormSubmit} />}
         />
         <Route
-          path={`/theaters/:theaterId`}
-          render={(props) => (
+          path={`/:theaterId`}
+          element={
             <TheaterWrapper
-              {...props}
               onDeleteClick={handleDeleteClick}
               onFormSubmit={handleEditFormSubmit}
             />
-          )}
+          }
         />
-        <Route
-          path={"/theaters/"}
-          render={(props) => <TheatersList {...props} theaters={theaters} />}
-        />
-      </Switch>
+        <Route path={"/"} element={<TheatersList theaters={theaters} />} />
+      </Routes>
     </div>
   );
 }

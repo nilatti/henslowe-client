@@ -2,16 +2,16 @@ import _ from "lodash";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import uuid from "react-uuid";
-import Modal from "../Modal";
-import { Spinner } from "../Loaders";
+import Modal from "../Modal.js";
+import { Spinner } from "../Loaders.js";
 import {
   filterEmptyContent,
   getFrenchScenesFromPlay,
   getOnStagesFromAct,
   getOnStagesFromScene,
   getScenesFromPlay,
-} from "../../utils/playScriptUtils";
-import { buildUserName } from "../../utils/actorUtils";
+} from "../../utils/playScriptUtils.js";
+import { buildUserName } from "../../utils/actorUtils.js";
 
 const TableStyle = styled.table`
   width: 100%;

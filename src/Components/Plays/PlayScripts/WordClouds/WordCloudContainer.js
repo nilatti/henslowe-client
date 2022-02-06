@@ -1,8 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
-import WordCloudPresenter from "./WordCloudPresenter";
-import WordCloudSelector from "./WordCloudSelector";
-import { Button } from "../../../Button";
+import WordCloudPresenter from "./WordCloudPresenter.js";
+import WordCloudSelector from "./WordCloudSelector.js";
+import { Button } from "../../../Button.js";
 
 const WordCloudContainerStyles = styled.div`
   display: flex;

@@ -1,9 +1,9 @@
-import { useHistory } from "react-router";
-import { Form, FormGroupInline } from "../Form";
-import { FormButtonGroup, StartEndDatePair, TextInput } from "../Inputs";
-import { useForm } from "../../hooks/environmentUtils";
-import { USER_GENDER_DESCRIPTORS } from "../../utils/hardcodedConstants";
-import { firstLetterUpcase } from "../../utils/stringUtils";
+import { useNavigate } from "react-router";
+import { Form, FormGroupInline } from "../Form.js";
+import { FormButtonGroup, StartEndDatePair, TextInput } from "../Inputs.js";
+import { useForm } from "../../hooks/environmentUtils.js";
+import { USER_GENDER_DESCRIPTORS } from "../../utils/hardcodedConstants.js";
+import { firstLetterUpcase } from "../../utils/stringUtils.js";
 
 export default function NewAuthor({ onFormSubmit }) {
   const { inputs, handleChange } = useForm({
@@ -16,10 +16,10 @@ export default function NewAuthor({ onFormSubmit }) {
     nationality: "",
   });
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   function onFormClose() {
-    history.push("/authors");
+    navigate("/authors");
   }
 
   function handleSubmit(event) {

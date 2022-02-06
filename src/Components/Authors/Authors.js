@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { Link, Route, Switch, useHistory } from "react-router-dom";
-import { createItem, deleteItem, updateServerItem } from "../../api/crud";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import { createItem, deleteItem, updateServerItem } from "../../api/crud.js";
 
-import AuthorsList from "./AuthorsList";
-import AuthorWrapper from "./AuthorWrapper";
-import NewAuthor from "./NewAuthor";
-import ErrorMessages from "../ErrorMessages";
+import AuthorsList from "./AuthorsList.js";
+import AuthorWrapper from "./AuthorWrapper.js";
+import NewAuthor from "./NewAuthor.js";
+import ErrorMessages from "../ErrorMessages.js";
 
 export default function Authors() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [authors, setAuthors] = useState([]);
   const [errors, setErrors] = useState([]);
 
@@ -19,7 +19,7 @@ export default function Authors() {
     } else {
       let newAuthors = (authors) => [...authors, newAuthor];
       setAuthors(newAuthors);
-      history.push(`/authors/${response.data.id}`);
+      navigate(`/authors/${response.data.id}`);
     }
   }
 
@@ -30,8 +30,7 @@ export default function Authors() {
     } else {
       let newAuthors = authors.filter((author) => author.id != authorId);
       setAuthors(newAuthors);
-      history.push("/authors");
-      history.go();
+      navigate("/authors");
     }
   }
 
@@ -48,8 +47,7 @@ export default function Authors() {
         }
       });
       setAuthors(newAuthors);
-      history.push(`/authors/${response.data.id}`);
-      history.go();
+      navigate(`/authors/${response.data.id}`);
     }
   }
 
@@ -60,28 +58,22 @@ export default function Authors() {
       </h2>
       <ErrorMessages errors={errors} />
       <hr />
-      <Switch>
+      <Routes>
         <Route
-          path="/authors/new"
-          render={(props) => (
-            <NewAuthor {...props} onFormSubmit={handleCreateFormSubmit} />
-          )}
+          path="/new"
+          element={<NewAuthor onFormSubmit={handleCreateFormSubmit} />}
         />
         <Route
-          path={`/authors/:authorId`}
-          render={(props) => (
+          path={`/:authorId`}
+          element={
             <AuthorWrapper
-              {...props}
               onDeleteClick={handleDeleteClick}
               onFormSubmit={handleEditFormSubmit}
             />
-          )}
+          }
         />
-        <Route
-          path={"/authors/"}
-          render={(props) => <AuthorsList {...props} />}
-        />
-      </Switch>
+        <Route path={"/"} element={<AuthorsList />} />
+      </Routes>
     </div>
   );
 }

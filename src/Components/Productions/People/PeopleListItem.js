@@ -1,7 +1,7 @@
 import _ from "lodash";
 
-import ActorTrack from "./ActorTrack";
-import { UserLink } from "../../../utils/actorUtils";
+import ActorTrack from "./ActorTrack.js";
+import { UserLink } from "../../../utils/actorUtils.js";
 export default function PeopleListItem({ person }) {
   // toggleShowActorTrack = () => {
   //   this.setState({

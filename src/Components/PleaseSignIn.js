@@ -1,5 +1,5 @@
 // import SignIn from "./SignIn";
-import { useMeState } from "../lib/meState";
+import { useMeState } from "../lib/meState.js";
 //apply to any elements that are completely blocked from users that are not signed in
 export default function ({ children }) {
   const { me } = useMeState();

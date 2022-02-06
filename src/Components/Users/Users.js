@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
-import { Link, Route, Switch, useHistory } from "react-router-dom";
-import { createItem, deleteItem, updateServerItem } from "../../api/crud";
-import { getItems } from "../../api/crud";
-import { useMeState } from "../../lib/meState";
-import { useMountedState } from "../../lib/mountedState";
-import UsersList from "./UsersList";
-import EditableUser from "./EditableUser";
-import NewUser from "./NewUser";
-import ErrorMessages from "../ErrorMessages";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import {
+  createItem,
+  deleteItem,
+  getItems,
+  updateServerItem,
+} from "../../api/crud.js";
+import { useMeState } from "../../lib/meState.js";
+import { useMountedState } from "../../lib/mountedState.js";
+import UsersList from "./UsersList.js";
+import EditableUser from "./EditableUser.js";
+import NewUser from "./NewUser.js";
+import ErrorMessages from "../ErrorMessages.js";
 
 export default function Users() {
-  const history = useHistory();
+  const navigation = useNavigate();
   const [users, setUsers] = useState([]);
   const [errors, setErrors] = useState([]);
   const isMounted = useMountedState();
@@ -28,7 +32,7 @@ export default function Users() {
   }, []);
 
   function closeForm() {
-    history.push("/");
+    navigate("/");
   }
 
   async function handleCreateFormSubmit(user) {
@@ -44,9 +48,9 @@ export default function Users() {
           localStorage.setItem("userId", userId);
           setMe(JSON.stringify(response.data));
           localStorage.setItem("user", JSON.stringify(response.data));
-          history.push(`/dashboard/`);
+          navigate(`/dashboard/`);
         } else {
-          history.push(`/users/`);
+          navigate(`/users/`);
         }
       }
     }
@@ -58,7 +62,7 @@ export default function Users() {
     } else {
       let newUsers = users.filter((user) => user.id != userId);
       setUsers(newUsers);
-      history.push("/users");
+      navigate("/users");
     }
   }
 
@@ -75,8 +79,7 @@ export default function Users() {
         }
       });
       setUsers(newUsers);
-      history.push(`/users/${response.data.id}`);
-      history.go();
+      navigate(`/users/${response.data.id}`);
     }
   }
 
@@ -87,10 +90,10 @@ export default function Users() {
       </h2>
       <ErrorMessages errors={errors} />
       <hr />
-      <Switch>
+      <Routes>
         <Route
           path="/users/new"
-          render={(props) => (
+          children={(props) => (
             <NewUser
               {...props}
               onFormSubmit={handleCreateFormSubmit}
@@ -100,7 +103,7 @@ export default function Users() {
         />
         <Route
           path={`/users/:userId`}
-          render={(props) => (
+          children={(props) => (
             <EditableUser
               {...props}
               onDeleteClick={handleDeleteClick}
@@ -110,9 +113,9 @@ export default function Users() {
         />
         <Route
           path={"/users/"}
-          render={(props) => <UsersList {...props} users={users} />}
+          children={(props) => <UsersList {...props} users={users} />}
         />
-      </Switch>
+      </Routes>
     </div>
   );
 }

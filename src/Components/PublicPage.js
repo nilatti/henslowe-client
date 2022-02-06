@@ -1,7 +1,7 @@
-import { PageContent } from "./Styled";
-import Footer from "./Footer";
-import PublicMain from "./PublicMain";
-import PublicNavigation from "./PublicNavigation";
+import { PageContent } from "./Styled.js";
+import Footer from "./Footer.js";
+import PublicMain from "./PublicMain.js";
+import PublicNavigation from "./PublicNavigation.js";
 
 const PublicPage = () => {
   return (

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import CastingForm from "./CastingForm";
-import CastingShow from "./CastingShow";
-import { buildUserName } from "../../utils/actorUtils";
+import CastingForm from "./CastingForm.js";
+import CastingShow from "./CastingShow.js";
+import { buildUserName } from "../../utils/actorUtils.js";
 export default function CastingContainer({
   availableActors,
   casting,

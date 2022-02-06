@@ -4,25 +4,25 @@ import {
   createItemWithParent,
   getItem,
   updateServerItem,
-} from "../../api/crud";
+} from "../../api/crud.js";
 import { Tab, Tabs } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import { Button } from "../Button";
-import LoadingModal from "../LoadingModal";
+import { Button } from "../Button.js";
+import LoadingModal from "../LoadingModal.js";
 
-import TheaterProfileForAdmin from "./TheaterProfileForAdmin";
-import TheaterProfileForVisitor from "./TheaterProfileForVisitor";
-import TheaterJobsList from "../Jobs/TheaterJobsList";
+import TheaterProfileForAdmin from "./TheaterProfileForAdmin.js";
+import TheaterProfileForVisitor from "./TheaterProfileForVisitor.js";
+import TheaterJobsList from "../Jobs/TheaterJobsList.js";
 
-import { deleteItem } from "../../api/crud";
-import ProductionInfoTab from "../Productions/ProductionInfoTab";
-import SpaceAgreementFormForTheaters from "../SpaceAgreements/SpaceAgreementFormForTheaters";
-import SpaceInfoTab from "../Spaces/SpaceInfoTab";
-import { useTheaterAuthState } from "../Contexts";
-import { useMeState } from "../../lib/meState";
-import { Profile } from "../Styled";
-export default function TheaterShow() {
+import { deleteItem } from "../../api/crud.js";
+import ProductionInfoTab from "../Productions/ProductionInfoTab.js";
+import SpaceAgreementFormForTheaters from "../SpaceAgreements/SpaceAgreementFormForTheaters.js";
+import SpaceInfoTab from "../Spaces/SpaceInfoTab.js";
+import { useTheaterAuthState } from "../Contexts.js";
+import { useMeState } from "../../lib/meState.js";
+import { Profile } from "../Styled.js";
+export default function TheaterShow({ onDeleteClick }) {
   const { me } = useMeState();
   const { theaterId } = useParams();
   const { role } = useTheaterAuthState();
@@ -129,6 +129,7 @@ export default function TheaterShow() {
         <TheaterProfileForAdmin
           theater={theater}
           updateTheater={updateTheater}
+          onDeleteClick={onDeleteClick}
         />
       ) : (
         <TheaterProfileForVisitor theater={theater} />

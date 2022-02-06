@@ -6,9 +6,8 @@ import {
   Line,
   LineNumber,
   LineShowStyles,
-} from "./ScriptStyles";
-
-var Diff = require("diff");
+} from "./ScriptStyles.js";
+import { Diff } from "diff";
 
 export default function LineShowRead({ index, line, showCharacter, showCut }) {
   function buildLineContentWithDiffs(diffArray) {

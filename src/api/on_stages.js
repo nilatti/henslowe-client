@@ -1,4 +1,4 @@
-import API from "./api";
+import API from "./api.js";
 async function createOnStage(on_stage) {
   return API.post("on_stages", {
     on_stage,

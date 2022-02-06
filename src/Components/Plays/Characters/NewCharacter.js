@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { AddNewTabStyle } from "../BreakdownStyles";
-import { Button } from "../../Button";
-import { Form, FormGroupInline } from "../../Form";
-import LoadingModal from "../../LoadingModal";
-import { usePlayState } from "../../../lib/playState";
-import { useForm } from "../../../hooks/environmentUtils";
+import { AddNewTabStyle } from "../BreakdownStyles.js";
+import { Button } from "../../Button.js";
+import { Form, FormGroupInline } from "../../Form.js";
+import LoadingModal from "../../LoadingModal.js";
+import { usePlayState } from "../../../lib/playState.js";
+import { useForm } from "../../../hooks/environmentUtils.js";
 import {
   CHARACTER_AGE_DESCRIPTORS,
   CHARACTER_GENDER_DESCRIPTORS,
-} from "../../../utils/hardcodedConstants";
-import { firstLetterUpcase } from "../../../utils/stringUtils";
+} from "../../../utils/hardcodedConstants.js";
+import { firstLetterUpcase } from "../../../utils/stringUtils.js";
 
 export default function NewCharacter({ setKey }) {
   const { addNewCharacter, play } = usePlayState();

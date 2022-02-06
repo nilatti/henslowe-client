@@ -1,26 +1,19 @@
 import parse from "html-react-parser";
 import Datetime from "react-datetime";
-import moment from "moment";
-import { Button } from "./Button";
+import { Button } from "./Button.js";
+import { useState } from "react";
 
-import { Form, FormGroupInline } from "./Form";
+import { Form, FormGroupInline } from "./Form.js";
 import {
   DATE_FORMAT,
-  DATE_TIME_FORMAT,
-  DATE_TIME_FORMAT_FOR_RAILS,
   DEFAULT_TIMEZONE,
   TIME_FORMAT,
   US_STATES_ARRAY,
-} from "../utils/hardcodedConstants";
-import { formatPhoneNumber } from "../utils/stringUtils";
+} from "../utils/hardcodedConstants.js";
+import { formatPhoneNumber } from "../utils/stringUtils.js";
 //Input = just the input
 //as form = input wrapped in a form
 //with toggle = form with a toggle switch
-import {
-  formatDateTimeForRails,
-  isAfterDate,
-  isAfterTime,
-} from "../utils/dateTimeUtils";
 
 let valid = function (current, startTime) {
   return current.isSame(startTime, "day") || current.isAfter(startTime);
@@ -302,17 +295,18 @@ export function StartEndDatePair({
   return (
     <>
       <label>{startLabel || "From"}</label>
-      <Datetime
-        dateFormat={DATE_FORMAT}
-        name={startName || "startDate"}
-        onChange={(date) =>
-          handleStartDateChange(date, startName, handleChange)
-        }
-        required
-        timeFormat={false}
-        value={startDate}
-      />
-      <label>{endLabel || "To"}</label>
+      {/* <Datetime /> */}
+      {/* <Datetime  TKTKTKTK
+      // dateFormat={DATE_FORMAT}
+      // name={startName || "startDate"}
+      // onChange={(date) =>
+      //   handleStartDateChange(date, startName, handleChange)
+      // }
+      // required
+      // timeFormat={false}
+      // value={startDate}
+      // />
+       <label>{endLabel || "To"}</label>
       <Datetime
         name={endName || "endDate"}
         format={DATE_FORMAT}
@@ -328,7 +322,7 @@ export function StartEndDatePair({
         required
         timeFormat={false}
         value={endDate || ""}
-      />
+      /> */}
     </>
   );
 }

@@ -1,4 +1,4 @@
-import API from "./api";
+import API from "./api.js";
 
 async function createEntranceExit(frenchSceneId, entrance_exit) {
   return API.post(`french_scenes/${frenchSceneId}/entrance_exits`, {

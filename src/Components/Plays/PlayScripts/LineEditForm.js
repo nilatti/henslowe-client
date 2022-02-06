@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form } from "../../Form";
+import { Form } from "../../Form.js";
 
 export default function LineEditForm({ onSubmit, line }) {
   const [newContent, setNewContent] = useState(line.new_content);

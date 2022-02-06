@@ -1,7 +1,7 @@
-import ComingSoon from "./ComingSoon";
 import { Link } from "react-router-dom";
-import ToolTip from "../ToolTip";
-import { useMeState } from "../../lib/meState";
+import ComingSoon from "./ComingSoon.js";
+import ToolTip from "../ToolTip.js";
+import { useMeState } from "../../lib/meState.js";
 export default function PricingIndividual() {
   const { me } = useMeState();
   return (

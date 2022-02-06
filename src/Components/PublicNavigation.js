@@ -1,6 +1,6 @@
 import { Nav, Navbar, Container } from "react-bootstrap";
-import LoginHooks from "./LoginHooks";
-import PaypalButton from "./PaypalButton";
+import LoginHooks from "./LoginHooks.js";
+import PaypalButton from "./PaypalButton.js";
 
 export default function PublicNavigation() {
   return (

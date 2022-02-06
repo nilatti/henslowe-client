@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { Form, FormGroupInline } from "../Form";
+import { useNavigate } from "react-router-dom";
+import { Form, FormGroupInline } from "../Form.js";
 import { Typeahead } from "react-bootstrap-typeahead";
-import { FormButtonGroup, StartEndDatePair } from "../Inputs";
+import { FormButtonGroup, StartEndDatePair } from "../Inputs.js";
 
-import { getTheaterNames } from "../../api/theaters";
+import { getTheaterNames } from "../../api/theaters.js";
 
-import { getPlayTitles } from "../../api/plays";
+import { getPlayTitles } from "../../api/plays.js";
 
-import { useForm } from "../../hooks/environmentUtils";
-import { useMeState } from "../../lib/meState";
-import { theatersWhereUserIsAdmin } from "../../utils/authorizationUtils";
+import { useForm } from "../../hooks/environmentUtils.js";
+import { useMeState } from "../../lib/meState.js";
+import { theatersWhereUserIsAdmin } from "../../utils/authorizationUtils.js";
 
 export default function NewProductionForm({ onFormSubmit, theaterId, playId }) {
-  let history = useHistory();
+  let navigate = useNavigate();
   const { me } = useMeState();
   const [plays, setPlays] = useState([]);
   const [selectedPlay, setSelectedPlay] = useState([]);
@@ -69,7 +69,7 @@ export default function NewProductionForm({ onFormSubmit, theaterId, playId }) {
   }
 
   function onFormClose() {
-    history.goBack();
+    navigate(-1);
   }
 
   function processSubmit() {

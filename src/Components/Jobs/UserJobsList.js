@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import _ from "lodash";
 
-import { buildUserName } from "../../utils/actorUtils";
-import { groupByTheater } from "../../utils/jobUtils";
+import { buildUserName } from "../../utils/actorUtils.js";
+import { groupByTheater } from "../../utils/jobUtils.js";
 
-import { getJobs } from "../../api/jobs";
+import { getJobs } from "../../api/jobs.js";
 export default function UserJobsList({ user }) {
   return <ul>{groupByTheater(user.jobs)}</ul>;
 }

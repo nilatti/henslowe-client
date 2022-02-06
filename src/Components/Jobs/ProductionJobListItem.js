@@ -1,4 +1,4 @@
-import { UserLink } from "../../utils/actorUtils";
+import { UserLink } from "../../utils/actorUtils.js";
 
 export default function ProductionJobListItem({ handleDeleteJob, job, role }) {
   return (

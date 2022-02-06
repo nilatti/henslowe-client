@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { createCheckoutSession } from "../../api/stripe";
+import { createCheckoutSession } from "../../api/stripe.js";
 const CardStyle = styled.div`
   align-items: center;
   background: var(--color-dark);
