@@ -285,6 +285,7 @@ export function StartEndDatePair({
   startDate,
   startLabel,
   startName,
+  timezone,
 }) {
   // const [tempStartDate, setTempStartDate] = useState(startDate);
   function handleStartDateChange(date, startName, handleChange) {

@@ -9,8 +9,8 @@ import { getTheaterNames } from "../../api/theaters";
 import { getPlayTitles } from "../../api/plays";
 
 import { useForm } from "../../hooks/environmentUtils";
-import { useMeState } from "../../lib/meState";
 import { theatersWhereUserIsAdmin } from "../../utils/authorizationUtils";
+import { useMeState } from "../../lib/meState";
 
 export default function NewProductionForm({ onFormSubmit, theaterId, playId }) {
   let history = useHistory();
@@ -130,6 +130,7 @@ export default function NewProductionForm({ onFormSubmit, theaterId, playId }) {
         endDate={inputs.end_date}
         handleChange={handleChange}
         startDate={inputs.start_date}
+        timezone={me.timezone}
       />
       <FormButtonGroup cancelFunction={onFormClose} />
     </Form>
