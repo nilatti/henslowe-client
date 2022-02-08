@@ -154,7 +154,8 @@ function ProductionProvider({ children }) {
       jobsActing.filter(
         (job) =>
           job.specialization_id == ACTOR_SPECIALIZATION_ID &&
-          job.character_id != null
+          job.character_id != null &&
+          !job.character.name.match(/Could Not Find Character/)
       )
     );
     let compactActing = _.compact(jobsActing.map((job) => job.user));
