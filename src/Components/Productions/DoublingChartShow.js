@@ -122,7 +122,7 @@ export default function DoublingChartShow({
         }
       });
       let uniqBlockCharacters = _.uniqBy(blockCharacters, function (onStage) {
-        return onStage.character.id;
+        return onStage.character?.id;
       });
       let blockCharactersNames = _.map(uniqBlockCharacters, function (onStage) {
         if (onStage.nonspeaking) {
