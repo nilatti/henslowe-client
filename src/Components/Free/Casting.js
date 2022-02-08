@@ -12,9 +12,9 @@ export default function Casting({}) {
   const {
     castings,
     loading,
-    fakeActors,
+    fakeActorCount,
     fakeActorsArray,
-    setFakeActors,
+    updateFakeActors,
     play,
     setPlay,
     updateActorJobs,
@@ -59,7 +59,7 @@ export default function Casting({}) {
   ));
   return (
     <>
-      <FakeActors actors={fakeActors} onSubmit={setFakeActors} />
+      <FakeActors actors={fakeActorCount} onSubmit={updateFakeActors} />
       <div>
         <em>
           Number beside character name indicates line count in your cut text (or

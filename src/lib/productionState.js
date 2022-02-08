@@ -45,10 +45,11 @@ function ProductionProvider({ children }) {
   const [notActors, setNotActors] = useState([]);
   const [production, setProduction] = useState({});
   const [rehearsals, setRehearsals] = useState([]);
+  const [reload, setReload] = useState(false);
 
   useEffect(async () => {
     setLoading(true);
-    if (productionId) {
+    if (!!productionId) {
       const response = await getItem(productionId, "production");
       if (response.status >= 400) {
         console.log("error getting production");
@@ -57,7 +58,7 @@ function ProductionProvider({ children }) {
       }
     }
     setLoading(false);
-  }, []);
+  }, [reload]);
 
   //set rehearsals
   useEffect(() => {
@@ -82,7 +83,6 @@ function ProductionProvider({ children }) {
         (job) => job.specialization_id == AUDITIONER_SPECIALIZATION_ID
       );
       setJobsAuditioned(auditionedJobs);
-
       let tempFakeActorsJobs = production.jobs.filter(
         (j) =>
           j.user &&
@@ -187,7 +187,9 @@ function ProductionProvider({ children }) {
     desiredNumber
   ) {
     let numberToAdd = desiredNumber - currentNumber;
-    let poolForGender = actorPool.filter((actor) => actor.gender == gender);
+    let poolForGender = actorPool.filter(
+      (actor) => actor.gender.toLowerCase() == gender
+    );
     let additionalFakeActors = [];
     do {
       //get random actor from pool for gender
@@ -395,8 +397,8 @@ function ProductionProvider({ children }) {
       let fakeAuditionersMale = returnRandomFakeActors(
         allFakeUsersResponse.data,
         "male",
-        fakeActorCount.female,
-        actorCount.female
+        fakeActorCount.male,
+        actorCount.male
       );
       let fakeAuditioners = fakeAuditionersFemale.concat(fakeAuditionersMale);
       //create job for each
@@ -408,6 +410,7 @@ function ProductionProvider({ children }) {
           user_id: auditioner.id,
         });
       });
+      setReload(!reload);
     }
     setLoading(false);
     //actorCount is an object: { female: int, male: int, nonbinary: int}
