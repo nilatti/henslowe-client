@@ -163,16 +163,16 @@ export default function UserForm({ onFormClose, onFormSubmit, user }) {
         <label>Gender</label>
         <select name="gender" onChange={handleChange} value={inputs.gender}>
           <option></option>
-          <option key="female" value="Female">
+          <option key="female" value="female">
             Female
           </option>
-          <option key="nonbinary" value="Nonbinary/Third Gender">
+          <option key="nonbinary" value="nonbinary">
             Nonbinary/Third Gender
           </option>
-          <option key="male" value="Male">
+          <option key="male" value="male">
             Male
           </option>
-          <option key="other" value="Other/Prefer Not to Say">
+          <option key="other" value="other">
             Other/Prefer Not to Say
           </option>
         </select>
