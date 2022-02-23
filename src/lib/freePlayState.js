@@ -321,7 +321,6 @@ function PlayProvider({ children }) {
         characterGroups,
         determineTypeOfLine,
         fakeActors,
-
         fakeActorsArray,
         frenchScenes,
         getPlay,
