@@ -245,6 +245,16 @@ export default function PlayProfileForAdmin({
             <Link to={`/plays/${play.id}/part_scripts`}>Make part scripts</Link>
           </li>
           <li>
+            <h3>Download cut scripts</h3>
+            <em>
+              Note: This feature is very new. If the loading spinner goes for
+              more than about 30 seconds, it's failed. Please email me at
+              henslowescloud@gmail.com and tell me which play and act you were
+              trying to download. Why can you only do one act at a time? Because
+              it takes a long time for the server to process these requests, and
+              if we ask it to do the whole play, your browser will get bored and
+              assume it's never going to happen.
+            </em>
             {play.acts.map((act) => (
               <li>
                 <Link
