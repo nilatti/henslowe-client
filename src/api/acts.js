@@ -24,4 +24,31 @@ async function updateServerAct(act) {
   });
 }
 
-export { createAct, deleteAct, getAct, getActs, updateServerAct };
+async function renderCutScript(actId, playId) {
+  console.log("render called", actId);
+  return API.request(`acts/${actId}/render_cut_script`, {
+    responseType: "blob",
+    params: {
+      play_id: playId,
+    },
+  });
+}
+
+async function renderMarkedScript(actId, playId) {
+  return API.request(`acts/${actId}/render_cuts_marked_script`, {
+    responseType: "blob",
+    params: {
+      play_id: playId,
+    },
+  });
+}
+
+export {
+  createAct,
+  deleteAct,
+  getAct,
+  getActs,
+  renderCutScript,
+  renderMarkedScript,
+  updateServerAct,
+};

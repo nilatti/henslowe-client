@@ -121,6 +121,15 @@ async function getSceneScript(sceneId) {
   });
 }
 
+async function renderCutScript(playId) {
+  return API.request(`plays/${playId}/render_cut_script`, {
+    responseType: "blob",
+    params: {
+      play: playId,
+    },
+  });
+}
+
 async function updateServerPlay(play) {
   return API.put(`plays/${play.id}`, {
     play: play,
@@ -147,5 +156,6 @@ export {
   getPlays,
   getProductionCopyComplete,
   getSceneScript,
+  renderCutScript,
   updateServerPlay,
 };

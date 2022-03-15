@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
 import { useForm } from "../../hooks/environmentUtils";
-import { Form, FormGroupInline } from "../Form";
+import { Form } from "../Form";
 import { Button } from "../Button";
 import {
   FormButtonGroup,
@@ -12,12 +12,15 @@ import {
 import ToolTip from "../ToolTip";
 import LoadingModal from "../LoadingModal";
 import { getItems } from "../../api/crud";
+import { renderCutScript, renderMarkedScript } from "../../api/acts";
+import { formatDateForRails } from "../../utils/dateTimeUtils";
 
 export default function PlayProfileForAdmin({
   play,
   onDeleteClick,
   updatePlay,
 }) {
+  play.acts.map((act) => console.log(act.id));
   const [authors, setAuthors] = useState([]);
   const [authorForm, setAuthorForm] = useState(false);
   const [canonicalForm, setCanonicalForm] = useState(false);
@@ -70,6 +73,7 @@ export default function PlayProfileForAdmin({
     updatePlay(inputs);
     closeAllForms();
   }
+
   function toggleAuthorForm() {
     setAuthorForm(!authorForm);
   }
@@ -85,6 +89,46 @@ export default function PlayProfileForAdmin({
   }
   function toggleTitleForm() {
     setTitleForm(!titleForm);
+  }
+
+  async function requestCutScript(act) {
+    setLoading(true);
+    const today = new Date();
+    const response = await renderCutScript(act.id, play.id);
+    if (response.status >= 400) {
+      console.log("error getting cut script");
+    } else {
+      var link = document.createElement("a");
+      link.href = window.URL.createObjectURL(new Blob([response.data]));
+      link.download = `${play.title}-${formatDateForRails({
+        date: today,
+      })}-ACT-${act.number}.docx`;
+
+      document.body.appendChild(link);
+
+      link.click();
+    }
+    setLoading(false);
+  }
+
+  async function requestMarkedScript(act) {
+    setLoading(true);
+    const today = new Date();
+    const response = await renderMarkedScript(act.id, play.id);
+    if (response.status >= 400) {
+      console.log("error getting cut script");
+    } else {
+      var link = document.createElement("a");
+      link.href = window.URL.createObjectURL(new Blob([response.data]));
+      link.download = `${play.title}-marked-${formatDateForRails({
+        date: today,
+      })}-ACT-${act.number}.docx`;
+
+      document.body.appendChild(link);
+
+      link.click();
+    }
+    setLoading(false);
   }
   if (loading || !authors.length) {
     return <LoadingModal displayText="loading" />;
@@ -200,9 +244,29 @@ export default function PlayProfileForAdmin({
           <li>
             <Link to={`/plays/${play.id}/part_scripts`}>Make part scripts</Link>
           </li>
-          {/* <li>
-            <Link to={`/`}>Download entire script</Link>
-          </li> */}
+          <li>
+            {play.acts.map((act) => (
+              <li>
+                <Link
+                  to={`#`}
+                  onClick={() => {
+                    requestCutScript(act);
+                  }}
+                >
+                  Download Act {act.number} script with cuts removed
+                </Link>
+                |
+                <Link
+                  to={`#`}
+                  onClick={() => {
+                    requestMarkedScript(act);
+                  }}
+                >
+                  Download Act {act.number} script with cuts marked
+                </Link>
+              </li>
+            ))}
+          </li>
         </ul>
       </div>
     </>
