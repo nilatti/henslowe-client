@@ -18,6 +18,7 @@ function formatDateForRails({ date }) {
   return moment(date).format(DATE_FORMAT_FOR_RAILS);
 }
 function formatDateTimeForRails({ datetime }) {
+  console.log(datetime);
   return moment(datetime).format(DATE_TIME_FORMAT_FOR_RAILS);
 }
 function formatTimeForRails(time) {

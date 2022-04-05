@@ -28,6 +28,10 @@ export function useForm(initial = {}) {
       checkbox.push(value);
       value = checkbox;
     }
+    if (type == "datetime") {
+      value = value._d;
+    }
+    console.log({ value, name, type });
     setInputs({
       // copy the existing state
       ...inputs,

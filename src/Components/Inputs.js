@@ -26,7 +26,9 @@ let valid = function (current, startTime) {
   return current.isSame(startTime, "day") || current.isAfter(startTime);
 };
 
-function handleDateTimeChange({ time, name, handleChange }) {
+function handleDateTimeChange({ time, name, handleChange, timezone }) {
+  console.log("timezone", timezone);
+  console.log(time);
   let event = {
     target: {
       value: time,
@@ -383,6 +385,7 @@ export function StartEndDateTimePair({
             time: time,
             name: "start_time",
             handleChange: handleChange,
+            timezone: timezone,
           })
         }
         dateFormat={DATE_FORMAT}

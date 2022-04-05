@@ -48,6 +48,7 @@ export default function ConflictForm({ conflict, onFormClose, onFormSubmit }) {
     let formattedStartTime = formatDateTimeForRails({
       datetime: inputs.start_time,
     });
+    console.log(inputs.start_time);
     console.log(formattedStartTime, formattedEndTime);
     onFormSubmit(
       {

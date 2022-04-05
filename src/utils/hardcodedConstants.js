@@ -35,7 +35,7 @@ export const DATE_FORMAT_FOR_RAILS = "YYYY-MM-DD";
 export const DATE_FORMAT_WITH_WEEKDAY = "dddd, MMMM D";
 export const DATE_FORMAT_WITH_MONTH_NAME = "MMMM D, YYYY";
 export const DATE_TIME_FORMAT = "MM/DD/YYYY hh:mm A";
-export const DATE_TIME_FORMAT_FOR_RAILS = "YYYY-MM-DD hh:mm:ssZZ";
+export const DATE_TIME_FORMAT_FOR_RAILS = "YYYY-MM-DD HH:mm:ssZZ";
 export const DEFAULT_TIMEZONE = "America/New_York";
 export const PRODUCTION_ADMIN = [
   "Producer",
