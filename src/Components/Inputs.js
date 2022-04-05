@@ -389,7 +389,6 @@ export function StartEndDateTimePair({
           })
         }
         dateFormat={DATE_FORMAT}
-        displayTimeZone={timezone || DEFAULT_TIMEZONE}
         timeFormat={TIME_FORMAT}
         name="start_time"
         value={startTime}
@@ -405,7 +404,6 @@ export function StartEndDateTimePair({
             timezone: timezone,
           })
         }
-        displayTimeZone={timezone || DEFAULT_TIMEZONE}
         type="datetime"
         value={endTime}
         // isValidDate={(current) => valid(current, startTime)}
