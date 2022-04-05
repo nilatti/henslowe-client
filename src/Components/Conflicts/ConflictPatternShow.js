@@ -18,7 +18,8 @@ export default function ConflictPatternShow({
       {moment(conflictPattern.end_time).format("h:mm a")}
       {conflictPattern.start_date && (
         <span>
-          {conflictPattern.start_date} to {conflictPattern.end_date}
+          {" "}
+          ({conflictPattern.start_date} to {conflictPattern.end_date})
         </span>
       )}
       {role && (role === "admin" || role === "self") && (

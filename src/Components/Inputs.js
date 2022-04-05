@@ -287,16 +287,16 @@ export function StartEndDatePair({
   startName,
   timezone,
 }) {
-  // const [tempStartDate, setTempStartDate] = useState(startDate);
-  function handleStartDateChange(date, startName, handleChange) {
-    //this is a hacky workaround that keeps the end time after the start time.
-    setTempStartDate(date);
-    handleDateTimeChange({
-      date: date,
-      name: startName,
-      handleChange: handleChange,
-    });
-  }
+  // // const [tempStartDate, setTempStartDate] = useState(startDate);
+  // function handleStartDateChange(date, startName, handleChange) {
+  //   //this is a hacky workaround that keeps the end time after the start time.
+  //   setTempStartDate(date);
+  //   handleDateTimeChange({
+  //     date: date,
+  //     name: startName,
+  //     handleChange: handleChange,
+  //   });
+  // }
 
   endName = endName || "end_date";
   startName = startName || "start_date";
@@ -307,7 +307,13 @@ export function StartEndDatePair({
         dateFormat={DATE_FORMAT}
         name={startName || "startDate"}
         onChange={(date) =>
-          handleStartDateChange(date, startName, handleChange)
+          // handleStartDateChange(date, startName, handleChange)
+          handleDateTimeChange({
+            date: date,
+            name: startName,
+            handleChange: handleChange,
+            timezone: timezone,
+          })
         }
         required
         timeFormat={false}
@@ -342,7 +348,7 @@ export function StartEndTimePair({ endTime, handleChange, startTime }) {
         dateFormat={false}
         format={TIME_FORMAT}
         onChange={(time) =>
-          handleDateTimeChange(time, "start_time", handleChange)
+          handleDateTimeChange({ time, name: "start_time", handleChange })
         }
         required
         value={startTime}
@@ -352,7 +358,7 @@ export function StartEndTimePair({ endTime, handleChange, startTime }) {
         dateFormat={false}
         format={TIME_FORMAT}
         onChange={(time) =>
-          handleDateTimeChange(time, "end_time", handleChange)
+          handleDateTimeChange({ time, name: "end_time", handleChange })
         }
         required
         value={endTime}
