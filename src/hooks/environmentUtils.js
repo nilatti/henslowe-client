@@ -16,6 +16,7 @@ export function useForm(initial = {}) {
   }, []);
 
   function handleChange(e) {
+    console.log(19, e);
     let { value, name, type } = e.target;
     if (type === "number") {
       value = parseInt(value);
@@ -28,10 +29,8 @@ export function useForm(initial = {}) {
       checkbox.push(value);
       value = checkbox;
     }
-    // if (type == "datetime") {
-    //   value = value._d;
-    // }
-    // console.log({ value, name, type });
+
+    console.log({ value, name, type });
     setInputs({
       // copy the existing state
       ...inputs,

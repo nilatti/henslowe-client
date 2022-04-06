@@ -41,6 +41,10 @@ export default function RehearsalPatternCreator({ production, cancel }) {
     );
   }, []);
 
+  function handleDateChange(data) {
+    const e = { target: { ...data, type: "date" } };
+    handleChange(e);
+  }
   function handleSubmit(event) {
     event.preventDefault();
     let calledUsers = defaultUsers.filter((user) => user.isCalled);
@@ -49,6 +53,7 @@ export default function RehearsalPatternCreator({ production, cancel }) {
       timezone: me.timezone,
     });
     let formattedEndTime = formatTimeForRails(inputs.end_time);
+    console.log("START DATE", inputs.start_date);
     let formattedStartDate = formatDateForRails({
       date: inputs.start_date,
       timezone: me.timezone,
@@ -153,7 +158,7 @@ export default function RehearsalPatternCreator({ production, cancel }) {
         <StartEndDatePair
           endTime={inputs.end_date}
           startTime={inputs.start_date}
-          handleChange={handleChange}
+          handleChange={handleDateChange}
         />
         <FormGroup>
           <label>We rehearse every</label>

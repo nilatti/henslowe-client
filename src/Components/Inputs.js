@@ -27,8 +27,6 @@ let valid = function (current, startTime) {
 };
 
 function handleDateTimeChange({ time, name, handleChange, timezone }) {
-  console.log("timezone", timezone);
-  console.log(time);
   let event = {
     target: {
       value: time,
@@ -308,15 +306,9 @@ export function StartEndDatePair({
       <Datetime
         dateFormat={DATE_FORMAT}
         name={startName || "startDate"}
-        onChange={(date) =>
-          // handleStartDateChange(date, startName, handleChange)
-          handleDateTimeChange({
-            date: date,
-            name: startName,
-            handleChange: handleChange,
-            timezone: timezone,
-          })
-        }
+        onChange={(v) => {
+          handleChange({ value: v, name: startName || "startDate" });
+        }}
         required
         timeFormat={false}
         value={startDate}
@@ -326,14 +318,9 @@ export function StartEndDatePair({
         name={endName || "endDate"}
         format={DATE_FORMAT}
         // isValidDate={(current) => isAfterDate(tempStartDate, current)}
-        onChange={(date) =>
-          handleDateTimeChange({
-            date: date,
-            name: endName,
-            handleChange: handleChange,
-            timezone: timezone,
-          })
-        }
+        onChange={(v) => {
+          handleChange({ value: v, name: endName || "endDate" });
+        }}
         required
         timeFormat={false}
         value={endDate || ""}
