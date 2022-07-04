@@ -126,9 +126,9 @@ export default function DoublingChartShow({
       });
       let blockCharactersNames = _.map(uniqBlockCharacters, function (onStage) {
         if (onStage.nonspeaking) {
-          return "(" + onStage.character.name + ")";
+          return "(" + onStage.character?.name + ")";
         } else {
-          return onStage.character.name;
+          return onStage.character?.name;
         }
       });
       if (uniqBlockCharacters.length > 1) {
