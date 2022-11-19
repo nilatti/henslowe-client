@@ -70,12 +70,12 @@ export default function OnStageShow({ onStage }) {
         {nonspeaking ? (
           <span onDoubleClick={() => handleNonspeakingClick(false)}>
             {" "}
-            Nonspeaking
+            Speaking
           </span>
         ) : (
           <span onDoubleClick={() => handleNonspeakingClick(true)}>
             {" "}
-            Speaking
+            Nonspeaking
           </span>
         )}
       </div>
