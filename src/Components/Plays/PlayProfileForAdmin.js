@@ -12,6 +12,7 @@ import {
 import {
   FancyCheckBox,
   FancyCheckBoxLabel,
+  FancyRadio
 } from "../Styled";
 import ToolTip from "../ToolTip";
 import LoadingModal from "../LoadingModal";
