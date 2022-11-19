@@ -28,7 +28,7 @@ export default function OnStageShow({ onStage }) {
   }
 
   function handleNonspeakingClick(bool) {
-    setNonspeaking(bool);
+    console.log('nonspeaking handler', bool)
     let workingOnStage = { ...onStage, nonspeaking: bool };
     updateOnStage(workingOnStage);
   }

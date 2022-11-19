@@ -9,6 +9,10 @@ import {
   TextInputAsForm,
   TextAreaInputWithToggle,
 } from "../Inputs";
+import {
+  FancyCheckBox,
+  FancyCheckBoxLabel,
+} from "../Styled";
 import ToolTip from "../ToolTip";
 import LoadingModal from "../LoadingModal";
 import { getItems } from "../../api/crud";
@@ -192,11 +196,31 @@ export default function PlayProfileForAdmin({
       )}
 
       <div width="100%">
-        {play.canonical && (
+      {canonicalForm ? (
+        <Form onSubmit={(e) => handleSubmit(e)}>
+          <FancyCheckBox htmlFor={day}>
+            <FancyRadio
+              type="checkbox"
+              id={`canonical`}
+              onChange={handleChange}
+              name="canonical"
+              value={inputs.canonical}
+            />
+            <FancyCheckBoxLabel>Canonical?</FancyCheckBoxLabel>
+          </FancyCheckBox>
+        </Form>
+      ) : (
+        <>
           <div>
-            <em> Canonical Version</em>
-          </div>
-        )}
+            <h4 onDoubleClick={toggleCanonicalForm}>
+              Canonical?</h4> {play.canonical ? 
+              <div>Canonical version</div>  
+              : 
+              <span></span>
+              }
+            </div>
+        </>
+      )}
         <TextAreaInputWithToggle
           formOpen={synopsisForm}
           handleChange={handleChange}
