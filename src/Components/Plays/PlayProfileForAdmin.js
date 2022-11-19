@@ -84,6 +84,7 @@ export default function PlayProfileForAdmin({
   }
 
   function toggleCanonicalForm() {
+    console.log('canonical?', play.canonical)
     setCanonicalForm(!canonicalForm);
   }
   function toggleSynopsisForm() {
