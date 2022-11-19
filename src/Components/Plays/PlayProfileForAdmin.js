@@ -198,7 +198,7 @@ export default function PlayProfileForAdmin({
       <div width="100%">
       {canonicalForm ? (
         <Form onSubmit={(e) => handleSubmit(e)}>
-          <FancyCheckBox htmlFor={day}>
+          <FancyCheckBox>
             <FancyRadio
               type="checkbox"
               id={`canonical`}
