@@ -209,6 +209,7 @@ export default function PlayProfileForAdmin({
             />
             <FancyCheckBoxLabel>Canonical?</FancyCheckBoxLabel>
           </FancyCheckBox>
+          <FormButtonGroup cancelFunction={toggleCanonicalForm} />
         </Form>
       ) : (
         <>
