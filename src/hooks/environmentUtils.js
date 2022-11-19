@@ -16,19 +16,17 @@ export function useForm(initial = {}) {
   }, []);
 
   function handleChange(e) {
-    console.log(19, e);
     let { value, name, type } = e.target;
     if (type === "number") {
       value = parseInt(value);
-    }
-    if (type === "file") {
+    } else if (type === "file") {
       [value] = e.target.files;
-    }
-    if (type === "checkbox") {
+    } else if (type === "checkbox") {
       let checkbox = inputs[name];
       checkbox.push(value);
       value = checkbox;
     }
+
 
     console.log({ value, name, type });
     setInputs({

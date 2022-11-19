@@ -199,16 +199,13 @@ export default function PlayProfileForAdmin({
       <div width="100%">
       {canonicalForm ? (
         <Form onSubmit={(e) => handleSubmit(e)}>
-          <FancyCheckBox>
-            <FancyRadio
-              type="checkbox"
-              id={`canonical`}
-              onChange={handleChange}
-              name="canonical"
-              value={inputs.canonical}
-            />
-            <FancyCheckBoxLabel>Canonical?</FancyCheckBoxLabel>
-          </FancyCheckBox>
+        <label>
+          Canonical?:
+          <select value={play.canonical} onChange={handleChange}>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </label>
           <FormButtonGroup cancelFunction={toggleCanonicalForm} />
         </Form>
       ) : (
