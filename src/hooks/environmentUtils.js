@@ -25,6 +25,12 @@ export function useForm(initial = {}) {
       let checkbox = inputs[name];
       checkbox.push(value);
       value = checkbox;
+    } else if (type === "bool") {
+      if (value === "true") {
+        value = true
+      } else {
+        value = false
+      }
     }
 
 
