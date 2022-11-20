@@ -202,7 +202,7 @@ export default function PlayProfileForAdmin({
         <Form onSubmit={(e) => handleSubmit(e)}>
         <label>
           Canonical?:
-          <select value={play.canonical} onChange={handleChange}>
+          <select name="canonical" type="bool" value={play.canonical} onChange={handleChange}>
             <option value="true">Yes</option>
             <option value="false">No</option>
           </select>

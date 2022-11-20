@@ -17,6 +17,7 @@ export function useForm(initial = {}) {
 
   function handleChange(e) {
     let { value, name, type } = e.target;
+    console.log('change', value, name, type)
     if (type === "number") {
       value = parseInt(value);
     } else if (type === "file") {
@@ -32,7 +33,6 @@ export function useForm(initial = {}) {
         value = false
       }
     }
-
 
     console.log({ value, name, type });
     setInputs({
