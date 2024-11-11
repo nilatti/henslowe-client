@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { Col, Row } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { useQuery } from "../../hooks/environmentUtils";
@@ -32,7 +31,3 @@ export default function NewProduction({ onFormSubmit }) {
     </Row>
   );
 }
-
-NewProduction.propTypes = {
-  onFormSubmit: PropTypes.func.isRequired,
-};

@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 import React, { Component } from "react";
 
 import { Button, Col, Form } from "react-bootstrap";
@@ -192,15 +190,5 @@ class NewEntranceExitForm extends Component {
     );
   }
 }
-
-NewEntranceExitForm.propTypes = {
-  actId: PropTypes.number.isRequired,
-  characters: PropTypes.array.isRequired,
-  frenchSceneId: PropTypes.number.isRequired,
-  onFormClose: PropTypes.func.isRequired,
-  onFormSubmit: PropTypes.func.isRequired,
-  sceneId: PropTypes.number.isRequired,
-  stageExits: PropTypes.array.isRequired,
-};
 
 export default NewEntranceExitForm;

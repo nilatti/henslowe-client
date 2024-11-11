@@ -1,5 +1,4 @@
 import Moment from "react-moment";
-import PropTypes from "prop-types";
 import { useMeState } from "../../lib/meState";
 import {
   DATE_TIME_FORMAT,

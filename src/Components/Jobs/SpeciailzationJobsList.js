@@ -1,5 +1,4 @@
 import _ from "lodash";
-import { checkPropTypes } from "prop-types";
 import { useEffect, useState } from "react";
 
 import { UserLink } from "../../utils/actorUtils";

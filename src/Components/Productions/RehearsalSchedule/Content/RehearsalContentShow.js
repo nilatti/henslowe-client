@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { useProductionAuthState } from "../../../Contexts";
 import uuid from "react-uuid";
@@ -45,11 +44,3 @@ export default function RehearsalContentShow({
     </ContentShow>
   );
 }
-
-RehearsalContentShow.propTypes = {
-  acts: PropTypes.array,
-  french_scenes: PropTypes.array,
-  // hiredUsers: PropTypes.array.isRequired,
-  handleEditClick: PropTypes.func.isRequired,
-  scenes: PropTypes.array,
-};

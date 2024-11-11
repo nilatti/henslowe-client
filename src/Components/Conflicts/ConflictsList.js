@@ -1,5 +1,4 @@
 import _ from "lodash";
-import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
 import { buildConflictPattern } from "../../api/conflicts.js";
 
@@ -237,5 +236,3 @@ export default function ConflictsList({ current = false }) {
     return <div></div>;
   }
 }
-
-ConflictsList.propTypes = {};

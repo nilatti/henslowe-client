@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import moment from "moment";
 
 export default function ConflictPatternShow({
@@ -36,15 +35,3 @@ export default function ConflictPatternShow({
     </li>
   );
 }
-
-ConflictPatternShow.propTypes = {
-  conflictPattern: PropTypes.shape({
-    category: PropTypes.string,
-    end_date: PropTypes.string.isRequired,
-    end_time: PropTypes.string.isRequired,
-    start_date: PropTypes.string.isRequired,
-    start_time: PropTypes.string.isRequired,
-    days_of_week: PropTypes.string.isRequired,
-  }),
-  handleDeleteClick: PropTypes.func.isRequired,
-};

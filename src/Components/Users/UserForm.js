@@ -1,5 +1,4 @@
 import { AddressInput, TelephoneInput } from "../Inputs";
-import PropTypes from "prop-types";
 import { Button } from "../Button";
 import { Form, FormGroupInline } from "../Form";
 import { useForm } from "../../hooks/environmentUtils";
@@ -226,8 +225,3 @@ export default function UserForm({ onFormClose, onFormSubmit, user }) {
     </Form>
   );
 }
-
-UserForm.propTypes = {
-  onFormClose: PropTypes.func.isRequired,
-  onFormSubmit: PropTypes.func.isRequired,
-};

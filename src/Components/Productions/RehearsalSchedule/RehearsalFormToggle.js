@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useState } from "react";
 import { Button } from "../../Button";
 
@@ -41,8 +40,3 @@ export default function RehearsalFormToggle() {
     );
   }
 }
-RehearsalFormToggle.propTypes = {
-  // isOpen: PropTypes.bool.isRequired,
-  // onFormSubmit: PropTypes.func.isRequired,
-  // production: PropTypes.object.isRequired,
-};

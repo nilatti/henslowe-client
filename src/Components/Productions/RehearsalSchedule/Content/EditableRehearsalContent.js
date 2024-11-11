@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import RehearsalContentForm from "./RehearsalContentForm";
@@ -61,6 +60,3 @@ export default function EditableRehearsalContent({ rehearsal }) {
   );
 }
 
-EditableRehearsalContent.propTypes = {
-  rehearsal: PropTypes.object.isRequired,
-};

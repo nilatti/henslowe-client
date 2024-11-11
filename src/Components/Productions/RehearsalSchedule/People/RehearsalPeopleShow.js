@@ -1,5 +1,4 @@
 import _ from "lodash";
-import PropTypes from "prop-types";
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -44,8 +43,3 @@ export default function RehearsalPeopleShow({ handleEditClick, calledUsers }) {
     </PeopleShow>
   );
 }
-
-RehearsalPeopleShow.propTypes = {
-  handleEditClick: PropTypes.func.isRequired,
-  calledUsers: PropTypes.array,
-};

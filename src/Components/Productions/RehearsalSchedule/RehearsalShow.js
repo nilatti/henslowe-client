@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import Moment from "react-moment";
 import "moment-timezone";
 import styled from "styled-components";
@@ -93,7 +92,3 @@ export default function RehearsalShow({ handleEditClick, rehearsal }) {
     </RehearsalContainer>
   );
 }
-
-RehearsalShow.propTypes = {
-  rehearsal: PropTypes.object.isRequired,
-};

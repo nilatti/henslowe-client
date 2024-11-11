@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 import UserForm from "./UserForm";
 
 export default function NewUser({ onFormClose, onFormSubmit }) {
@@ -10,8 +8,3 @@ export default function NewUser({ onFormClose, onFormSubmit }) {
     </>
   );
 }
-
-NewUser.propTypes = {
-  onFormSubmit: PropTypes.func.isRequired,
-  onFormClose: PropTypes.func.isRequired,
-};

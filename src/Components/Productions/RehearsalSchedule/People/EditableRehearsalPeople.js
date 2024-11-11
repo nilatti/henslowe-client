@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import RehearsalPeopleForm from "./RehearsalPeopleForm";
@@ -54,6 +53,3 @@ export default function EditableRehearsalPeople({ rehearsal }) {
     </People>
   );
 }
-EditableRehearsalPeople.propTypes = {
-  rehearsal: PropTypes.object.isRequired,
-};

@@ -1,5 +1,4 @@
 import _ from "lodash";
-import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 

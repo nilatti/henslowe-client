@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import styled from "styled-components";
 import { useForm } from "../../../hooks/environmentUtils";
 import { Button } from "../../Button";
@@ -105,8 +104,3 @@ export default function RehearsalForm({
     </RehearsalFormStyles>
   );
 }
-
-RehearsalForm.propTypes = {
-  onFormClose: PropTypes.func.isRequired,
-  rehearsal: PropTypes.object,
-};

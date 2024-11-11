@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React, { Component } from "react";
 
 import { Form } from "react-bootstrap";
@@ -321,16 +320,5 @@ class EntranceExitShow extends Component {
     );
   }
 }
-
-EntranceExitShow.propTypes = {
-  actId: PropTypes.number.isRequired,
-  entranceExit: PropTypes.object.isRequired,
-  frenchSceneId: PropTypes.number.isRequired,
-  onDeleteClick: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired,
-  play: PropTypes.object.isRequired,
-  production: PropTypes.object.isRequired,
-  sceneId: PropTypes.number.isRequired,
-};
 
 export default EntranceExitShow;

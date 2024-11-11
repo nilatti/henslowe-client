@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React from "react";
 import { Button } from "../Button";
 import { Form, FormGroup } from "../Form";
@@ -112,8 +111,3 @@ export default function ConflictPatternCreatorForm({ cancel, onFormSubmit }) {
     </Form>
   );
 }
-
-ConflictPatternCreatorForm.propTypes = {
-  cancel: PropTypes.func.isRequired,
-  onFormSubmit: PropTypes.func.isRequired,
-};

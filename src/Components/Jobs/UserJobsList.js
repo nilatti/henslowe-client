@@ -131,8 +131,4 @@ export default function UserJobsList({ user }) {
 //   }
 // }
 
-// UserJobsList.propTypes = {
-//   user: PropTypes.object.isRequired,
-// };
-
 // export default UserJobsList;

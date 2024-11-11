@@ -1,5 +1,4 @@
 import _ from "lodash";
-import PropTypes from "prop-types";
 import { useState } from "react";
 import styled from "styled-components";
 import RehearsalForm from "./RehearsalForm";
@@ -44,6 +43,3 @@ export default function EditableRehearsal({ rehearsal }) {
     </RehearsalStyle>
   );
 }
-EditableRehearsal.propTypes = {
-  rehearsal: PropTypes.object.isRequired,
-};

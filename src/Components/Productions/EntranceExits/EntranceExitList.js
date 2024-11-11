@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React, { Component } from "react";
 
 import { Button } from "react-bootstrap";
@@ -88,16 +87,5 @@ class EntranceExitsList extends Component {
     );
   }
 }
-
-EntranceExitsList.propTypes = {
-  actId: PropTypes.number.isRequired,
-  frenchSceneId: PropTypes.number.isRequired,
-  handleEntranceExitCreateFormSubmit: PropTypes.func.isRequired,
-  handleEntranceExitEditFormSubmit: PropTypes.func.isRequired,
-  onDeleteClick: PropTypes.func.isRequired,
-  play: PropTypes.object.isRequired,
-  production: PropTypes.object.isRequired,
-  sceneId: PropTypes.number.isRequired,
-};
 
 export default EntranceExitsList;

@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React from "react";
 // import { Button, Col, Form } from "react-bootstrap";
 import Datetime from "react-datetime";
@@ -102,9 +101,3 @@ export default function ConflictForm({ conflict, onFormClose, onFormSubmit }) {
     </Form>
   );
 }
-
-ConflictForm.propTypes = {
-  conflict: PropTypes.object,
-  onFormClose: PropTypes.func.isRequired,
-  onFormSubmit: PropTypes.func.isRequired,
-};
